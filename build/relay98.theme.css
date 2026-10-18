@@ -1,310 +1,668 @@
 /**
  * @name Relay98
- * @description A Windows 98 / Steam 2004 / CS 1.6 / neocities inspired theme for Discord.
+ * @description A dark Windows 98 / neocities inspired theme for Discord.
  * @author danlegt
  * @version 0.1.0
  * @source https://github.com/danlegt/Relay98
  */
 
-/* ---- src/components.css ---- */
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;700&family=VT323&display=swap');
+
+/* ---- src/00-variables.css ---- */
 /* ==========================================================================
-   Relay98 — components.css
-   Win98-style push buttons, recessed text inputs, and a chunky classic
-   scrollbar. Same substring-selector approach as layout.css.
+   Relay98 — 00-variables.css
+   Palette + fonts, mapped onto ALL of Discord's color tokens (old + new).
+   Palette is lifted from danlegt.com: black starfield, near-black panels,
+   neon ridge colors, and the win98 navy titlebar gradient.
    ========================================================================== */
 
-/* push buttons: raised bevel, inverts to pressed/inset on click */
-button,
-[role="button"],
-[class*="button"][class*="lookFilled"],
-[class*="button"][class*="lookOutlined"] {
-    background: var(--r98-face) !important;
-    color: var(--r98-text) !important;
-    border: var(--r98-border) solid var(--r98-highlight) !important;
-    border-right-color: var(--r98-shadow-dark) !important;
-    border-bottom-color: var(--r98-shadow-dark) !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
+/* Vesktop only allows fonts from Google Fonts / GitHub / GitLab / Codeberg.
+   Anything else (unpkg, personal sites...) gets silently blocked. */
+
+
+:root {
+    /* ---------- fonts ----------
+       PixeloidSans / PixelOperatorMono are used if installed locally
+       (same fonts as danlegt.com), otherwise Google's Pixelify Sans / VT323. */
+    --r98-font: 'PixeloidSans', 'Pixelify Sans', 'Tahoma', sans-serif;
+    --r98-font-code: 'PixelOperatorMono', 'VT323', 'Courier New', monospace;
+
+    /* ---------- surfaces (darkest -> lightest) ---------- */
+    --r98-bg-0: #000000; /* app frame, server rail, starfield */
+    --r98-bg-1: #08080c; /* main panels (chat, channel list, members) */
+    --r98-bg-2: #111118; /* raised surfaces: cards, popouts, modals */
+    --r98-bg-3: #1c1c26; /* button face */
+    --r98-bg-4: #2a2a38; /* button face hovered */
+
+    /* ---------- win98 bevel tones (dark edition) ---------- */
+    --r98-bevel-light: #8a8a9c; /* outer top-left */
+    --r98-bevel-mid: #45455a; /* inner top-left */
+    --r98-bevel-dim: #0c0c10; /* inner bottom-right */
+    --r98-bevel-dark: #000000; /* outer bottom-right */
+
+    /* ---------- text ---------- */
+    --r98-text-1: #ffffff; /* headings, names, strong */
+    --r98-text-2: #e6e6e6; /* message text */
+    --r98-text-3: #c0c0c0; /* classic w98 gray, secondary text */
+    --r98-text-4: #a6a6a6; /* channels, icons */
+    --r98-text-5: #6e6e80; /* muted, timestamps, placeholders */
+
+    /* ---------- danlegt.com neon panel colors ---------- */
+    --r98-orange: #ff7700;
+    --r98-green: #15b800;
+    --r98-blue: #007eb8;
+    --r98-red: #ff2e2e; /* brightened site red (#a00000) for readability on black */
+    --r98-red-dark: #a00000;
+    --r98-pink: #ff3ee7;
+    --r98-cyan: #18f5db;
+    --r98-gold: #ffbc31;
+
+    /* ---------- win98 blues ---------- */
+    --r98-navy: #000078;
+    --r98-navy-light: #0f80cd;
+    --r98-select: #000099; /* win98 selection highlight */
+    --r98-select-hover: #0000c0;
+    --r98-titlebar: linear-gradient(to right, #000078, 80%, #0f80cd);
+
+    /* ---------- semantic ---------- */
+    --r98-link: var(--r98-cyan);
+    --r98-mention: var(--r98-gold);
+    --r98-hover: rgba(15, 128, 205, 0.16);
+    --r98-active: rgba(15, 128, 205, 0.28);
+    --r98-border: #2c2c3a;
+    --r98-ridge: 4px; /* thickness of neon panel ridges */
+
+    /* bevel recipes (box-shadow so they never shift layout) */
+    --r98-raised: inset -1px -1px var(--r98-bevel-dark), inset 1px 1px var(--r98-bevel-light),
+        inset -2px -2px var(--r98-bevel-dim), inset 2px 2px var(--r98-bevel-mid);
+    --r98-sunken: inset -1px -1px var(--r98-bevel-light), inset 1px 1px var(--r98-bevel-dark),
+        inset -2px -2px var(--r98-bevel-mid), inset 2px 2px var(--r98-bevel-dim);
 }
 
-button:active,
-[role="button"]:active,
-[class*="button"][class*="lookFilled"]:active {
-    border-color: var(--r98-shadow-dark) var(--r98-highlight) var(--r98-highlight) var(--r98-shadow-dark) !important;
-}
-
-/* primary/accent actions get the mustard cs1.6 accent instead of blurple */
-[class*="button"][class*="colorBrand"] {
-    background: var(--r98-accent) !important;
-    color: var(--r98-black) !important;
-}
-[class*="button"][class*="colorBrand"]:hover {
-    background: var(--r98-accent-hover) !important;
-}
-[class*="button"][class*="colorBrand"]:active {
-    background: var(--r98-accent-active) !important;
-}
-
-/* text inputs / chatbar / search: recessed "inset" bevel on white */
-input,
-textarea,
-[class*="channelTextArea"] [class*="textArea"],
-[class*="searchBar"] input,
-[class*="inputDefault"] {
-    background: #ffffff !important;
-    color: var(--r98-text) !important;
-    border: var(--r98-border) solid var(--r98-shadow-dark) !important;
-    border-right-color: var(--r98-highlight) !important;
-    border-bottom-color: var(--r98-highlight) !important;
-}
-
-/* checkboxes/switches/radio-ish controls flattened to square toggles */
-[class*="slider"],
-[class*="checkbox"] {
-    border-radius: 0 !important;
-}
-
-/* selected / active channel or dm gets the mustard accent instead of blurple */
-[class*="selected"][class*="link"],
-[class*="modeSelected"] {
-    background: var(--r98-accent) !important;
-    color: var(--r98-black) !important;
-}
-
-/* classic chunky win98 scrollbar */
-::-webkit-scrollbar {
-    width: 16px;
-    height: 16px;
-}
-::-webkit-scrollbar-track {
-    background: var(--r98-face) !important;
-    border-left: 1px solid var(--r98-shadow);
-}
-::-webkit-scrollbar-thumb {
-    background: var(--r98-face) !important;
-    border: 2px solid var(--r98-highlight);
-    border-right-color: var(--r98-shadow-dark);
-    border-bottom-color: var(--r98-shadow-dark);
-    min-height: 24px;
-}
-::-webkit-scrollbar-corner {
-    background: var(--r98-face) !important;
-}
-
-/* ---- src/layout.css ---- */
-/* ==========================================================================
-   Relay98 — layout.css
-   Square corners everywhere + win98-style inset/outset bevel borders on the
-   main app panels. Discord's hashed classnames rotate their suffix on every
-   build (e.g. "sidebar-xYz123"), but the readable prefix stays put, so we
-   target those prefixes with [class*="..."] instead of exact hashes. This
-   keeps the theme working across client updates without a build pipeline
-   that re-scrapes Discord's DOM.
-   ========================================================================== */
-
-html, body {
-    font-family: var(--r98-font) !important;
-    background: var(--r98-face) !important;
-}
-
-/* kill rounded corners app-wide; avatars/pills opt back in further down */
-*, *::before, *::after {
-    border-radius: 0 !important;
-}
-
-/* keep round avatars + status pips circular, that's a different aesthetic */
-img[class*="avatar"],
-[class*="avatarContainer"] img,
-[class*="pointerEvents"][class*="avatar"] {
-    border-radius: 50% !important;
-}
-
-/* outset "raised" bevel helper, applied to the main chrome panels below */
-[class*="guilds"],
-[class*="sidebar"],
-[class*="chat"][class*="content"],
-[class*="membersWrap"],
-[class*="members"][class*="themed"],
-[class*="searchBar"],
-[class*="toolbar"],
-[class*="form"][class*="attachWrapper"],
-[class*="channelTextArea"] {
-    border-style: solid !important;
-    border-width: var(--r98-border) !important;
-    border-color: var(--r98-highlight) var(--r98-shadow-dark) var(--r98-shadow-dark) var(--r98-highlight) !important;
-}
-
-/* flatten the guild/server rail onto the same gray chrome */
-[class*="guilds"] {
-    background: var(--r98-face-alt) !important;
-    padding-top: 6px !important;
-}
-
-/* chat panel: inset "recessed" bevel, like a win98 textbox/viewport */
-[class*="chat"][class*="content"],
-[class*="scrollerContent"] {
-    border-color: var(--r98-shadow-dark) var(--r98-highlight) var(--r98-highlight) var(--r98-shadow-dark) !important;
-}
-
-/* message groups + dividers, flattened to simple rules instead of cards */
-[class*="message"][class*="cozy"],
-[class*="message"][class*="compact"] {
-    border-radius: 0 !important;
-}
-
-[class*="divider"] {
-    border-color: var(--r98-shadow) !important;
-}
-
-/* popouts/menus/modals get the same raised bevel as windows */
-[class*="menu"][class*="theme"],
-[class*="popout"],
-[class*="layerContainer"] [class*="modal"],
-[class*="tooltip"] {
-    background: var(--r98-face) !important;
-    border: var(--r98-border) solid var(--r98-highlight) !important;
-    border-right-color: var(--r98-shadow-dark) !important;
-    border-bottom-color: var(--r98-shadow-dark) !important;
-    box-shadow: 1px 1px 0 var(--r98-black) !important;
-}
-
-/* ---- src/titlebar.css ---- */
-/* ==========================================================================
-   Relay98 — titlebar.css
-   Turns the channel header / top bar into a win98-style window titlebar:
-   navy-to-light-blue gradient with bold white text, like old Explorer
-   windows and the Steam 2004 friends list header.
-   ========================================================================== */
-
-[class*="title"][class*="container"],
-[class*="header"][class*="wrapper"][class*="base"],
-[class*="chat"] > [class*="container"]:first-child {
-    background: linear-gradient(to right, var(--r98-titlebar-start), var(--r98-titlebar-end)) !important;
-    border: var(--r98-border) solid var(--r98-highlight) !important;
-    border-right-color: var(--r98-shadow-dark) !important;
-    border-bottom-color: var(--r98-shadow-dark) !important;
-}
-
-[class*="title"][class*="container"] [class*="title"],
-[class*="header"][class*="wrapper"][class*="base"] [class*="title"] {
-    color: var(--r98-titlebar-text) !important;
-    font-weight: bold !important;
-    text-shadow: none !important;
-}
-
-/* icons inside the titlebar read better as white against the navy */
-[class*="title"][class*="container"] svg,
-[class*="header"][class*="wrapper"][class*="base"] svg {
-    color: var(--r98-titlebar-text) !important;
-}
-
-/* ---- src/variables.css ---- */
-/* ==========================================================================
-   Relay98 — variables.css
-   Fonts + color palette, mapped onto Discord's native CSS custom properties.
-   Discord renames internal component classnames on every build, but it has
-   kept these custom property names stable for years, so this is the safest
-   surface to theme against for a "basic" theme like this one.
-   ========================================================================== */
-
-/* classic win98 pixel font, served from the 98.css project on unpkg */
-@font-face {
-    font-family: 'Relay98 Sans';
-    src:
-        url('https://unpkg.com/98.css@0.1.20/dist/ms_sans_serif.woff2') format('woff2'),
-        url('https://unpkg.com/98.css@0.1.20/dist/ms_sans_serif.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-@font-face {
-    font-family: 'Relay98 Sans';
-    src:
-        url('https://unpkg.com/98.css@0.1.20/dist/ms_sans_serif_bold.woff2') format('woff2'),
-        url('https://unpkg.com/98.css@0.1.20/dist/ms_sans_serif_bold.woff') format('woff');
-    font-weight: bold;
-    font-style: normal;
-}
-
-:root, .theme-dark, .theme-light {
-    /* ---- core win98/steam2004 chrome ---- */
-    --r98-face: #c0c0c0; /* button/panel face */
-    --r98-face-alt: #b4b4b4;
-    --r98-highlight: #ffffff; /* bevel light edge */
-    --r98-highlight-soft: #dfdfdf;
-    --r98-shadow: #808080; /* bevel dark edge */
-    --r98-shadow-dark: #404040;
-    --r98-black: #000000;
-
-    /* titlebar blue, straight out of win98/steam2004 */
-    --r98-titlebar-start: #000080;
-    --r98-titlebar-end: #1084d0;
-    --r98-titlebar-text: #ffffff;
-
-    /* cs 1.6 / hl1 hud mustard, used for accents + mentions */
-    --r98-accent: #a59263;
-    --r98-accent-hover: #bfae84;
-    --r98-accent-active: #8a7a4f;
-
-    --r98-link: #0000ee;
-    --r98-text: #101010;
-    --r98-text-muted: #4b4b4b;
-
-    --r98-font: 'Relay98 Sans', Tahoma, Geneva, 'MS Sans Serif', sans-serif;
-    --r98-font-code: 'Perfect DOS VGA 437', 'Courier New', monospace;
-
-    /* bevel border thickness, kept consistent across all components */
-    --r98-border: 2px;
-
-    /* ---- map onto discord's classic variable set ---- */
-    --background-primary: var(--r98-face);
-    --background-secondary: var(--r98-face-alt);
-    --background-secondary-alt: var(--r98-face);
-    --background-tertiary: #9c9c9c;
-    --background-floating: var(--r98-face);
-    --background-mobile-primary: var(--r98-face);
-    --background-mobile-secondary: var(--r98-face-alt);
-    --background-accent: var(--r98-accent);
-    --background-message-hover: rgba(0, 0, 0, 0.06);
-    --background-modifier-hover: rgba(0, 0, 0, 0.08);
-    --background-modifier-active: rgba(0, 0, 0, 0.14);
-    --background-modifier-selected: var(--r98-accent);
-    --background-modifier-accent: var(--r98-shadow);
-    --channeltextarea-background: #ffffff;
-
-    --text-normal: var(--r98-text);
-    --text-muted: var(--r98-text-muted);
-    --text-link: var(--r98-link);
-    --header-primary: var(--r98-text);
-    --header-secondary: var(--r98-text-muted);
-    --interactive-normal: #2b2b2b;
-    --interactive-hover: #000000;
-    --interactive-active: #000000;
-    --interactive-muted: #7a7a7a;
-
-    --brand-experiment: var(--r98-accent);
-    --brand-experiment-560: var(--r98-accent-active);
-
+/* same selector set midnight/system24 use, so we beat Discord's own
+   per-theme variable blocks (.theme-dark etc.) */
+body,
+.theme-dark:not(.custom-user-profile-theme),
+.theme-light:not(.custom-user-profile-theme) {
     --font-primary: var(--r98-font);
     --font-display: var(--r98-font);
+    --font-headline: var(--r98-font);
     --font-code: var(--r98-font-code);
 
-    --scrollbar-thin-thumb: var(--r98-shadow);
-    --scrollbar-auto-thumb: var(--r98-shadow);
-    --scrollbar-auto-track: var(--r98-face);
+    /* ---- backgrounds ---- */
+    --app-frame-background: var(--r98-bg-0);
+    --app-frame-border: var(--r98-border);
+    --background-primary: var(--r98-bg-1);
+    --background-secondary: var(--r98-bg-1);
+    --background-secondary-alt: var(--r98-bg-2);
+    --background-tertiary: var(--r98-bg-0);
+    --background-floating: var(--r98-bg-2);
+    --background-accent: var(--r98-bg-3);
+    --background-base-low: var(--r98-bg-1);
+    --background-base-lower: var(--r98-bg-1);
+    --background-base-lowest: var(--r98-bg-0);
+    --background-surface-high: var(--r98-bg-2);
+    --background-surface-higher: var(--r98-bg-2);
+    --background-surface-highest: var(--r98-bg-2);
+    --bg-surface-raised: var(--r98-bg-2);
+    --bg-surface-overlay-tmp: var(--r98-bg-2);
+    --home-background: var(--r98-bg-1);
+    --chat-background-default: var(--r98-bg-1);
+    --card-background-default: var(--r98-bg-2);
+    --modal-background: var(--r98-bg-2);
+    --modal-footer-background: var(--r98-bg-1);
+    --background-code: var(--r98-bg-0);
+    --background-brand: var(--r98-select);
+    --background-scrim: rgba(0, 0, 0, 0.75);
+    --background-scrim-lightbox: rgba(0, 0, 0, 0.92);
 
-    /* newer semantic tokens, best-effort fallback for current clients */
-    --bg-base-primary: var(--r98-face);
-    --bg-base-secondary: var(--r98-face-alt);
-    --bg-base-tertiary: #9c9c9c;
-    --bg-surface-raised: var(--r98-face);
-    --bg-surface-overlay: var(--r98-face);
-    --bg-mod-subtle: rgba(0, 0, 0, 0.08);
-    --bg-mod-strong: rgba(0, 0, 0, 0.16);
-    --text-default: var(--r98-text);
-    --border-subtle: var(--r98-shadow);
-    --border-strong: var(--r98-shadow-dark);
+    --background-mod-subtle: var(--r98-hover);
+    --background-mod-muted: var(--r98-hover);
+    --background-mod-normal: var(--r98-bg-3);
+    --background-mod-strong: var(--r98-bg-4);
+    --background-message-hover: rgba(255, 255, 255, 0.03);
+    --background-modifier-hover: var(--r98-hover);
+    --background-modifier-active: var(--r98-active);
+    --background-modifier-selected: var(--r98-select);
+    --background-modifier-accent: var(--r98-border);
+
+    --background-feedback-critical: rgba(255, 46, 46, 0.15);
+    --background-feedback-info: rgba(15, 128, 205, 0.15);
+    --background-feedback-positive: rgba(21, 184, 0, 0.15);
+    --background-feedback-warning: rgba(255, 188, 49, 0.15);
+    --background-feedback-notification: var(--r98-red);
+    --background-code-addition: rgba(21, 184, 0, 0.2);
+    --background-code-deletion: rgba(255, 46, 46, 0.2);
+
+    /* ---- text ---- */
+    --text-normal: var(--r98-text-2);
+    --text-default: var(--r98-text-2);
+    --text-strong: var(--r98-text-1);
+    --text-subtle: var(--r98-text-4);
+    --text-muted: var(--r98-text-5);
+    --text-link: var(--r98-link);
+    --text-brand: var(--r98-cyan);
+    --text-invert: var(--r98-bg-0);
+    --text-overlay-light: var(--r98-text-1);
+    --header-primary: var(--r98-text-1);
+    --header-secondary: var(--r98-text-3);
+    --channels-default: var(--r98-text-4);
+    --channel-icon: var(--r98-text-4);
+    --channel-text-area-placeholder: var(--r98-text-5);
+    --chat-text-muted: var(--r98-text-5);
+    --textbox-markdown-syntax: var(--r98-text-4);
+    --app-message-embed-secondary-text: var(--r98-text-3);
+    --text-feedback-critical: var(--r98-red);
+    --text-feedback-info: var(--r98-cyan);
+    --text-feedback-positive: var(--r98-green);
+    --text-feedback-warning: var(--r98-gold);
+
+    /* ---- interactive (channels, dms, list items, icon buttons) ---- */
+    --interactive-normal: var(--r98-text-4);
+    --interactive-hover: var(--r98-text-1);
+    --interactive-active: var(--r98-text-1);
+    --interactive-muted: var(--r98-text-5);
+    --interactive-text-default: var(--r98-text-4);
+    --interactive-text-hover: var(--r98-text-1);
+    --interactive-text-active: var(--r98-text-1);
+    --interactive-icon-default: var(--r98-text-4);
+    --interactive-icon-hover: var(--r98-text-1);
+    --interactive-icon-active: var(--r98-text-1);
+    --interactive-background-hover: var(--r98-hover);
+    --interactive-background-active: var(--r98-active);
+    --interactive-background-selected: var(--r98-select);
+
+    /* ---- icons ---- */
+    --icon-default: var(--r98-text-4);
+    --icon-strong: var(--r98-text-1);
+    --icon-subtle: var(--r98-text-4);
+    --icon-muted: var(--r98-text-5);
+    --icon-link: var(--r98-cyan);
+    --icon-voice-muted: var(--r98-red);
+    --icon-feedback-critical: var(--r98-red);
+    --icon-feedback-info: var(--r98-cyan);
+    --icon-feedback-positive: var(--r98-green);
+    --icon-feedback-warning: var(--r98-gold);
+
+    /* ---- borders ---- */
+    --border-subtle: var(--r98-border);
+    --border-muted: var(--r98-border);
+    --border-normal: var(--r98-border);
+    --border-strong: var(--r98-bevel-light);
+    --border-focus: var(--r98-navy-light);
+    --border-feedback-critical: var(--r98-red);
+    --divider-color: var(--r98-red);
+
+    /* ---- buttons (control-*) ---- */
+    --control-primary-background-default: var(--r98-select);
+    --control-primary-background-hover: var(--r98-select-hover);
+    --control-primary-background-active: var(--r98-navy);
+    --control-primary-border-default: transparent;
+    --control-primary-border-hover: transparent;
+    --control-primary-border-active: transparent;
+    --control-primary-text-default: var(--r98-text-1);
+    --control-primary-text-hover: var(--r98-text-1);
+    --control-primary-text-active: var(--r98-text-1);
+    --control-primary-icon-default: var(--r98-text-1);
+    --control-primary-icon-hover: var(--r98-text-1);
+    --control-primary-icon-active: var(--r98-text-1);
+
+    --control-secondary-background-default: var(--r98-bg-3);
+    --control-secondary-background-hover: var(--r98-bg-4);
+    --control-secondary-background-active: var(--r98-bg-2);
+    --control-secondary-border-default: transparent;
+    --control-secondary-border-hover: transparent;
+    --control-secondary-border-active: transparent;
+    --control-secondary-text-default: var(--r98-text-1);
+    --control-secondary-text-hover: var(--r98-text-1);
+    --control-secondary-text-active: var(--r98-text-1);
+    --control-secondary-icon-default: var(--r98-text-1);
+    --control-secondary-icon-hover: var(--r98-text-1);
+    --control-secondary-icon-active: var(--r98-text-1);
+
+    --control-critical-primary-background-default: var(--r98-red-dark);
+    --control-critical-primary-background-hover: #c00000;
+    --control-critical-primary-background-active: #780000;
+    --control-critical-primary-text-default: var(--r98-text-1);
+    --control-critical-primary-text-hover: var(--r98-text-1);
+    --control-critical-primary-text-active: var(--r98-text-1);
+    --control-critical-primary-icon-default: var(--r98-text-1);
+    --control-critical-primary-icon-hover: var(--r98-text-1);
+    --control-critical-primary-icon-active: var(--r98-text-1);
+    --control-critical-secondary-background-default: var(--r98-bg-3);
+    --control-critical-secondary-background-hover: var(--r98-bg-4);
+    --control-critical-secondary-background-active: var(--r98-bg-2);
+    --control-critical-secondary-text-default: var(--r98-red);
+    --control-critical-secondary-text-hover: var(--r98-red);
+    --control-critical-secondary-text-active: var(--r98-red);
+    --control-critical-secondary-icon-default: var(--r98-red);
+    --control-critical-secondary-icon-hover: var(--r98-red);
+    --control-critical-secondary-icon-active: var(--r98-red);
+
+    --control-connect-background-default: var(--r98-green);
+    --control-connect-background-hover: #1ad100;
+    --control-connect-background-active: #0f8a00;
+    --control-connect-text-default: var(--r98-bg-0);
+    --control-connect-text-hover: var(--r98-bg-0);
+    --control-connect-text-active: var(--r98-bg-0);
+    --control-connect-icon-default: var(--r98-bg-0);
+    --control-connect-icon-hover: var(--r98-bg-0);
+    --control-connect-icon-active: var(--r98-bg-0);
+
+    --control-icon-only-background-hover: var(--r98-hover);
+    --control-icon-only-background-active: var(--r98-active);
+    --control-icon-only-icon-default: var(--r98-text-4);
+    --control-icon-only-icon-hover: var(--r98-text-1);
+    --control-icon-only-icon-active: var(--r98-text-1);
+    --control-brand-foreground: var(--r98-cyan);
+
+    --redesign-button-secondary-background: var(--r98-bg-3);
+    --redesign-button-secondary-pressed-background: var(--r98-bg-2);
+    --redesign-button-secondary-text: var(--r98-text-1);
+    --button-outline-primary-text: var(--r98-text-1);
+
+    /* ---- inputs ---- */
+    --input-background-default: var(--r98-bg-0);
+    --input-background-error-default: rgba(255, 46, 46, 0.1);
+    --input-border-default: transparent;
+    --input-border-hover: transparent;
+    --input-border-active: var(--r98-navy-light);
+    --input-border-error-default: var(--r98-red);
+    --input-text-default: var(--r98-text-1);
+    --input-placeholder-text-default: var(--r98-text-5);
+    --channeltextarea-background: var(--r98-bg-0);
+
+    /* ---- checkbox / radio / switch / slider ---- */
+    --checkbox-background-default: var(--r98-bg-0);
+    --checkbox-background-hover: var(--r98-bg-2);
+    --checkbox-background-selected-default: var(--r98-select);
+    --checkbox-background-selected-hover: var(--r98-select-hover);
+    --checkbox-border-default: var(--r98-bevel-light);
+    --checkbox-border-hover: var(--r98-text-1);
+    --checkbox-border-selected-default: var(--r98-bevel-light);
+    --checkbox-border-selected-hover: var(--r98-text-1);
+    --checkbox-icon-active: var(--r98-text-1);
+    --radio-background-default: var(--r98-bg-0);
+    --radio-background-hover: var(--r98-bg-2);
+    --radio-background-selected-default: var(--r98-select);
+    --radio-background-selected-hover: var(--r98-select-hover);
+    --radio-border-default: var(--r98-bevel-light);
+    --radio-border-hover: var(--r98-text-1);
+    --radio-border-selected-default: var(--r98-bevel-light);
+    --radio-border-selected-hover: var(--r98-text-1);
+    --radio-thumb-background-active: var(--r98-text-1);
+    --switch-background-default: var(--r98-bg-3);
+    --switch-background-hover: var(--r98-bg-4);
+    --switch-background-selected-default: var(--r98-green);
+    --switch-background-selected-hover: var(--r98-green);
+    --switch-border-default: var(--r98-bevel-light);
+    --switch-border-hover: var(--r98-text-1);
+    --switch-border-selected-default: var(--r98-bevel-light);
+    --switch-border-selected-hover: var(--r98-text-1);
+    --switch-thumb-background-default: var(--r98-text-3);
+    --switch-thumb-background-selected-default: var(--r98-text-1);
+    --slider-track-background: var(--r98-bg-3);
+    --progressbar-track-background: var(--r98-bg-3);
+    --progressbar-indicator-background: var(--r98-navy-light);
+
+    /* ---- messages / mentions / reactions ---- */
+    --message-background-hover: rgba(255, 255, 255, 0.03);
+    --message-mentioned-background-default: rgba(255, 188, 49, 0.1);
+    --message-mentioned-background-hover: rgba(255, 188, 49, 0.15);
+    --message-highlight-background-default: rgba(24, 245, 219, 0.07);
+    --message-highlight-background-hover: rgba(24, 245, 219, 0.11);
+    --message-reacted-background-default: rgba(15, 128, 205, 0.25);
+    --message-reacted-text-default: var(--r98-text-1);
+    --mention-background: rgba(255, 188, 49, 0.18);
+    --mention-foreground: var(--r98-gold);
+    --reaction-background-default: var(--r98-bg-2);
+    --reaction-background-hover: var(--r98-bg-3);
+    --reaction-background-active: var(--r98-bg-3);
+    --reaction-background-reacted-default: rgba(15, 128, 205, 0.25);
+    --reaction-background-reacted-hover: rgba(15, 128, 205, 0.35);
+    --reaction-border-default: var(--r98-border);
+    --reaction-border-hover: var(--r98-bevel-light);
+    --reaction-border-active: var(--r98-bevel-light);
+    --reaction-border-reacted-default: var(--r98-navy-light);
+    --reaction-text-default: var(--r98-text-3);
+    --reaction-text-hover: var(--r98-text-1);
+    --reaction-text-active: var(--r98-text-1);
+    --reaction-text-reacted-default: var(--r98-text-1);
+    --polls-voted-fill: rgba(15, 128, 205, 0.2);
+    --polls-victor-fill: rgba(21, 184, 0, 0.2);
+    --spine-default: var(--r98-text-5);
+
+    /* ---- badges / notices ---- */
+    --badge-background-default: var(--r98-select);
+    --badge-text-default: var(--r98-text-1);
+    --badge-notification-background: var(--r98-red);
+    --badge-expressive-background-default: var(--r98-pink);
+    --badge-expressive-text-default: var(--r98-bg-0);
+    --notice-background-info: var(--r98-navy);
+    --notice-background-positive: var(--r98-green);
+    --notice-background-warning: var(--r98-gold);
+    --notice-background-critical: var(--r98-red-dark);
+    --notice-text-info: var(--r98-text-1);
+    --notice-text-positive: var(--r98-bg-0);
+    --notice-text-warning: var(--r98-bg-0);
+    --notice-text-critical: var(--r98-text-1);
+
+    /* ---- status ---- */
+    --status-online: var(--r98-green);
+    --status-positive: var(--r98-green);
+    --status-positive-background: var(--r98-green);
+    --status-speaking: var(--r98-green);
+    --status-warning: var(--r98-gold);
+    --status-danger: var(--r98-red);
+    --icon-status-online: var(--r98-green);
+    --icon-status-idle: var(--r98-gold);
+    --icon-status-dnd: var(--r98-red);
+    --icon-status-offline: var(--r98-text-5);
+    --text-status-online: var(--r98-green);
+    --text-status-idle: var(--r98-gold);
+    --text-status-dnd: var(--r98-red);
+    --text-status-offline: var(--r98-text-5);
+
+    /* ---- user profiles ---- */
+    --user-profile-border: var(--r98-border);
+    --user-profile-overlay-background: var(--r98-bg-1);
+    --user-profile-overlay-background-hover: var(--r98-hover);
+    --user-profile-background-hover: var(--r98-hover);
+    --user-profile-toolbar-background: var(--r98-bg-2);
+    --user-profile-toolbar-border: var(--r98-border);
+    --user-profile-note-background-focus: var(--r98-bg-0);
+
+    /* ---- scrollbars (overridden with real w98 bars in 20-components) ---- */
+    --scrollbar-thin-thumb: var(--r98-bg-4);
+    --scrollbar-thin-track: transparent;
+    --scrollbar-auto-thumb: var(--r98-bg-3);
+    --scrollbar-auto-track: var(--r98-bg-0);
+
+    /* ---- legacy brand + raw palette tokens (plugins still use these) ---- */
+    --brand-experiment: var(--r98-select);
+    --brand-experiment-560: var(--r98-navy);
+    --brand-260: var(--r98-navy-light);
+    --brand-360: var(--r98-navy-light);
+    --brand-500: var(--r98-select);
+    --blurple-50: var(--r98-navy-light);
+    --green-360: var(--r98-green);
+    --red-400: var(--r98-red);
+    --red-500: var(--r98-red-dark);
+    --yellow-300: var(--r98-gold);
+    --primary-400: var(--r98-text-4);
+
+    /* ---- square everything ---- */
     --radius-xs: 0px;
     --radius-sm: 0px;
     --radius-md: 0px;
     --radius-lg: 0px;
+    --radius-xl: 0px;
+}
+
+/* user profiles with custom nitro themes keep their own colors */
+.custom-user-profile-theme {
+    --white: var(--r98-text-1);
+}
+
+/* ---- src/10-layout.css ---- */
+/* ==========================================================================
+   Relay98 — 10-layout.css
+   Panel chrome. Each main panel gets a neon `ridge` border in one of the
+   danlegt.com panel colors, the server rail gets a starfield, and headers
+   become win98 titlebars.
+
+   Class names are Discord's current hashed names (same approach as
+   midnight/system24). If Discord renames one after an update, only that
+   single rule stops applying — nothing else breaks.
+   ========================================================================== */
+
+/* ---------- global ---------- */
+body {
+    font-family: var(--r98-font);
+    -webkit-font-smoothing: none;
+    image-rendering: pixelated;
+}
+
+/* square corners, the win98 way (svg avatar masks are unaffected) */
+*,
+*::before,
+*::after {
+    border-radius: 0 !important;
+}
+
+::selection {
+    background: var(--r98-select);
+    color: var(--r98-text-1);
+}
+
+/* black starfield, like the danlegt.com background */
+:root {
+    --r98-stars:
+        radial-gradient(1px 1px at 12px 18px, #ffffff, transparent),
+        radial-gradient(1px 1px at 52px 44px, #c0c0c0, transparent),
+        radial-gradient(1px 1px at 30px 90px, #ffffff, transparent),
+        radial-gradient(1px 1px at 64px 128px, #a6a6a6, transparent),
+        radial-gradient(2px 2px at 20px 150px, #ffffff, transparent),
+        radial-gradient(1px 1px at 44px 186px, #18f5db, transparent),
+        radial-gradient(1px 1px at 8px 220px, #c0c0c0, transparent),
+        radial-gradient(1px 1px at 58px 236px, #ffbc31, transparent);
+}
+
+.bg__960e4 /* app background */ {
+    background: var(--r98-bg-0) var(--r98-stars);
+    background-size: 72px 240px;
+}
+
+/* ---------- neon ridge panels ---------- */
+.guilds__5e434 /* server list */,
+.sidebarList__5e434 /* channel + dm list */,
+.panels__5e434 /* user panel */,
+.chat_f75fb0 /* chat */,
+.page__5e434 > .container__133bf /* friends page */,
+.container_c8ffbb /* member list */,
+.nowPlayingColumn__133bf /* active now */,
+.content_f75fb0 > aside > .outer_c0bea0 /* dm profile panel */ {
+    box-sizing: border-box;
+    border: var(--r98-ridge) ridge var(--r98-panel, var(--r98-bevel-light)) !important;
+}
+
+.guilds__5e434 {
+    --r98-panel: var(--r98-orange);
+    background: var(--r98-bg-0) var(--r98-stars) !important;
+    background-size: 72px 240px !important;
+}
+.sidebarList__5e434 {
+    --r98-panel: var(--r98-green);
+    background: var(--r98-bg-1);
+}
+.panels__5e434 {
+    --r98-panel: var(--r98-gold);
+    background: var(--r98-bg-2) !important;
+}
+.chat_f75fb0,
+.page__5e434 > .container__133bf {
+    --r98-panel: var(--r98-blue);
+}
+.container_c8ffbb,
+.nowPlayingColumn__133bf,
+.content_f75fb0 > aside > .outer_c0bea0 {
+    --r98-panel: var(--r98-pink);
+}
+
+/* ---------- win98 titlebars ---------- */
+/* top window bar ("Friends", "Direct Messages", back/forward, inbox) */
+.bar_c38106 {
+    background: var(--r98-titlebar) !important;
+}
+.bar_c38106 .title_c38106,
+.bar_c38106 .title_c38106 * {
+    color: var(--r98-text-1) !important;
+    font-weight: 700;
+}
+.bar_c38106 svg {
+    color: var(--r98-text-1);
+}
+
+/* chat / friends / message-requests headers */
+.subtitleContainer_f75fb0 > section,
+.container__133bf > .container__9293f,
+.container_f391e3 > .container__9293f,
+.container__01ae2 > .container__9293f {
+    background: var(--r98-titlebar) !important;
+    border-bottom: 2px solid var(--r98-bevel-dark) !important;
+    box-shadow: none !important;
+}
+.subtitleContainer_f75fb0 > section *,
+.container__9293f :is(h1, h2, h3, [class*="title"]) {
+    color: var(--r98-text-1);
+}
+.subtitleContainer_f75fb0 > section svg,
+.container__9293f svg {
+    color: var(--r98-text-1) !important;
+}
+
+/* ---------- selected list items: classic win98 navy selection ---------- */
+.side_aa8da2 .item_aa8da2.selected_aa8da2 /* settings tabs */,
+.interactive__972a0.interactiveSelected__972a0 /* dm list */ {
+    background-color: var(--r98-select) !important;
+    color: var(--r98-text-1) !important;
+}
+.interactive__972a0.interactiveSelected__972a0 * {
+    color: var(--r98-text-1) !important;
+}
+.side_aa8da2 .item_aa8da2:hover:not(.selected_aa8da2) {
+    background-color: var(--r98-hover) !important;
+}
+
+/* ---------- messages ---------- */
+.mentioned__5126c::before /* mention left edge */ {
+    background: var(--r98-gold) !important;
+}
+.newMessagesBar__0f481 /* "new messages" bar */ {
+    background: var(--r98-titlebar) !important;
+}
+
+/* ---------- floating windows: menus, popouts, modals ---------- */
+[class^="menu_"],
+[class*=" menu_"],
+.container__8a031 /* popout modals */ {
+    background: var(--r98-bg-2) !important;
+    box-shadow: var(--r98-raised), 3px 3px 0 rgba(0, 0, 0, 0.6) !important;
+    border: none !important;
+}
+[class^="menu_"] [class*="focused_"],
+[class*=" menu_"] [class*="focused_"] {
+    background: var(--r98-select) !important;
+    color: var(--r98-text-1) !important;
+}
+
+/* win98 tooltips: pale yellow with black text */
+[class^="tooltip_"][class*="tooltipPrimary_"],
+[class*=" tooltip_"][class*="tooltipPrimary_"] {
+    background: #ffffe1 !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6) !important;
+}
+[class*="tooltipPrimary_"] * {
+    color: #000000 !important;
+}
+[class*="tooltipPrimary_"] [class*="tooltipPointer"] {
+    display: none;
+}
+
+/* ---- src/20-components.css ---- */
+/* ==========================================================================
+   Relay98 — 20-components.css
+   Win98 bevels for real buttons + text fields, and dithered scrollbars.
+   Bevels are done with inset box-shadows (like 98.css does) so they never
+   change element sizes / layout. Colors come from the control-* tokens in
+   00-variables.css — this file only adds the 3D edges.
+   ========================================================================== */
+
+/* ---------- push buttons ---------- */
+/* only Discord's actual text buttons, NOT every icon/role=button */
+button:is([class*="lookFilled"], [class*="colorBrand"], [class*="colorPrimary"], [class*="colorGreen"], [class*="colorRed"]),
+button[class*="button_"]:is([class*="primary_"], [class*="secondary_"], [class*="critical"], [class*="active_"]) {
+    box-shadow: var(--r98-raised) !important;
+    border: none !important;
+    font-family: var(--r98-font);
+}
+button:is([class*="lookFilled"], [class*="colorBrand"], [class*="colorPrimary"], [class*="colorGreen"], [class*="colorRed"]):active,
+button[class*="button_"]:is([class*="primary_"], [class*="secondary_"], [class*="critical"], [class*="active_"]):active {
+    box-shadow: var(--r98-sunken) !important;
+}
+
+/* ---------- text fields: sunken black wells ---------- */
+input[type='text'],
+input[type='search'],
+input[type='email'],
+input[type='password'],
+input[type='number'],
+textarea,
+.channelTextArea_f75fb0 /* chat bar */,
+[class^="searchBar_"],
+[class*=" searchBar_"] {
+    background-color: var(--r98-bg-0) !important;
+    color: var(--r98-text-1) !important;
+    box-shadow: var(--r98-sunken) !important;
+    border: none !important;
+}
+
+/* inputs nested inside an already-sunken wrapper shouldn't double-bevel */
+.channelTextArea_f75fb0 :is(input, textarea),
+:is([class^="searchBar_"], [class*=" searchBar_"]) input {
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+::placeholder {
+    color: var(--r98-text-5) !important;
+}
+
+/* ---------- code blocks: DOS terminal ---------- */
+code,
+pre code {
+    font-family: var(--r98-font-code) !important;
+    background: var(--r98-bg-0) !important;
+    border: 1px solid var(--r98-border) !important;
+}
+
+/* ---------- scrollbars ---------- */
+/* Chromium ignores ::-webkit-scrollbar once scrollbar-color/width is set.
+   Discord's "thin" scrollers set those, so give them flat colors... */
+[class^="thin_"],
+[class*=" thin_"],
+[class^="none_"],
+[class*=" none_"] {
+    scrollbar-color: var(--r98-bg-4) transparent !important;
+}
+
+/* ...and turn the big "auto" scrollers (chat etc.) back into real w98 bars */
+[class^="auto_"],
+[class*=" auto_"] {
+    scrollbar-color: auto !important;
+    scrollbar-width: auto !important;
+}
+
+::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+}
+/* classic 50% dither track */
+::-webkit-scrollbar-track {
+    background: repeating-conic-gradient(var(--r98-bg-3) 0% 25%, var(--r98-bg-0) 0% 50%) 0 0 / 2px 2px !important;
+    border: none !important;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--r98-bg-3) !important;
+    box-shadow: var(--r98-raised);
+    border: none !important;
+    min-height: 24px;
+}
+::-webkit-scrollbar-thumb:active {
+    background: var(--r98-bg-4) !important;
+}
+::-webkit-scrollbar-corner {
+    background: var(--r98-bg-3) !important;
 }

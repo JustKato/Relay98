@@ -17,7 +17,7 @@ const pkg = require(path.join(root, 'package.json'));
 
 const header = `/**
  * @name Relay98
- * @description A Windows 98 / Steam 2004 / CS 1.6 / neocities inspired theme for Discord.
+ * @description A dark Windows 98 / neocities inspired theme for Discord.
  * @author ${pkg.author}
  * @version ${pkg.version}
  * @source https://github.com/${pkg.author}/Relay98
@@ -31,12 +31,26 @@ function build() {
         .filter((file) => file.endsWith('.css'))
         .sort((a, b) => a.localeCompare(b));
 
+    // @import is only valid at the very top of a stylesheet, so pull every
+    // @import out of the source files and hoist them above everything else.
+    const imports = [];
+    // line-based on purpose: google fonts urls contain ';' (wght@400;700)
+    const importRe = /^[ \t]*@import\b.*;[ \t]*$/gm;
+
     const body = files
-        .map((file) => `/* ---- src/${file} ---- */\n${fs.readFileSync(path.join(srcDir, file), 'utf8').trim()}\n`)
+        .map((file) => {
+            const css = fs.readFileSync(path.join(srcDir, file), 'utf8').replace(importRe, (match) => {
+                imports.push(match.trim());
+                return '';
+            });
+            return `/* ---- src/${file} ---- */\n${css.trim()}\n`;
+        })
         .join('\n');
 
+    const importBlock = imports.length ? `${[...new Set(imports)].join('\n')}\n\n` : '';
+
     fs.mkdirSync(buildDir, { recursive: true });
-    fs.writeFileSync(buildFile, header + body);
+    fs.writeFileSync(buildFile, header + importBlock + body);
 
     console.log(`Built build/relay98.theme.css from ${files.length} source file(s).`);
 }

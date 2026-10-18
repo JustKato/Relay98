@@ -1,0 +1,94 @@
+/* ==========================================================================
+   Relay98 — 20-components.css
+   Win98 bevels for real buttons + text fields, and dithered scrollbars.
+   Bevels are done with inset box-shadows (like 98.css does) so they never
+   change element sizes / layout. Colors come from the control-* tokens in
+   00-variables.css — this file only adds the 3D edges.
+   ========================================================================== */
+
+/* ---------- push buttons ---------- */
+/* only Discord's actual text buttons, NOT every icon/role=button */
+button:is([class*="lookFilled"], [class*="colorBrand"], [class*="colorPrimary"], [class*="colorGreen"], [class*="colorRed"]),
+button[class*="button_"]:is([class*="primary_"], [class*="secondary_"], [class*="critical"], [class*="active_"]) {
+    box-shadow: var(--r98-raised) !important;
+    border: none !important;
+    font-family: var(--r98-font);
+}
+button:is([class*="lookFilled"], [class*="colorBrand"], [class*="colorPrimary"], [class*="colorGreen"], [class*="colorRed"]):active,
+button[class*="button_"]:is([class*="primary_"], [class*="secondary_"], [class*="critical"], [class*="active_"]):active {
+    box-shadow: var(--r98-sunken) !important;
+}
+
+/* ---------- text fields: sunken black wells ---------- */
+input[type='text'],
+input[type='search'],
+input[type='email'],
+input[type='password'],
+input[type='number'],
+textarea,
+.channelTextArea_f75fb0 /* chat bar */,
+[class^="searchBar_"],
+[class*=" searchBar_"] {
+    background-color: var(--r98-bg-0) !important;
+    color: var(--r98-text-1) !important;
+    box-shadow: var(--r98-sunken) !important;
+    border: none !important;
+}
+
+/* inputs nested inside an already-sunken wrapper shouldn't double-bevel */
+.channelTextArea_f75fb0 :is(input, textarea),
+:is([class^="searchBar_"], [class*=" searchBar_"]) input {
+    box-shadow: none !important;
+    background: transparent !important;
+}
+
+::placeholder {
+    color: var(--r98-text-5) !important;
+}
+
+/* ---------- code blocks: DOS terminal ---------- */
+code,
+pre code {
+    font-family: var(--r98-font-code) !important;
+    background: var(--r98-bg-0) !important;
+    border: 1px solid var(--r98-border) !important;
+}
+
+/* ---------- scrollbars ---------- */
+/* Chromium ignores ::-webkit-scrollbar once scrollbar-color/width is set.
+   Discord's "thin" scrollers set those, so give them flat colors... */
+[class^="thin_"],
+[class*=" thin_"],
+[class^="none_"],
+[class*=" none_"] {
+    scrollbar-color: var(--r98-bg-4) transparent !important;
+}
+
+/* ...and turn the big "auto" scrollers (chat etc.) back into real w98 bars */
+[class^="auto_"],
+[class*=" auto_"] {
+    scrollbar-color: auto !important;
+    scrollbar-width: auto !important;
+}
+
+::-webkit-scrollbar {
+    width: 16px;
+    height: 16px;
+}
+/* classic 50% dither track */
+::-webkit-scrollbar-track {
+    background: repeating-conic-gradient(var(--r98-bg-3) 0% 25%, var(--r98-bg-0) 0% 50%) 0 0 / 2px 2px !important;
+    border: none !important;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--r98-bg-3) !important;
+    box-shadow: var(--r98-raised);
+    border: none !important;
+    min-height: 24px;
+}
+::-webkit-scrollbar-thumb:active {
+    background: var(--r98-bg-4) !important;
+}
+::-webkit-scrollbar-corner {
+    background: var(--r98-bg-3) !important;
+}

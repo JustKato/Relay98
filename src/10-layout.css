@@ -1,0 +1,165 @@
+/* ==========================================================================
+   Relay98 — 10-layout.css
+   Panel chrome. Each main panel gets a neon `ridge` border in one of the
+   danlegt.com panel colors, the server rail gets a starfield, and headers
+   become win98 titlebars.
+
+   Class names are Discord's current hashed names (same approach as
+   midnight/system24). If Discord renames one after an update, only that
+   single rule stops applying — nothing else breaks.
+   ========================================================================== */
+
+/* ---------- global ---------- */
+body {
+    font-family: var(--r98-font);
+    -webkit-font-smoothing: none;
+    image-rendering: pixelated;
+}
+
+/* square corners, the win98 way (svg avatar masks are unaffected) */
+*,
+*::before,
+*::after {
+    border-radius: 0 !important;
+}
+
+::selection {
+    background: var(--r98-select);
+    color: var(--r98-text-1);
+}
+
+/* black starfield, like the danlegt.com background */
+:root {
+    --r98-stars:
+        radial-gradient(1px 1px at 12px 18px, #ffffff, transparent),
+        radial-gradient(1px 1px at 52px 44px, #c0c0c0, transparent),
+        radial-gradient(1px 1px at 30px 90px, #ffffff, transparent),
+        radial-gradient(1px 1px at 64px 128px, #a6a6a6, transparent),
+        radial-gradient(2px 2px at 20px 150px, #ffffff, transparent),
+        radial-gradient(1px 1px at 44px 186px, #18f5db, transparent),
+        radial-gradient(1px 1px at 8px 220px, #c0c0c0, transparent),
+        radial-gradient(1px 1px at 58px 236px, #ffbc31, transparent);
+}
+
+.bg__960e4 /* app background */ {
+    background: var(--r98-bg-0) var(--r98-stars);
+    background-size: 72px 240px;
+}
+
+/* ---------- neon ridge panels ---------- */
+.guilds__5e434 /* server list */,
+.sidebarList__5e434 /* channel + dm list */,
+.panels__5e434 /* user panel */,
+.chat_f75fb0 /* chat */,
+.page__5e434 > .container__133bf /* friends page */,
+.container_c8ffbb /* member list */,
+.nowPlayingColumn__133bf /* active now */,
+.content_f75fb0 > aside > .outer_c0bea0 /* dm profile panel */ {
+    box-sizing: border-box;
+    border: var(--r98-ridge) ridge var(--r98-panel, var(--r98-bevel-light)) !important;
+}
+
+.guilds__5e434 {
+    --r98-panel: var(--r98-orange);
+    background: var(--r98-bg-0) var(--r98-stars) !important;
+    background-size: 72px 240px !important;
+}
+.sidebarList__5e434 {
+    --r98-panel: var(--r98-green);
+    background: var(--r98-bg-1);
+}
+.panels__5e434 {
+    --r98-panel: var(--r98-gold);
+    background: var(--r98-bg-2) !important;
+}
+.chat_f75fb0,
+.page__5e434 > .container__133bf {
+    --r98-panel: var(--r98-blue);
+}
+.container_c8ffbb,
+.nowPlayingColumn__133bf,
+.content_f75fb0 > aside > .outer_c0bea0 {
+    --r98-panel: var(--r98-pink);
+}
+
+/* ---------- win98 titlebars ---------- */
+/* top window bar ("Friends", "Direct Messages", back/forward, inbox) */
+.bar_c38106 {
+    background: var(--r98-titlebar) !important;
+}
+.bar_c38106 .title_c38106,
+.bar_c38106 .title_c38106 * {
+    color: var(--r98-text-1) !important;
+    font-weight: 700;
+}
+.bar_c38106 svg {
+    color: var(--r98-text-1);
+}
+
+/* chat / friends / message-requests headers */
+.subtitleContainer_f75fb0 > section,
+.container__133bf > .container__9293f,
+.container_f391e3 > .container__9293f,
+.container__01ae2 > .container__9293f {
+    background: var(--r98-titlebar) !important;
+    border-bottom: 2px solid var(--r98-bevel-dark) !important;
+    box-shadow: none !important;
+}
+.subtitleContainer_f75fb0 > section *,
+.container__9293f :is(h1, h2, h3, [class*="title"]) {
+    color: var(--r98-text-1);
+}
+.subtitleContainer_f75fb0 > section svg,
+.container__9293f svg {
+    color: var(--r98-text-1) !important;
+}
+
+/* ---------- selected list items: classic win98 navy selection ---------- */
+.side_aa8da2 .item_aa8da2.selected_aa8da2 /* settings tabs */,
+.interactive__972a0.interactiveSelected__972a0 /* dm list */ {
+    background-color: var(--r98-select) !important;
+    color: var(--r98-text-1) !important;
+}
+.interactive__972a0.interactiveSelected__972a0 * {
+    color: var(--r98-text-1) !important;
+}
+.side_aa8da2 .item_aa8da2:hover:not(.selected_aa8da2) {
+    background-color: var(--r98-hover) !important;
+}
+
+/* ---------- messages ---------- */
+.mentioned__5126c::before /* mention left edge */ {
+    background: var(--r98-gold) !important;
+}
+.newMessagesBar__0f481 /* "new messages" bar */ {
+    background: var(--r98-titlebar) !important;
+}
+
+/* ---------- floating windows: menus, popouts, modals ---------- */
+[class^="menu_"],
+[class*=" menu_"],
+.container__8a031 /* popout modals */ {
+    background: var(--r98-bg-2) !important;
+    box-shadow: var(--r98-raised), 3px 3px 0 rgba(0, 0, 0, 0.6) !important;
+    border: none !important;
+}
+[class^="menu_"] [class*="focused_"],
+[class*=" menu_"] [class*="focused_"] {
+    background: var(--r98-select) !important;
+    color: var(--r98-text-1) !important;
+}
+
+/* win98 tooltips: pale yellow with black text */
+[class^="tooltip_"][class*="tooltipPrimary_"],
+[class*=" tooltip_"][class*="tooltipPrimary_"] {
+    background: #ffffe1 !important;
+    color: #000000 !important;
+    border: 1px solid #000000 !important;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6) !important;
+}
+[class*="tooltipPrimary_"] * {
+    color: #000000 !important;
+}
+[class*="tooltipPrimary_"] [class*="tooltipPointer"] {
+    display: none;
+}

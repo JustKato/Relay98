@@ -1,8 +1,8 @@
 # Relay98
 
-A basic Windows 98 / Steam 2004 / CS 1.6 / neocities inspired theme for Discord, built for **Vesktop** and **BetterDiscord**.
+A dark Windows 98 / neocities inspired theme for Discord, built for **Vesktop** and **BetterDiscord**. Palette and vibe taken from [danlegt.com](https://danlegt.com).
 
-Square corners, beveled "outset"/"inset" panels, a navy win98 titlebar gradient, a chunky classic scrollbar, and a CS1.6-mustard accent color in place of Discord's blurple.
+Black starfield, near-black panels framed by neon `ridge` borders, win98 navy titlebars (`#000078 → #0f80cd`), beveled buttons, sunken black text fields, navy selection highlights, yellow win98 tooltips, dithered scrollbars and pixel fonts.
 
 Structurally inspired by [system24](https://github.com/refact0r/system24) (split `/src` files combined by a build script into one theme file), kept intentionally small: no flavors, no config toggles, no tests.
 
@@ -27,14 +27,19 @@ npm run dev     # rebuilds automatically when files in src/ change
 
 ```
 src/
-  variables.css   fonts + color palette, mapped onto Discord's CSS variables
-  layout.css      square corners, panel bevels (guild list, chat, members, popouts)
-  components.css  buttons, inputs, scrollbar
-  titlebar.css    win98-style titlebar gradient for the channel header
-scripts/build.js  concatenates src/*.css into build/relay98.theme.css
+  00-variables.css   palette + fonts, mapped onto every Discord color token
+  10-layout.css      neon ridge panels, starfield, titlebars, selection, menus, tooltips
+  20-components.css  beveled buttons, sunken inputs, code blocks, scrollbars
+scripts/build.js     concatenates src/*.css (in filename order) into build/relay98.theme.css
 build/relay98.theme.css  the actual file you install
 ```
 
+To recolor, edit the `--r98-*` variables at the top of `src/00-variables.css`.
+
+## Fonts
+
+Vesktop blocks external resources unless they come from GitHub, GitLab, Codeberg, Imgur, Discord or Google Fonts. The theme uses `PixeloidSans` / `PixelOperatorMono` if they're installed locally, otherwise it falls back to Google Fonts' `Pixelify Sans` / `VT323`.
+
 ## Notes
 
-Discord's internal component classnames are hashed and change on every release. This theme avoids hard-coding exact hashes (which would break on the next Discord update) by targeting the stable, human-readable prefixes of those classnames with `[class*="..."]` selectors, plus Discord's own long-lived CSS custom properties (`--background-primary`, `--text-normal`, etc.) wherever possible. That keeps things simple and reasonably durable, at the cost of not covering every single screen pixel-perfectly — PRs welcome if something looks off after a Discord update.
+Like system24/midnight, layout rules target Discord's current hashed class names (e.g. `.guilds__5e434`). If Discord renames one in an update, only that rule stops applying; the colors keep working because they come from Discord's CSS variables.
