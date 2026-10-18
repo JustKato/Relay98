@@ -1,6 +1,6 @@
 /**
  * @name Relay98
- * @description A dark Windows 98 / neocities inspired theme for Discord.
+ * @description A retro-inspired, modern dark theme with pixel fonts.
  * @author danlegt
  * @version 0.1.0
  * @source https://github.com/danlegt/Relay98
@@ -12,8 +12,10 @@
 /* ==========================================================================
    Relay98 — 00-variables.css
    Palette + fonts, mapped onto ALL of Discord's color tokens (old + new).
-   Palette is lifted from danlegt.com: black starfield, near-black panels,
-   neon ridge colors, and the win98 navy titlebar gradient.
+
+   Direction: retro-inspired but modern. Pixel font, cool slate grays that
+   sit well next to the navy -> blue title bars, soft bevels, and a faint
+   dither/scanline texture instead of flat AMOLED black.
    ========================================================================== */
 
 /* Vesktop only allows fonts from Google Fonts / GitHub / GitLab / Codeberg.
@@ -27,50 +29,60 @@
     --r98-font: 'PixeloidSans', 'Pixelify Sans', 'Tahoma', sans-serif;
     --r98-font-code: 'PixelOperatorMono', 'VT323', 'Courier New', monospace;
 
-    /* ---------- surfaces (darkest -> lightest) ---------- */
-    --r98-bg-0: #000000; /* app frame, server rail, starfield */
-    --r98-bg-1: #08080c; /* main panels (chat, channel list, members) */
-    --r98-bg-2: #111118; /* raised surfaces: cards, popouts, modals */
-    --r98-bg-3: #1c1c26; /* button face */
-    --r98-bg-4: #2a2a38; /* button face hovered */
+    /* ---------- slate surfaces (darkest -> lightest) ----------
+       slightly blue-tinted grays (hue ~225) so they harmonize with the
+       blue title bars instead of fighting them */
+    --r98-bg-0: #1a1b20; /* wells: inputs, chat bar, code, server rail */
+    --r98-bg-1: #212329; /* side panels: channel list, members */
+    --r98-bg-2: #282a31; /* chat */
+    --r98-bg-3: #31333b; /* raised: cards, popouts, buttons */
+    --r98-bg-4: #3b3e47; /* raised + hovered */
 
-    /* ---------- win98 bevel tones (dark edition) ---------- */
-    --r98-bevel-light: #8a8a9c; /* outer top-left */
-    --r98-bevel-mid: #45455a; /* inner top-left */
-    --r98-bevel-dim: #0c0c10; /* inner bottom-right */
-    --r98-bevel-dark: #000000; /* outer bottom-right */
+    /* ---------- soft bevel tones ---------- */
+    --r98-bevel-light: #555967; /* outer top-left */
+    --r98-bevel-mid: #42454f; /* inner top-left */
+    --r98-bevel-dim: #1f2126; /* inner bottom-right */
+    --r98-bevel-dark: #121317; /* outer bottom-right */
+    --r98-line: #17181c; /* 1px panel separators */
 
     /* ---------- text ---------- */
-    --r98-text-1: #ffffff; /* headings, names, strong */
-    --r98-text-2: #e6e6e6; /* message text */
-    --r98-text-3: #c0c0c0; /* classic w98 gray, secondary text */
-    --r98-text-4: #a6a6a6; /* channels, icons */
-    --r98-text-5: #6e6e80; /* muted, timestamps, placeholders */
+    --r98-text-1: #f2f3f5; /* headings, names, strong */
+    --r98-text-2: #dcdde2; /* message text */
+    --r98-text-3: #b5b8c2; /* secondary text */
+    --r98-text-4: #959aa6; /* channels, icons */
+    --r98-text-5: #6d717d; /* muted, timestamps, placeholders */
 
-    /* ---------- danlegt.com neon panel colors ---------- */
-    --r98-orange: #ff7700;
-    --r98-green: #15b800;
-    --r98-blue: #007eb8;
-    --r98-red: #ff2e2e; /* brightened site red (#a00000) for readability on black */
-    --r98-red-dark: #a00000;
-    --r98-pink: #ff3ee7;
-    --r98-cyan: #18f5db;
-    --r98-gold: #ffbc31;
-
-    /* ---------- win98 blues ---------- */
+    /* ---------- title bar blues (the bit that stays retro) ---------- */
     --r98-navy: #000078;
-    --r98-navy-light: #0f80cd;
-    --r98-select: #000099; /* win98 selection highlight */
-    --r98-select-hover: #0000c0;
+    --r98-sky: #0f80cd;
     --r98-titlebar: linear-gradient(to right, #000078, 80%, #0f80cd);
 
-    /* ---------- semantic ---------- */
-    --r98-link: var(--r98-cyan);
-    --r98-mention: var(--r98-gold);
-    --r98-hover: rgba(15, 128, 205, 0.16);
-    --r98-active: rgba(15, 128, 205, 0.28);
-    --r98-border: #2c2c3a;
-    --r98-ridge: 4px; /* thickness of neon panel ridges */
+    /* ---------- accents ---------- */
+    --r98-blue: #1d5fc4; /* primary buttons, between the two bar blues */
+    --r98-blue-hover: #2a6fd6;
+    --r98-blue-active: #174fa6;
+    --r98-select: #22408a; /* selected channel / dm / menu item */
+    --r98-link: #5aaaf5;
+    --r98-amber: #f0b443; /* mentions, idle — retro CRT amber */
+    --r98-green: #5cbf4f;
+    --r98-red: #e5534b;
+    --r98-red-dark: #b8322b;
+    --r98-purple: #a07ef0;
+
+    /* ---------- states ---------- */
+    --r98-hover: rgba(255, 255, 255, 0.045);
+    --r98-active: rgba(255, 255, 255, 0.08);
+    --r98-border: #393c46;
+
+    /* ---------- texture ----------
+       faint 2px pixel dither + 3px scanlines. pure css, no external assets */
+    --r98-texture:
+        repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 3px),
+        repeating-conic-gradient(rgba(0, 0, 0, 0.07) 0% 25%, transparent 0% 50%);
+    --r98-texture-size: auto, 2px 2px;
+
+    /* hard pixel drop shadow for floating things */
+    --r98-drop: 3px 3px 0 rgba(0, 0, 0, 0.35);
 
     /* bevel recipes (box-shadow so they never shift layout) */
     --r98-raised: inset -1px -1px var(--r98-bevel-dark), inset 1px 1px var(--r98-bevel-light),
@@ -91,48 +103,48 @@ body,
 
     /* ---- backgrounds ---- */
     --app-frame-background: var(--r98-bg-0);
-    --app-frame-border: var(--r98-border);
-    --background-primary: var(--r98-bg-1);
+    --app-frame-border: var(--r98-line);
+    --background-primary: var(--r98-bg-2);
     --background-secondary: var(--r98-bg-1);
-    --background-secondary-alt: var(--r98-bg-2);
+    --background-secondary-alt: var(--r98-bg-1);
     --background-tertiary: var(--r98-bg-0);
-    --background-floating: var(--r98-bg-2);
-    --background-accent: var(--r98-bg-3);
-    --background-base-low: var(--r98-bg-1);
+    --background-floating: var(--r98-bg-3);
+    --background-accent: var(--r98-bg-4);
+    --background-base-low: var(--r98-bg-2);
     --background-base-lower: var(--r98-bg-1);
     --background-base-lowest: var(--r98-bg-0);
-    --background-surface-high: var(--r98-bg-2);
-    --background-surface-higher: var(--r98-bg-2);
-    --background-surface-highest: var(--r98-bg-2);
-    --bg-surface-raised: var(--r98-bg-2);
-    --bg-surface-overlay-tmp: var(--r98-bg-2);
-    --home-background: var(--r98-bg-1);
-    --chat-background-default: var(--r98-bg-1);
-    --card-background-default: var(--r98-bg-2);
+    --background-surface-high: var(--r98-bg-3);
+    --background-surface-higher: var(--r98-bg-3);
+    --background-surface-highest: var(--r98-bg-4);
+    --bg-surface-raised: var(--r98-bg-3);
+    --bg-surface-overlay-tmp: var(--r98-bg-3);
+    --home-background: var(--r98-bg-2);
+    --chat-background-default: var(--r98-bg-2);
+    --card-background-default: var(--r98-bg-3);
     --modal-background: var(--r98-bg-2);
     --modal-footer-background: var(--r98-bg-1);
     --background-code: var(--r98-bg-0);
-    --background-brand: var(--r98-select);
-    --background-scrim: rgba(0, 0, 0, 0.75);
-    --background-scrim-lightbox: rgba(0, 0, 0, 0.92);
+    --background-brand: var(--r98-blue);
+    --background-scrim: rgba(10, 11, 14, 0.7);
+    --background-scrim-lightbox: rgba(10, 11, 14, 0.9);
 
     --background-mod-subtle: var(--r98-hover);
     --background-mod-muted: var(--r98-hover);
     --background-mod-normal: var(--r98-bg-3);
     --background-mod-strong: var(--r98-bg-4);
-    --background-message-hover: rgba(255, 255, 255, 0.03);
+    --background-message-hover: rgba(255, 255, 255, 0.025);
     --background-modifier-hover: var(--r98-hover);
     --background-modifier-active: var(--r98-active);
     --background-modifier-selected: var(--r98-select);
     --background-modifier-accent: var(--r98-border);
 
-    --background-feedback-critical: rgba(255, 46, 46, 0.15);
-    --background-feedback-info: rgba(15, 128, 205, 0.15);
-    --background-feedback-positive: rgba(21, 184, 0, 0.15);
-    --background-feedback-warning: rgba(255, 188, 49, 0.15);
+    --background-feedback-critical: rgba(229, 83, 75, 0.14);
+    --background-feedback-info: rgba(90, 170, 245, 0.14);
+    --background-feedback-positive: rgba(92, 191, 79, 0.14);
+    --background-feedback-warning: rgba(240, 180, 67, 0.14);
     --background-feedback-notification: var(--r98-red);
-    --background-code-addition: rgba(21, 184, 0, 0.2);
-    --background-code-deletion: rgba(255, 46, 46, 0.2);
+    --background-code-addition: rgba(92, 191, 79, 0.18);
+    --background-code-deletion: rgba(229, 83, 75, 0.18);
 
     /* ---- text ---- */
     --text-normal: var(--r98-text-2);
@@ -141,7 +153,7 @@ body,
     --text-subtle: var(--r98-text-4);
     --text-muted: var(--r98-text-5);
     --text-link: var(--r98-link);
-    --text-brand: var(--r98-cyan);
+    --text-brand: var(--r98-link);
     --text-invert: var(--r98-bg-0);
     --text-overlay-light: var(--r98-text-1);
     --header-primary: var(--r98-text-1);
@@ -153,9 +165,9 @@ body,
     --textbox-markdown-syntax: var(--r98-text-4);
     --app-message-embed-secondary-text: var(--r98-text-3);
     --text-feedback-critical: var(--r98-red);
-    --text-feedback-info: var(--r98-cyan);
+    --text-feedback-info: var(--r98-link);
     --text-feedback-positive: var(--r98-green);
-    --text-feedback-warning: var(--r98-gold);
+    --text-feedback-warning: var(--r98-amber);
 
     /* ---- interactive (channels, dms, list items, icon buttons) ---- */
     --interactive-normal: var(--r98-text-4);
@@ -177,39 +189,39 @@ body,
     --icon-strong: var(--r98-text-1);
     --icon-subtle: var(--r98-text-4);
     --icon-muted: var(--r98-text-5);
-    --icon-link: var(--r98-cyan);
+    --icon-link: var(--r98-link);
     --icon-voice-muted: var(--r98-red);
     --icon-feedback-critical: var(--r98-red);
-    --icon-feedback-info: var(--r98-cyan);
+    --icon-feedback-info: var(--r98-link);
     --icon-feedback-positive: var(--r98-green);
-    --icon-feedback-warning: var(--r98-gold);
+    --icon-feedback-warning: var(--r98-amber);
 
     /* ---- borders ---- */
-    --border-subtle: var(--r98-border);
-    --border-muted: var(--r98-border);
+    --border-subtle: var(--r98-line);
+    --border-muted: var(--r98-line);
     --border-normal: var(--r98-border);
     --border-strong: var(--r98-bevel-light);
-    --border-focus: var(--r98-navy-light);
+    --border-focus: var(--r98-sky);
     --border-feedback-critical: var(--r98-red);
     --divider-color: var(--r98-red);
 
     /* ---- buttons (control-*) ---- */
-    --control-primary-background-default: var(--r98-select);
-    --control-primary-background-hover: var(--r98-select-hover);
-    --control-primary-background-active: var(--r98-navy);
+    --control-primary-background-default: var(--r98-blue);
+    --control-primary-background-hover: var(--r98-blue-hover);
+    --control-primary-background-active: var(--r98-blue-active);
     --control-primary-border-default: transparent;
     --control-primary-border-hover: transparent;
     --control-primary-border-active: transparent;
-    --control-primary-text-default: var(--r98-text-1);
-    --control-primary-text-hover: var(--r98-text-1);
-    --control-primary-text-active: var(--r98-text-1);
-    --control-primary-icon-default: var(--r98-text-1);
-    --control-primary-icon-hover: var(--r98-text-1);
-    --control-primary-icon-active: var(--r98-text-1);
+    --control-primary-text-default: #ffffff;
+    --control-primary-text-hover: #ffffff;
+    --control-primary-text-active: #ffffff;
+    --control-primary-icon-default: #ffffff;
+    --control-primary-icon-hover: #ffffff;
+    --control-primary-icon-active: #ffffff;
 
     --control-secondary-background-default: var(--r98-bg-3);
     --control-secondary-background-hover: var(--r98-bg-4);
-    --control-secondary-background-active: var(--r98-bg-2);
+    --control-secondary-background-active: var(--r98-bg-3);
     --control-secondary-border-default: transparent;
     --control-secondary-border-hover: transparent;
     --control-secondary-border-active: transparent;
@@ -221,17 +233,17 @@ body,
     --control-secondary-icon-active: var(--r98-text-1);
 
     --control-critical-primary-background-default: var(--r98-red-dark);
-    --control-critical-primary-background-hover: #c00000;
-    --control-critical-primary-background-active: #780000;
-    --control-critical-primary-text-default: var(--r98-text-1);
-    --control-critical-primary-text-hover: var(--r98-text-1);
-    --control-critical-primary-text-active: var(--r98-text-1);
-    --control-critical-primary-icon-default: var(--r98-text-1);
-    --control-critical-primary-icon-hover: var(--r98-text-1);
-    --control-critical-primary-icon-active: var(--r98-text-1);
+    --control-critical-primary-background-hover: var(--r98-red);
+    --control-critical-primary-background-active: #962620;
+    --control-critical-primary-text-default: #ffffff;
+    --control-critical-primary-text-hover: #ffffff;
+    --control-critical-primary-text-active: #ffffff;
+    --control-critical-primary-icon-default: #ffffff;
+    --control-critical-primary-icon-hover: #ffffff;
+    --control-critical-primary-icon-active: #ffffff;
     --control-critical-secondary-background-default: var(--r98-bg-3);
     --control-critical-secondary-background-hover: var(--r98-bg-4);
-    --control-critical-secondary-background-active: var(--r98-bg-2);
+    --control-critical-secondary-background-active: var(--r98-bg-3);
     --control-critical-secondary-text-default: var(--r98-red);
     --control-critical-secondary-text-hover: var(--r98-red);
     --control-critical-secondary-text-active: var(--r98-red);
@@ -239,34 +251,34 @@ body,
     --control-critical-secondary-icon-hover: var(--r98-red);
     --control-critical-secondary-icon-active: var(--r98-red);
 
-    --control-connect-background-default: var(--r98-green);
-    --control-connect-background-hover: #1ad100;
-    --control-connect-background-active: #0f8a00;
-    --control-connect-text-default: var(--r98-bg-0);
-    --control-connect-text-hover: var(--r98-bg-0);
-    --control-connect-text-active: var(--r98-bg-0);
-    --control-connect-icon-default: var(--r98-bg-0);
-    --control-connect-icon-hover: var(--r98-bg-0);
-    --control-connect-icon-active: var(--r98-bg-0);
+    --control-connect-background-default: #3f9a35;
+    --control-connect-background-hover: var(--r98-green);
+    --control-connect-background-active: #337d2b;
+    --control-connect-text-default: #ffffff;
+    --control-connect-text-hover: #ffffff;
+    --control-connect-text-active: #ffffff;
+    --control-connect-icon-default: #ffffff;
+    --control-connect-icon-hover: #ffffff;
+    --control-connect-icon-active: #ffffff;
 
     --control-icon-only-background-hover: var(--r98-hover);
     --control-icon-only-background-active: var(--r98-active);
     --control-icon-only-icon-default: var(--r98-text-4);
     --control-icon-only-icon-hover: var(--r98-text-1);
     --control-icon-only-icon-active: var(--r98-text-1);
-    --control-brand-foreground: var(--r98-cyan);
+    --control-brand-foreground: var(--r98-link);
 
     --redesign-button-secondary-background: var(--r98-bg-3);
-    --redesign-button-secondary-pressed-background: var(--r98-bg-2);
+    --redesign-button-secondary-pressed-background: var(--r98-bg-4);
     --redesign-button-secondary-text: var(--r98-text-1);
     --button-outline-primary-text: var(--r98-text-1);
 
     /* ---- inputs ---- */
     --input-background-default: var(--r98-bg-0);
-    --input-background-error-default: rgba(255, 46, 46, 0.1);
+    --input-background-error-default: rgba(229, 83, 75, 0.1);
     --input-border-default: transparent;
     --input-border-hover: transparent;
-    --input-border-active: var(--r98-navy-light);
+    --input-border-active: var(--r98-sky);
     --input-border-error-default: var(--r98-red);
     --input-text-default: var(--r98-text-1);
     --input-placeholder-text-default: var(--r98-text-5);
@@ -274,124 +286,124 @@ body,
 
     /* ---- checkbox / radio / switch / slider ---- */
     --checkbox-background-default: var(--r98-bg-0);
-    --checkbox-background-hover: var(--r98-bg-2);
-    --checkbox-background-selected-default: var(--r98-select);
-    --checkbox-background-selected-hover: var(--r98-select-hover);
+    --checkbox-background-hover: var(--r98-bg-1);
+    --checkbox-background-selected-default: var(--r98-blue);
+    --checkbox-background-selected-hover: var(--r98-blue-hover);
     --checkbox-border-default: var(--r98-bevel-light);
-    --checkbox-border-hover: var(--r98-text-1);
-    --checkbox-border-selected-default: var(--r98-bevel-light);
-    --checkbox-border-selected-hover: var(--r98-text-1);
-    --checkbox-icon-active: var(--r98-text-1);
+    --checkbox-border-hover: var(--r98-text-4);
+    --checkbox-border-selected-default: var(--r98-blue);
+    --checkbox-border-selected-hover: var(--r98-blue-hover);
+    --checkbox-icon-active: #ffffff;
     --radio-background-default: var(--r98-bg-0);
-    --radio-background-hover: var(--r98-bg-2);
-    --radio-background-selected-default: var(--r98-select);
-    --radio-background-selected-hover: var(--r98-select-hover);
+    --radio-background-hover: var(--r98-bg-1);
+    --radio-background-selected-default: var(--r98-blue);
+    --radio-background-selected-hover: var(--r98-blue-hover);
     --radio-border-default: var(--r98-bevel-light);
-    --radio-border-hover: var(--r98-text-1);
-    --radio-border-selected-default: var(--r98-bevel-light);
-    --radio-border-selected-hover: var(--r98-text-1);
-    --radio-thumb-background-active: var(--r98-text-1);
-    --switch-background-default: var(--r98-bg-3);
-    --switch-background-hover: var(--r98-bg-4);
-    --switch-background-selected-default: var(--r98-green);
-    --switch-background-selected-hover: var(--r98-green);
-    --switch-border-default: var(--r98-bevel-light);
-    --switch-border-hover: var(--r98-text-1);
-    --switch-border-selected-default: var(--r98-bevel-light);
-    --switch-border-selected-hover: var(--r98-text-1);
+    --radio-border-hover: var(--r98-text-4);
+    --radio-border-selected-default: var(--r98-blue);
+    --radio-border-selected-hover: var(--r98-blue-hover);
+    --radio-thumb-background-active: #ffffff;
+    --switch-background-default: var(--r98-bg-4);
+    --switch-background-hover: var(--r98-bevel-light);
+    --switch-background-selected-default: var(--r98-blue);
+    --switch-background-selected-hover: var(--r98-blue-hover);
+    --switch-border-default: transparent;
+    --switch-border-hover: transparent;
+    --switch-border-selected-default: transparent;
+    --switch-border-selected-hover: transparent;
     --switch-thumb-background-default: var(--r98-text-3);
-    --switch-thumb-background-selected-default: var(--r98-text-1);
-    --slider-track-background: var(--r98-bg-3);
-    --progressbar-track-background: var(--r98-bg-3);
-    --progressbar-indicator-background: var(--r98-navy-light);
+    --switch-thumb-background-selected-default: #ffffff;
+    --slider-track-background: var(--r98-bg-4);
+    --progressbar-track-background: var(--r98-bg-0);
+    --progressbar-indicator-background: var(--r98-sky);
 
     /* ---- messages / mentions / reactions ---- */
-    --message-background-hover: rgba(255, 255, 255, 0.03);
-    --message-mentioned-background-default: rgba(255, 188, 49, 0.1);
-    --message-mentioned-background-hover: rgba(255, 188, 49, 0.15);
-    --message-highlight-background-default: rgba(24, 245, 219, 0.07);
-    --message-highlight-background-hover: rgba(24, 245, 219, 0.11);
-    --message-reacted-background-default: rgba(15, 128, 205, 0.25);
+    --message-background-hover: rgba(255, 255, 255, 0.025);
+    --message-mentioned-background-default: rgba(240, 180, 67, 0.08);
+    --message-mentioned-background-hover: rgba(240, 180, 67, 0.12);
+    --message-highlight-background-default: rgba(90, 170, 245, 0.07);
+    --message-highlight-background-hover: rgba(90, 170, 245, 0.1);
+    --message-reacted-background-default: rgba(29, 95, 196, 0.25);
     --message-reacted-text-default: var(--r98-text-1);
-    --mention-background: rgba(255, 188, 49, 0.18);
-    --mention-foreground: var(--r98-gold);
-    --reaction-background-default: var(--r98-bg-2);
-    --reaction-background-hover: var(--r98-bg-3);
-    --reaction-background-active: var(--r98-bg-3);
-    --reaction-background-reacted-default: rgba(15, 128, 205, 0.25);
-    --reaction-background-reacted-hover: rgba(15, 128, 205, 0.35);
-    --reaction-border-default: var(--r98-border);
+    --mention-background: rgba(240, 180, 67, 0.16);
+    --mention-foreground: var(--r98-amber);
+    --reaction-background-default: var(--r98-bg-3);
+    --reaction-background-hover: var(--r98-bg-4);
+    --reaction-background-active: var(--r98-bg-4);
+    --reaction-background-reacted-default: rgba(29, 95, 196, 0.28);
+    --reaction-background-reacted-hover: rgba(29, 95, 196, 0.38);
+    --reaction-border-default: transparent;
     --reaction-border-hover: var(--r98-bevel-light);
     --reaction-border-active: var(--r98-bevel-light);
-    --reaction-border-reacted-default: var(--r98-navy-light);
+    --reaction-border-reacted-default: var(--r98-blue);
     --reaction-text-default: var(--r98-text-3);
     --reaction-text-hover: var(--r98-text-1);
     --reaction-text-active: var(--r98-text-1);
     --reaction-text-reacted-default: var(--r98-text-1);
-    --polls-voted-fill: rgba(15, 128, 205, 0.2);
-    --polls-victor-fill: rgba(21, 184, 0, 0.2);
+    --polls-voted-fill: rgba(29, 95, 196, 0.22);
+    --polls-victor-fill: rgba(92, 191, 79, 0.2);
     --spine-default: var(--r98-text-5);
 
     /* ---- badges / notices ---- */
-    --badge-background-default: var(--r98-select);
-    --badge-text-default: var(--r98-text-1);
+    --badge-background-default: var(--r98-blue);
+    --badge-text-default: #ffffff;
     --badge-notification-background: var(--r98-red);
-    --badge-expressive-background-default: var(--r98-pink);
-    --badge-expressive-text-default: var(--r98-bg-0);
-    --notice-background-info: var(--r98-navy);
-    --notice-background-positive: var(--r98-green);
-    --notice-background-warning: var(--r98-gold);
+    --badge-expressive-background-default: var(--r98-blue);
+    --badge-expressive-text-default: #ffffff;
+    --notice-background-info: var(--r98-blue);
+    --notice-background-positive: #3f9a35;
+    --notice-background-warning: var(--r98-amber);
     --notice-background-critical: var(--r98-red-dark);
-    --notice-text-info: var(--r98-text-1);
-    --notice-text-positive: var(--r98-bg-0);
+    --notice-text-info: #ffffff;
+    --notice-text-positive: #ffffff;
     --notice-text-warning: var(--r98-bg-0);
-    --notice-text-critical: var(--r98-text-1);
+    --notice-text-critical: #ffffff;
 
     /* ---- status ---- */
     --status-online: var(--r98-green);
     --status-positive: var(--r98-green);
     --status-positive-background: var(--r98-green);
     --status-speaking: var(--r98-green);
-    --status-warning: var(--r98-gold);
+    --status-warning: var(--r98-amber);
     --status-danger: var(--r98-red);
     --icon-status-online: var(--r98-green);
-    --icon-status-idle: var(--r98-gold);
+    --icon-status-idle: var(--r98-amber);
     --icon-status-dnd: var(--r98-red);
     --icon-status-offline: var(--r98-text-5);
     --text-status-online: var(--r98-green);
-    --text-status-idle: var(--r98-gold);
+    --text-status-idle: var(--r98-amber);
     --text-status-dnd: var(--r98-red);
     --text-status-offline: var(--r98-text-5);
 
     /* ---- user profiles ---- */
     --user-profile-border: var(--r98-border);
-    --user-profile-overlay-background: var(--r98-bg-1);
+    --user-profile-overlay-background: var(--r98-bg-2);
     --user-profile-overlay-background-hover: var(--r98-hover);
     --user-profile-background-hover: var(--r98-hover);
-    --user-profile-toolbar-background: var(--r98-bg-2);
+    --user-profile-toolbar-background: var(--r98-bg-3);
     --user-profile-toolbar-border: var(--r98-border);
     --user-profile-note-background-focus: var(--r98-bg-0);
 
-    /* ---- scrollbars (overridden with real w98 bars in 20-components) ---- */
+    /* ---- scrollbars (real retro bars live in 20-components) ---- */
     --scrollbar-thin-thumb: var(--r98-bg-4);
     --scrollbar-thin-track: transparent;
-    --scrollbar-auto-thumb: var(--r98-bg-3);
-    --scrollbar-auto-track: var(--r98-bg-0);
+    --scrollbar-auto-thumb: var(--r98-bg-4);
+    --scrollbar-auto-track: var(--r98-bg-1);
 
     /* ---- legacy brand + raw palette tokens (plugins still use these) ---- */
-    --brand-experiment: var(--r98-select);
-    --brand-experiment-560: var(--r98-navy);
-    --brand-260: var(--r98-navy-light);
-    --brand-360: var(--r98-navy-light);
-    --brand-500: var(--r98-select);
-    --blurple-50: var(--r98-navy-light);
+    --brand-experiment: var(--r98-blue);
+    --brand-experiment-560: var(--r98-blue-active);
+    --brand-260: var(--r98-link);
+    --brand-360: var(--r98-link);
+    --brand-500: var(--r98-blue);
+    --blurple-50: var(--r98-link);
     --green-360: var(--r98-green);
     --red-400: var(--r98-red);
     --red-500: var(--r98-red-dark);
-    --yellow-300: var(--r98-gold);
+    --yellow-300: var(--r98-amber);
     --primary-400: var(--r98-text-4);
 
-    /* ---- square everything ---- */
+    /* ---- square, pixel-y corners ---- */
     --radius-xs: 0px;
     --radius-sm: 0px;
     --radius-md: 0px;
@@ -399,31 +411,23 @@ body,
     --radius-xl: 0px;
 }
 
-/* user profiles with custom nitro themes keep their own colors */
-.custom-user-profile-theme {
-    --white: var(--r98-text-1);
-}
-
 /* ---- src/10-layout.css ---- */
 /* ==========================================================================
    Relay98 — 10-layout.css
-   Panel chrome. Each main panel gets a neon `ridge` border in one of the
-   danlegt.com panel colors, the server rail gets a starfield, and headers
-   become win98 titlebars.
+   App chrome: texture overlay, blue title bars, selection, floating panels.
 
    Class names are Discord's current hashed names (same approach as
    midnight/system24). If Discord renames one after an update, only that
-   single rule stops applying — nothing else breaks.
+   single rule stops applying — colors still come from the variables.
    ========================================================================== */
 
 /* ---------- global ---------- */
 body {
     font-family: var(--r98-font);
     -webkit-font-smoothing: none;
-    image-rendering: pixelated;
 }
 
-/* square corners, the win98 way (svg avatar masks are unaffected) */
+/* square, pixel-y corners (svg avatar masks are unaffected) */
 *,
 *::before,
 *::after {
@@ -432,103 +436,84 @@ body {
 
 ::selection {
     background: var(--r98-select);
-    color: var(--r98-text-1);
+    color: #ffffff;
 }
 
-/* black starfield, like the danlegt.com background */
+/* ---------- texture ----------
+   one faint full-screen overlay (dither + scanlines) instead of texturing
+   every panel separately, so it's uniform and never stacks up darker.
+   set --r98-texture-opacity: 0 in quickcss to turn it off. */
 :root {
-    --r98-stars:
-        radial-gradient(1px 1px at 12px 18px, #ffffff, transparent),
-        radial-gradient(1px 1px at 52px 44px, #c0c0c0, transparent),
-        radial-gradient(1px 1px at 30px 90px, #ffffff, transparent),
-        radial-gradient(1px 1px at 64px 128px, #a6a6a6, transparent),
-        radial-gradient(2px 2px at 20px 150px, #ffffff, transparent),
-        radial-gradient(1px 1px at 44px 186px, #18f5db, transparent),
-        radial-gradient(1px 1px at 8px 220px, #c0c0c0, transparent),
-        radial-gradient(1px 1px at 58px 236px, #ffbc31, transparent);
+    --r98-texture-opacity: 1;
+}
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 2147483647;
+    pointer-events: none;
+    background-image: var(--r98-texture);
+    background-size: var(--r98-texture-size);
+    opacity: var(--r98-texture-opacity);
 }
 
-.bg__960e4 /* app background */ {
-    background: var(--r98-bg-0) var(--r98-stars);
-    background-size: 72px 240px;
-}
-
-/* ---------- neon ridge panels ---------- */
-.guilds__5e434 /* server list */,
-.sidebarList__5e434 /* channel + dm list */,
-.panels__5e434 /* user panel */,
-.chat_f75fb0 /* chat */,
-.page__5e434 > .container__133bf /* friends page */,
-.container_c8ffbb /* member list */,
-.nowPlayingColumn__133bf /* active now */,
-.content_f75fb0 > aside > .outer_c0bea0 /* dm profile panel */ {
-    box-sizing: border-box;
-    border: var(--r98-ridge) ridge var(--r98-panel, var(--r98-bevel-light)) !important;
-}
-
-.guilds__5e434 {
-    --r98-panel: var(--r98-orange);
-    background: var(--r98-bg-0) var(--r98-stars) !important;
-    background-size: 72px 240px !important;
-}
-.sidebarList__5e434 {
-    --r98-panel: var(--r98-green);
-    background: var(--r98-bg-1);
-}
-.panels__5e434 {
-    --r98-panel: var(--r98-gold);
-    background: var(--r98-bg-2) !important;
-}
-.chat_f75fb0,
-.page__5e434 > .container__133bf {
-    --r98-panel: var(--r98-blue);
-}
-.container_c8ffbb,
-.nowPlayingColumn__133bf,
-.content_f75fb0 > aside > .outer_c0bea0 {
-    --r98-panel: var(--r98-pink);
-}
-
-/* ---------- win98 titlebars ---------- */
+/* ---------- title bars (the retro bit) ---------- */
 /* top window bar ("Friends", "Direct Messages", back/forward, inbox) */
 .bar_c38106 {
     background: var(--r98-titlebar) !important;
 }
 .bar_c38106 .title_c38106,
 .bar_c38106 .title_c38106 * {
-    color: var(--r98-text-1) !important;
+    color: #ffffff !important;
     font-weight: 700;
 }
 .bar_c38106 svg {
-    color: var(--r98-text-1);
+    color: #ffffff;
 }
 
-/* chat / friends / message-requests headers */
+/* chat / friends / message-requests / vc chat headers */
 .subtitleContainer_f75fb0 > section,
 .container__133bf > .container__9293f,
 .container_f391e3 > .container__9293f,
 .container__01ae2 > .container__9293f {
     background: var(--r98-titlebar) !important;
-    border-bottom: 2px solid var(--r98-bevel-dark) !important;
+    border-bottom: 1px solid var(--r98-line) !important;
     box-shadow: none !important;
 }
-.subtitleContainer_f75fb0 > section *,
+.subtitleContainer_f75fb0 > section :is(h1, h2, h3, [class*="title"]),
 .container__9293f :is(h1, h2, h3, [class*="title"]) {
-    color: var(--r98-text-1);
+    color: #ffffff;
 }
 .subtitleContainer_f75fb0 > section svg,
 .container__9293f svg {
-    color: var(--r98-text-1) !important;
+    color: #ffffff !important;
 }
 
-/* ---------- selected list items: classic win98 navy selection ---------- */
+/* ---------- panel separation: quiet 1px lines, nothing loud ---------- */
+.guilds__5e434 {
+    border-right: 1px solid var(--r98-line) !important;
+}
+.sidebarList__5e434 {
+    border-right: 1px solid var(--r98-line) !important;
+}
+.container_c8ffbb /* member list */,
+.nowPlayingColumn__133bf /* active now */ {
+    border-left: 1px solid var(--r98-line) !important;
+}
+.panels__5e434 /* user panel */ {
+    background: var(--r98-bg-0) !important;
+    box-shadow: var(--r98-raised) !important;
+    border: none !important;
+}
+
+/* ---------- selection ---------- */
 .side_aa8da2 .item_aa8da2.selected_aa8da2 /* settings tabs */,
 .interactive__972a0.interactiveSelected__972a0 /* dm list */ {
     background-color: var(--r98-select) !important;
-    color: var(--r98-text-1) !important;
+    color: #ffffff !important;
 }
 .interactive__972a0.interactiveSelected__972a0 * {
-    color: var(--r98-text-1) !important;
+    color: #ffffff !important;
 }
 .side_aa8da2 .item_aa8da2:hover:not(.selected_aa8da2) {
     background-color: var(--r98-hover) !important;
@@ -536,36 +521,33 @@ body {
 
 /* ---------- messages ---------- */
 .mentioned__5126c::before /* mention left edge */ {
-    background: var(--r98-gold) !important;
+    background: var(--r98-amber) !important;
 }
 .newMessagesBar__0f481 /* "new messages" bar */ {
     background: var(--r98-titlebar) !important;
 }
 
-/* ---------- floating windows: menus, popouts, modals ---------- */
+/* ---------- floating panels: menus, popouts, tooltips ---------- */
+/* flat surface + 1px border + hard pixel drop shadow (retro, not windows) */
 [class^="menu_"],
 [class*=" menu_"],
 .container__8a031 /* popout modals */ {
-    background: var(--r98-bg-2) !important;
-    box-shadow: var(--r98-raised), 3px 3px 0 rgba(0, 0, 0, 0.6) !important;
-    border: none !important;
+    background: var(--r98-bg-3) !important;
+    border: 1px solid var(--r98-border) !important;
+    box-shadow: var(--r98-drop) !important;
 }
 [class^="menu_"] [class*="focused_"],
 [class*=" menu_"] [class*="focused_"] {
     background: var(--r98-select) !important;
-    color: var(--r98-text-1) !important;
+    color: #ffffff !important;
 }
 
-/* win98 tooltips: pale yellow with black text */
 [class^="tooltip_"][class*="tooltipPrimary_"],
 [class*=" tooltip_"][class*="tooltipPrimary_"] {
-    background: #ffffe1 !important;
-    color: #000000 !important;
-    border: 1px solid #000000 !important;
-    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.6) !important;
-}
-[class*="tooltipPrimary_"] * {
-    color: #000000 !important;
+    background: var(--r98-bg-0) !important;
+    color: var(--r98-text-1) !important;
+    border: 1px solid var(--r98-border) !important;
+    box-shadow: var(--r98-drop) !important;
 }
 [class*="tooltipPrimary_"] [class*="tooltipPointer"] {
     display: none;
@@ -574,10 +556,10 @@ body {
 /* ---- src/20-components.css ---- */
 /* ==========================================================================
    Relay98 — 20-components.css
-   Win98 bevels for real buttons + text fields, and dithered scrollbars.
-   Bevels are done with inset box-shadows (like 98.css does) so they never
-   change element sizes / layout. Colors come from the control-* tokens in
-   00-variables.css — this file only adds the 3D edges.
+   Soft retro bevels for real buttons + text fields, and dithered scrollbars.
+   Bevels are inset box-shadows so they never change element sizes/layout.
+   Colors come from the control-* tokens in 00-variables.css — this file
+   only adds the 3D edges.
    ========================================================================== */
 
 /* ---------- push buttons ---------- */
@@ -593,7 +575,7 @@ button[class*="button_"]:is([class*="primary_"], [class*="secondary_"], [class*=
     box-shadow: var(--r98-sunken) !important;
 }
 
-/* ---------- text fields: sunken black wells ---------- */
+/* ---------- text fields: sunken dark wells ---------- */
 input[type='text'],
 input[type='search'],
 input[type='email'],
@@ -620,7 +602,7 @@ textarea,
     color: var(--r98-text-5) !important;
 }
 
-/* ---------- code blocks: DOS terminal ---------- */
+/* ---------- code blocks: pixel mono terminal ---------- */
 code,
 pre code {
     font-family: var(--r98-font-code) !important;
@@ -638,7 +620,7 @@ pre code {
     scrollbar-color: var(--r98-bg-4) transparent !important;
 }
 
-/* ...and turn the big "auto" scrollers (chat etc.) back into real w98 bars */
+/* ...and turn the big "auto" scrollers (chat etc.) into chunky retro bars */
 [class^="auto_"],
 [class*=" auto_"] {
     scrollbar-color: auto !important;
@@ -646,12 +628,12 @@ pre code {
 }
 
 ::-webkit-scrollbar {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
 }
-/* classic 50% dither track */
+/* subtle 50% dither track */
 ::-webkit-scrollbar-track {
-    background: repeating-conic-gradient(var(--r98-bg-3) 0% 25%, var(--r98-bg-0) 0% 50%) 0 0 / 2px 2px !important;
+    background: repeating-conic-gradient(var(--r98-bg-1) 0% 25%, var(--r98-bg-0) 0% 50%) 0 0 / 2px 2px !important;
     border: none !important;
 }
 ::-webkit-scrollbar-thumb {

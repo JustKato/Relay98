@@ -17,7 +17,7 @@ const pkg = require(path.join(root, 'package.json'));
 
 const header = `/**
  * @name Relay98
- * @description A dark Windows 98 / neocities inspired theme for Discord.
+ * @description A retro-inspired, modern dark theme with pixel fonts.
  * @author ${pkg.author}
  * @version ${pkg.version}
  * @source https://github.com/${pkg.author}/Relay98
