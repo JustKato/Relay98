@@ -54,41 +54,99 @@ pre code {
     border: 1px solid var(--r98-border) !important;
 }
 
-/* ---------- scrollbars ---------- */
-/* Chromium ignores ::-webkit-scrollbar once scrollbar-color/width is set.
-   Discord's "thin" scrollers set those, so give them flat colors... */
-[class^="thin_"],
-[class*=" thin_"],
+/* ---------- scrollbars: square + retro ----------
+   Chromium ignores ::-webkit-scrollbar as soon as an element sets
+   scrollbar-color / scrollbar-width (Discord does on most scrollers, which
+   is why they looked like default rounded blobs). Reset those everywhere so
+   our styling actually applies, but keep hidden scrollers hidden. */
+* {
+    scrollbar-width: auto !important;
+    scrollbar-color: auto !important;
+}
 [class^="none_"],
 [class*=" none_"] {
-    scrollbar-color: var(--r98-bg-4) transparent !important;
+    scrollbar-width: none !important;
+}
+[class^="none_"]::-webkit-scrollbar,
+[class*=" none_"]::-webkit-scrollbar {
+    display: none !important;
 }
 
-/* ...and turn the big "auto" scrollers (chat etc.) into chunky retro bars */
-[class^="auto_"],
-[class*=" auto_"] {
-    scrollbar-color: auto !important;
-    scrollbar-width: auto !important;
-}
-
+/* sizes: chunky on main scrollers, slimmer on discord's "thin" ones */
 ::-webkit-scrollbar {
-    width: 14px;
-    height: 14px;
+    width: 14px !important;
+    height: 14px !important;
+    background: var(--r98-bg-0) !important;
 }
-/* subtle 50% dither track */
+:is([class^="thin_"], [class*=" thin_"])::-webkit-scrollbar {
+    width: 10px !important;
+    height: 10px !important;
+}
+
+/* track: 50% pixel dither, sunken */
 ::-webkit-scrollbar-track {
     background: repeating-conic-gradient(var(--r98-bg-1) 0% 25%, var(--r98-bg-0) 0% 50%) 0 0 / 2px 2px !important;
     border: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
 }
+
+/* thumb: square, raised bevel, little 3-line grip in the middle */
 ::-webkit-scrollbar-thumb {
-    background: var(--r98-bg-3) !important;
-    box-shadow: var(--r98-raised);
+    background-color: var(--r98-bg-3) !important;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        var(--r98-bevel-light) 0 1px,
+        var(--r98-bevel-dark) 1px 2px,
+        transparent 2px 4px
+    ) !important;
+    background-size: 6px 10px !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-clip: border-box !important;
+    box-shadow: var(--r98-raised) !important;
     border: none !important;
-    min-height: 24px;
+    border-radius: 0 !important;
+    min-height: 28px;
+    min-width: 28px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--r98-bg-4) !important;
 }
 ::-webkit-scrollbar-thumb:active {
-    background: var(--r98-bg-4) !important;
+    background-color: var(--r98-accent) !important;
 }
 ::-webkit-scrollbar-corner {
-    background: var(--r98-bg-3) !important;
+    background: var(--r98-bg-1) !important;
+}
+
+/* arrow buttons: one at each end, raised squares with pixel-art arrows */
+::-webkit-scrollbar-button:single-button {
+    display: block;
+    width: 14px;
+    height: 14px;
+    background-color: var(--r98-bg-3);
+    background-repeat: no-repeat;
+    background-position: center;
+    box-shadow: var(--r98-raised);
+}
+::-webkit-scrollbar-button:single-button:active {
+    box-shadow: var(--r98-sunken);
+    background-color: var(--r98-bg-2);
+}
+::-webkit-scrollbar-button:vertical:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath fill='%23b3b8b1' d='M3 0h1v1h1v1h1v1h1v1H0V3h1V2h1V1h1z'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:vertical:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath fill='%23b3b8b1' d='M0 0h7v1H6v1H5v1H4v1H3V3H2V2H1V1H0z'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:horizontal:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath fill='%23b3b8b1' d='M4 0H3v1H2v1H1v1H0v1h1v1h1v1h1v1h1z'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:horizontal:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath fill='%23b3b8b1' d='M0 0h1v1h1v1h1v1h1v1H3v1H2v1H1v1H0z'/%3E%3C/svg%3E");
+}
+/* no arrows on the slim sidebar scrollers — keeps them tidy */
+:is([class^="thin_"], [class*=" thin_"])::-webkit-scrollbar-button {
+    display: none;
 }

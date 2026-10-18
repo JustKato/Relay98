@@ -1,10 +1,8 @@
 # Relay98
 
-A retro-inspired, modern dark theme for Discord, built for **Vesktop** and **BetterDiscord**. Vibe taken from [danlegt.com](https://danlegt.com).
+A retro-inspired, modern dark theme for Discord, built for **Vesktop** and **BetterDiscord**.
 
-Pixel fonts, cool slate-gray surfaces (not AMOLED black), navy → blue title bars (`#000078 → #0f80cd`), soft beveled buttons, sunken text fields, hard pixel drop shadows on menus, and a faint dither + scanline texture over everything to keep it easy on the eyes.
-
-Structurally inspired by [system24](https://github.com/refact0r/system24) (split `/src` files combined by a build script into one theme file), kept intentionally small: no flavors, no config toggles, no tests.
+Structurally inspired by [system24](https://github.com/refact0r/system24)
 
 ## Install
 
@@ -16,7 +14,7 @@ Structurally inspired by [system24](https://github.com/refact0r/system24) (split
 
 ## Build
 
-No dependencies required.
+Node/Npm required
 
 ```sh
 npm run build   # builds build/relay98.theme.css once
@@ -28,13 +26,13 @@ npm run dev     # rebuilds automatically when files in src/ change
 ```
 src/
   00-variables.css   palette + fonts, mapped onto every Discord color token
-  10-layout.css      texture overlay, title bars, panel lines, selection, menus, tooltips
+  10-layout.css      per-area patterns, title bars, panel lines, selection, menus, tooltips
   20-components.css  beveled buttons, sunken inputs, code blocks, scrollbars
 scripts/build.js     concatenates src/*.css (in filename order) into build/relay98.theme.css
 build/relay98.theme.css  the actual file you install
 ```
 
-To recolor, edit the `--r98-*` variables at the top of `src/00-variables.css`. To turn off the texture, add `:root { --r98-texture-opacity: 0; }` to your QuickCSS.
+To recolor, edit the `--r98-*` variables at the top of `src/00-variables.css`.
 
 ## Fonts
 

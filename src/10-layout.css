@@ -25,28 +25,53 @@ body {
     color: #ffffff;
 }
 
-/* ---------- texture ----------
-   one faint full-screen overlay (dither + scanlines) instead of texturing
-   every panel separately, so it's uniform and never stacks up darker.
-   set --r98-texture-opacity: 0 in quickcss to turn it off. */
-:root {
-    --r98-texture-opacity: 1;
+/* ---------- per-area patterns ----------
+   each region gets its own barely-visible texture; floating stuff (menus,
+   popouts, modals) stays flat so it reads as "in front".
+   inner wrappers are made transparent so the outer pattern shows through. */
+
+/* chat + friends page: soft CRT scanlines */
+.chatContent_f75fb0,
+.page__5e434 > .container__133bf {
+    background-color: var(--r98-bg-2) !important;
+    background-image: var(--r98-pat-scan) !important;
 }
-body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 2147483647;
-    pointer-events: none;
-    background-image: var(--r98-texture);
-    background-size: var(--r98-texture-size);
-    opacity: var(--r98-texture-opacity);
+.tabBody__133bf {
+    background: transparent !important;
+}
+
+/* server rail: pixel dither */
+.guilds__5e434 {
+    background-color: var(--r98-bg-0) !important;
+    background-image: var(--r98-pat-dither) !important;
+    background-size: var(--r98-pat-dither-size) !important;
+}
+.guilds__5e434 .scroller_ef3116,
+.guilds__5e434 .wrapper_ef3116 {
+    background: transparent !important;
+}
+
+/* channel/dm list + member list + active now: tiny dot grid */
+.sidebarList__5e434,
+.container_c8ffbb,
+.nowPlayingColumn__133bf {
+    background-color: var(--r98-bg-1) !important;
+    background-image: var(--r98-pat-dots) !important;
+    background-size: var(--r98-pat-dots-size) !important;
+}
+.sidebarList__5e434 .container__2637a,
+.sidebarList__5e434 .scroller__629e4,
+.sidebarList__5e434 .scroller__99e7c,
+.container_c8ffbb .members_c8ffbb,
+.nowPlayingColumn__133bf .container__7d20c,
+.nowPlayingColumn__133bf .scroller__7d20c {
+    background: transparent !important;
 }
 
 /* ---------- title bars (the retro bit) ---------- */
 /* top window bar ("Friends", "Direct Messages", back/forward, inbox) */
 .bar_c38106 {
-    background: var(--r98-titlebar) !important;
+    background: var(--r98-pat-bar), var(--r98-titlebar) !important;
 }
 .bar_c38106 .title_c38106,
 .bar_c38106 .title_c38106 * {
@@ -62,7 +87,7 @@ body::after {
 .container__133bf > .container__9293f,
 .container_f391e3 > .container__9293f,
 .container__01ae2 > .container__9293f {
-    background: var(--r98-titlebar) !important;
+    background: var(--r98-pat-bar), var(--r98-titlebar) !important;
     border-bottom: 1px solid var(--r98-line) !important;
     box-shadow: none !important;
 }
@@ -87,7 +112,8 @@ body::after {
     border-left: 1px solid var(--r98-line) !important;
 }
 .panels__5e434 /* user panel */ {
-    background: var(--r98-bg-0) !important;
+    background: var(--r98-bg-0) var(--r98-pat-dither) !important;
+    background-size: var(--r98-pat-dither-size) !important;
     box-shadow: var(--r98-raised) !important;
     border: none !important;
 }

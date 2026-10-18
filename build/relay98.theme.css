@@ -13,9 +13,9 @@
    Relay98 — 00-variables.css
    Palette + fonts, mapped onto ALL of Discord's color tokens (old + new).
 
-   Direction: retro-inspired but modern. Pixel font, cool slate grays that
-   sit well next to the navy -> blue title bars, soft bevels, and a faint
-   dither/scanline texture instead of flat AMOLED black.
+   Direction: retro-inspired but modern. Pixel font, soft charcoal grays
+   with a hint of green, muted pine -> sage title bars, soft bevels, and a
+   few barely-there patterns on selected areas instead of flat black.
    ========================================================================== */
 
 /* Vesktop only allows fonts from Google Fonts / GitHub / GitLab / Codeberg.
@@ -29,57 +29,64 @@
     --r98-font: 'PixeloidSans', 'Pixelify Sans', 'Tahoma', sans-serif;
     --r98-font-code: 'PixelOperatorMono', 'VT323', 'Courier New', monospace;
 
-    /* ---------- slate surfaces (darkest -> lightest) ----------
-       slightly blue-tinted grays (hue ~225) so they harmonize with the
-       blue title bars instead of fighting them */
-    --r98-bg-0: #1a1b20; /* wells: inputs, chat bar, code, server rail */
-    --r98-bg-1: #212329; /* side panels: channel list, members */
-    --r98-bg-2: #282a31; /* chat */
-    --r98-bg-3: #31333b; /* raised: cards, popouts, buttons */
-    --r98-bg-4: #3b3e47; /* raised + hovered */
+    /* ---------- charcoal surfaces (darkest -> lightest) ----------
+       neutral grays with a faint green cast so they sit naturally under the
+       pine/sage title bars */
+    --r98-bg-0: #1b1d1c; /* wells: inputs, chat bar, code, server rail */
+    --r98-bg-1: #222524; /* side panels: channel list, members */
+    --r98-bg-2: #292c2b; /* chat */
+    --r98-bg-3: #323634; /* raised: cards, popouts, buttons */
+    --r98-bg-4: #3c403e; /* raised + hovered */
 
     /* ---------- soft bevel tones ---------- */
-    --r98-bevel-light: #555967; /* outer top-left */
-    --r98-bevel-mid: #42454f; /* inner top-left */
-    --r98-bevel-dim: #1f2126; /* inner bottom-right */
-    --r98-bevel-dark: #121317; /* outer bottom-right */
-    --r98-line: #17181c; /* 1px panel separators */
+    --r98-bevel-light: #5a5f5c; /* outer top-left */
+    --r98-bevel-mid: #454a47; /* inner top-left */
+    --r98-bevel-dim: #1f2221; /* inner bottom-right */
+    --r98-bevel-dark: #121413; /* outer bottom-right */
+    --r98-line: #161817; /* 1px panel separators */
 
     /* ---------- text ---------- */
-    --r98-text-1: #f2f3f5; /* headings, names, strong */
-    --r98-text-2: #dcdde2; /* message text */
-    --r98-text-3: #b5b8c2; /* secondary text */
-    --r98-text-4: #959aa6; /* channels, icons */
-    --r98-text-5: #6d717d; /* muted, timestamps, placeholders */
+    --r98-text-1: #eef0ec; /* headings, names, strong */
+    --r98-text-2: #d9dcd6; /* message text */
+    --r98-text-3: #b3b8b1; /* secondary text */
+    --r98-text-4: #959b94; /* channels, icons */
+    --r98-text-5: #6e746d; /* muted, timestamps, placeholders */
 
-    /* ---------- title bar blues (the bit that stays retro) ---------- */
-    --r98-navy: #000078;
-    --r98-sky: #0f80cd;
-    --r98-titlebar: linear-gradient(to right, #000078, 80%, #0f80cd);
+    /* ---------- title bars: muted pine -> sage ----------
+       from the classic "forest & sage" family (hunter #3e5641,
+       torrey pine #527a54, sage #7a9167), kept dusty so white text reads
+       well and it never feels loud */
+    --r98-titlebar: linear-gradient(to right, #2e4a3b, 75%, #5b8360);
 
     /* ---------- accents ---------- */
-    --r98-blue: #1d5fc4; /* primary buttons, between the two bar blues */
-    --r98-blue-hover: #2a6fd6;
-    --r98-blue-active: #174fa6;
-    --r98-select: #22408a; /* selected channel / dm / menu item */
-    --r98-link: #5aaaf5;
-    --r98-amber: #f0b443; /* mentions, idle — retro CRT amber */
-    --r98-green: #5cbf4f;
-    --r98-red: #e5534b;
-    --r98-red-dark: #b8322b;
-    --r98-purple: #a07ef0;
+    --r98-accent: #4a7a54; /* primary buttons (torrey pine) */
+    --r98-accent-hover: #568a61;
+    --r98-accent-active: #3e6647;
+    --r98-accent-light: #7fae86; /* focus rings, progress bars */
+    --r98-select: #3b5c45; /* selected channel / dm / menu item */
+    --r98-link: #8cc7a6; /* soft seafoam */
+    --r98-amber: #e8b04a; /* mentions, idle — retro CRT amber */
+    --r98-green: #6fbf73;
+    --r98-red: #e0635a;
+    --r98-red-dark: #b23f37;
 
     /* ---------- states ---------- */
     --r98-hover: rgba(255, 255, 255, 0.045);
     --r98-active: rgba(255, 255, 255, 0.08);
-    --r98-border: #393c46;
+    --r98-border: #3a3f3c;
 
-    /* ---------- texture ----------
-       faint 2px pixel dither + 3px scanlines. pure css, no external assets */
-    --r98-texture:
-        repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 3px),
-        repeating-conic-gradient(rgba(0, 0, 0, 0.07) 0% 25%, transparent 0% 50%);
-    --r98-texture-size: auto, 2px 2px;
+    /* ---------- patterns ----------
+       each area gets its own, all barely visible. pure css, no assets. */
+    /* chat + friends: soft CRT scanlines */
+    --r98-pat-scan: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.016) 0 1px, transparent 1px 3px);
+    /* server rail + user panel: 2px pixel dither */
+    --r98-pat-dither: repeating-conic-gradient(rgba(255, 255, 255, 0.022) 0% 25%, transparent 0% 50%);
+    --r98-pat-dither-size: 4px 4px;
+    /* channel list + member list: tiny dot grid */
+    --r98-pat-dots: radial-gradient(rgba(255, 255, 255, 0.035) 0.75px, transparent 1px);
+    --r98-pat-dots-size: 6px 6px;
+    /* title bars: darker scanlines laid over the gradient */
+    --r98-pat-bar: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 2px);
 
     /* hard pixel drop shadow for floating things */
     --r98-drop: 3px 3px 0 rgba(0, 0, 0, 0.35);
@@ -124,9 +131,9 @@ body,
     --modal-background: var(--r98-bg-2);
     --modal-footer-background: var(--r98-bg-1);
     --background-code: var(--r98-bg-0);
-    --background-brand: var(--r98-blue);
-    --background-scrim: rgba(10, 11, 14, 0.7);
-    --background-scrim-lightbox: rgba(10, 11, 14, 0.9);
+    --background-brand: var(--r98-accent);
+    --background-scrim: rgba(10, 12, 11, 0.7);
+    --background-scrim-lightbox: rgba(10, 12, 11, 0.9);
 
     --background-mod-subtle: var(--r98-hover);
     --background-mod-muted: var(--r98-hover);
@@ -138,13 +145,13 @@ body,
     --background-modifier-selected: var(--r98-select);
     --background-modifier-accent: var(--r98-border);
 
-    --background-feedback-critical: rgba(229, 83, 75, 0.14);
-    --background-feedback-info: rgba(90, 170, 245, 0.14);
-    --background-feedback-positive: rgba(92, 191, 79, 0.14);
-    --background-feedback-warning: rgba(240, 180, 67, 0.14);
+    --background-feedback-critical: rgba(224, 99, 90, 0.14);
+    --background-feedback-info: rgba(140, 199, 166, 0.14);
+    --background-feedback-positive: rgba(111, 191, 115, 0.14);
+    --background-feedback-warning: rgba(232, 176, 74, 0.14);
     --background-feedback-notification: var(--r98-red);
-    --background-code-addition: rgba(92, 191, 79, 0.18);
-    --background-code-deletion: rgba(229, 83, 75, 0.18);
+    --background-code-addition: rgba(111, 191, 115, 0.18);
+    --background-code-deletion: rgba(224, 99, 90, 0.18);
 
     /* ---- text ---- */
     --text-normal: var(--r98-text-2);
@@ -201,14 +208,14 @@ body,
     --border-muted: var(--r98-line);
     --border-normal: var(--r98-border);
     --border-strong: var(--r98-bevel-light);
-    --border-focus: var(--r98-sky);
+    --border-focus: var(--r98-accent-light);
     --border-feedback-critical: var(--r98-red);
     --divider-color: var(--r98-red);
 
     /* ---- buttons (control-*) ---- */
-    --control-primary-background-default: var(--r98-blue);
-    --control-primary-background-hover: var(--r98-blue-hover);
-    --control-primary-background-active: var(--r98-blue-active);
+    --control-primary-background-default: var(--r98-accent);
+    --control-primary-background-hover: var(--r98-accent-hover);
+    --control-primary-background-active: var(--r98-accent-active);
     --control-primary-border-default: transparent;
     --control-primary-border-hover: transparent;
     --control-primary-border-active: transparent;
@@ -234,7 +241,7 @@ body,
 
     --control-critical-primary-background-default: var(--r98-red-dark);
     --control-critical-primary-background-hover: var(--r98-red);
-    --control-critical-primary-background-active: #962620;
+    --control-critical-primary-background-active: #8f322c;
     --control-critical-primary-text-default: #ffffff;
     --control-critical-primary-text-hover: #ffffff;
     --control-critical-primary-text-active: #ffffff;
@@ -251,9 +258,9 @@ body,
     --control-critical-secondary-icon-hover: var(--r98-red);
     --control-critical-secondary-icon-active: var(--r98-red);
 
-    --control-connect-background-default: #3f9a35;
+    --control-connect-background-default: #4a8f4f;
     --control-connect-background-hover: var(--r98-green);
-    --control-connect-background-active: #337d2b;
+    --control-connect-background-active: #3d7741;
     --control-connect-text-default: #ffffff;
     --control-connect-text-hover: #ffffff;
     --control-connect-text-active: #ffffff;
@@ -275,10 +282,10 @@ body,
 
     /* ---- inputs ---- */
     --input-background-default: var(--r98-bg-0);
-    --input-background-error-default: rgba(229, 83, 75, 0.1);
+    --input-background-error-default: rgba(224, 99, 90, 0.1);
     --input-border-default: transparent;
     --input-border-hover: transparent;
-    --input-border-active: var(--r98-sky);
+    --input-border-active: var(--r98-accent-light);
     --input-border-error-default: var(--r98-red);
     --input-text-default: var(--r98-text-1);
     --input-placeholder-text-default: var(--r98-text-5);
@@ -287,26 +294,26 @@ body,
     /* ---- checkbox / radio / switch / slider ---- */
     --checkbox-background-default: var(--r98-bg-0);
     --checkbox-background-hover: var(--r98-bg-1);
-    --checkbox-background-selected-default: var(--r98-blue);
-    --checkbox-background-selected-hover: var(--r98-blue-hover);
+    --checkbox-background-selected-default: var(--r98-accent);
+    --checkbox-background-selected-hover: var(--r98-accent-hover);
     --checkbox-border-default: var(--r98-bevel-light);
     --checkbox-border-hover: var(--r98-text-4);
-    --checkbox-border-selected-default: var(--r98-blue);
-    --checkbox-border-selected-hover: var(--r98-blue-hover);
+    --checkbox-border-selected-default: var(--r98-accent);
+    --checkbox-border-selected-hover: var(--r98-accent-hover);
     --checkbox-icon-active: #ffffff;
     --radio-background-default: var(--r98-bg-0);
     --radio-background-hover: var(--r98-bg-1);
-    --radio-background-selected-default: var(--r98-blue);
-    --radio-background-selected-hover: var(--r98-blue-hover);
+    --radio-background-selected-default: var(--r98-accent);
+    --radio-background-selected-hover: var(--r98-accent-hover);
     --radio-border-default: var(--r98-bevel-light);
     --radio-border-hover: var(--r98-text-4);
-    --radio-border-selected-default: var(--r98-blue);
-    --radio-border-selected-hover: var(--r98-blue-hover);
+    --radio-border-selected-default: var(--r98-accent);
+    --radio-border-selected-hover: var(--r98-accent-hover);
     --radio-thumb-background-active: #ffffff;
     --switch-background-default: var(--r98-bg-4);
     --switch-background-hover: var(--r98-bevel-light);
-    --switch-background-selected-default: var(--r98-blue);
-    --switch-background-selected-hover: var(--r98-blue-hover);
+    --switch-background-selected-default: var(--r98-accent);
+    --switch-background-selected-hover: var(--r98-accent-hover);
     --switch-border-default: transparent;
     --switch-border-hover: transparent;
     --switch-border-selected-default: transparent;
@@ -315,43 +322,43 @@ body,
     --switch-thumb-background-selected-default: #ffffff;
     --slider-track-background: var(--r98-bg-4);
     --progressbar-track-background: var(--r98-bg-0);
-    --progressbar-indicator-background: var(--r98-sky);
+    --progressbar-indicator-background: var(--r98-accent-light);
 
     /* ---- messages / mentions / reactions ---- */
     --message-background-hover: rgba(255, 255, 255, 0.025);
-    --message-mentioned-background-default: rgba(240, 180, 67, 0.08);
-    --message-mentioned-background-hover: rgba(240, 180, 67, 0.12);
-    --message-highlight-background-default: rgba(90, 170, 245, 0.07);
-    --message-highlight-background-hover: rgba(90, 170, 245, 0.1);
-    --message-reacted-background-default: rgba(29, 95, 196, 0.25);
+    --message-mentioned-background-default: rgba(232, 176, 74, 0.08);
+    --message-mentioned-background-hover: rgba(232, 176, 74, 0.12);
+    --message-highlight-background-default: rgba(140, 199, 166, 0.07);
+    --message-highlight-background-hover: rgba(140, 199, 166, 0.1);
+    --message-reacted-background-default: rgba(74, 122, 84, 0.25);
     --message-reacted-text-default: var(--r98-text-1);
-    --mention-background: rgba(240, 180, 67, 0.16);
+    --mention-background: rgba(232, 176, 74, 0.16);
     --mention-foreground: var(--r98-amber);
     --reaction-background-default: var(--r98-bg-3);
     --reaction-background-hover: var(--r98-bg-4);
     --reaction-background-active: var(--r98-bg-4);
-    --reaction-background-reacted-default: rgba(29, 95, 196, 0.28);
-    --reaction-background-reacted-hover: rgba(29, 95, 196, 0.38);
+    --reaction-background-reacted-default: rgba(74, 122, 84, 0.28);
+    --reaction-background-reacted-hover: rgba(74, 122, 84, 0.38);
     --reaction-border-default: transparent;
     --reaction-border-hover: var(--r98-bevel-light);
     --reaction-border-active: var(--r98-bevel-light);
-    --reaction-border-reacted-default: var(--r98-blue);
+    --reaction-border-reacted-default: var(--r98-accent);
     --reaction-text-default: var(--r98-text-3);
     --reaction-text-hover: var(--r98-text-1);
     --reaction-text-active: var(--r98-text-1);
     --reaction-text-reacted-default: var(--r98-text-1);
-    --polls-voted-fill: rgba(29, 95, 196, 0.22);
-    --polls-victor-fill: rgba(92, 191, 79, 0.2);
+    --polls-voted-fill: rgba(74, 122, 84, 0.22);
+    --polls-victor-fill: rgba(111, 191, 115, 0.2);
     --spine-default: var(--r98-text-5);
 
     /* ---- badges / notices ---- */
-    --badge-background-default: var(--r98-blue);
+    --badge-background-default: var(--r98-accent);
     --badge-text-default: #ffffff;
     --badge-notification-background: var(--r98-red);
-    --badge-expressive-background-default: var(--r98-blue);
+    --badge-expressive-background-default: var(--r98-accent);
     --badge-expressive-text-default: #ffffff;
-    --notice-background-info: var(--r98-blue);
-    --notice-background-positive: #3f9a35;
+    --notice-background-info: var(--r98-accent);
+    --notice-background-positive: #4a8f4f;
     --notice-background-warning: var(--r98-amber);
     --notice-background-critical: var(--r98-red-dark);
     --notice-text-info: #ffffff;
@@ -391,11 +398,11 @@ body,
     --scrollbar-auto-track: var(--r98-bg-1);
 
     /* ---- legacy brand + raw palette tokens (plugins still use these) ---- */
-    --brand-experiment: var(--r98-blue);
-    --brand-experiment-560: var(--r98-blue-active);
+    --brand-experiment: var(--r98-accent);
+    --brand-experiment-560: var(--r98-accent-active);
     --brand-260: var(--r98-link);
     --brand-360: var(--r98-link);
-    --brand-500: var(--r98-blue);
+    --brand-500: var(--r98-accent);
     --blurple-50: var(--r98-link);
     --green-360: var(--r98-green);
     --red-400: var(--r98-red);
@@ -439,28 +446,53 @@ body {
     color: #ffffff;
 }
 
-/* ---------- texture ----------
-   one faint full-screen overlay (dither + scanlines) instead of texturing
-   every panel separately, so it's uniform and never stacks up darker.
-   set --r98-texture-opacity: 0 in quickcss to turn it off. */
-:root {
-    --r98-texture-opacity: 1;
+/* ---------- per-area patterns ----------
+   each region gets its own barely-visible texture; floating stuff (menus,
+   popouts, modals) stays flat so it reads as "in front".
+   inner wrappers are made transparent so the outer pattern shows through. */
+
+/* chat + friends page: soft CRT scanlines */
+.chatContent_f75fb0,
+.page__5e434 > .container__133bf {
+    background-color: var(--r98-bg-2) !important;
+    background-image: var(--r98-pat-scan) !important;
 }
-body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 2147483647;
-    pointer-events: none;
-    background-image: var(--r98-texture);
-    background-size: var(--r98-texture-size);
-    opacity: var(--r98-texture-opacity);
+.tabBody__133bf {
+    background: transparent !important;
+}
+
+/* server rail: pixel dither */
+.guilds__5e434 {
+    background-color: var(--r98-bg-0) !important;
+    background-image: var(--r98-pat-dither) !important;
+    background-size: var(--r98-pat-dither-size) !important;
+}
+.guilds__5e434 .scroller_ef3116,
+.guilds__5e434 .wrapper_ef3116 {
+    background: transparent !important;
+}
+
+/* channel/dm list + member list + active now: tiny dot grid */
+.sidebarList__5e434,
+.container_c8ffbb,
+.nowPlayingColumn__133bf {
+    background-color: var(--r98-bg-1) !important;
+    background-image: var(--r98-pat-dots) !important;
+    background-size: var(--r98-pat-dots-size) !important;
+}
+.sidebarList__5e434 .container__2637a,
+.sidebarList__5e434 .scroller__629e4,
+.sidebarList__5e434 .scroller__99e7c,
+.container_c8ffbb .members_c8ffbb,
+.nowPlayingColumn__133bf .container__7d20c,
+.nowPlayingColumn__133bf .scroller__7d20c {
+    background: transparent !important;
 }
 
 /* ---------- title bars (the retro bit) ---------- */
 /* top window bar ("Friends", "Direct Messages", back/forward, inbox) */
 .bar_c38106 {
-    background: var(--r98-titlebar) !important;
+    background: var(--r98-pat-bar), var(--r98-titlebar) !important;
 }
 .bar_c38106 .title_c38106,
 .bar_c38106 .title_c38106 * {
@@ -476,7 +508,7 @@ body::after {
 .container__133bf > .container__9293f,
 .container_f391e3 > .container__9293f,
 .container__01ae2 > .container__9293f {
-    background: var(--r98-titlebar) !important;
+    background: var(--r98-pat-bar), var(--r98-titlebar) !important;
     border-bottom: 1px solid var(--r98-line) !important;
     box-shadow: none !important;
 }
@@ -501,7 +533,8 @@ body::after {
     border-left: 1px solid var(--r98-line) !important;
 }
 .panels__5e434 /* user panel */ {
-    background: var(--r98-bg-0) !important;
+    background: var(--r98-bg-0) var(--r98-pat-dither) !important;
+    background-size: var(--r98-pat-dither-size) !important;
     box-shadow: var(--r98-raised) !important;
     border: none !important;
 }
@@ -610,41 +643,99 @@ pre code {
     border: 1px solid var(--r98-border) !important;
 }
 
-/* ---------- scrollbars ---------- */
-/* Chromium ignores ::-webkit-scrollbar once scrollbar-color/width is set.
-   Discord's "thin" scrollers set those, so give them flat colors... */
-[class^="thin_"],
-[class*=" thin_"],
+/* ---------- scrollbars: square + retro ----------
+   Chromium ignores ::-webkit-scrollbar as soon as an element sets
+   scrollbar-color / scrollbar-width (Discord does on most scrollers, which
+   is why they looked like default rounded blobs). Reset those everywhere so
+   our styling actually applies, but keep hidden scrollers hidden. */
+* {
+    scrollbar-width: auto !important;
+    scrollbar-color: auto !important;
+}
 [class^="none_"],
 [class*=" none_"] {
-    scrollbar-color: var(--r98-bg-4) transparent !important;
+    scrollbar-width: none !important;
+}
+[class^="none_"]::-webkit-scrollbar,
+[class*=" none_"]::-webkit-scrollbar {
+    display: none !important;
 }
 
-/* ...and turn the big "auto" scrollers (chat etc.) into chunky retro bars */
-[class^="auto_"],
-[class*=" auto_"] {
-    scrollbar-color: auto !important;
-    scrollbar-width: auto !important;
-}
-
+/* sizes: chunky on main scrollers, slimmer on discord's "thin" ones */
 ::-webkit-scrollbar {
-    width: 14px;
-    height: 14px;
+    width: 14px !important;
+    height: 14px !important;
+    background: var(--r98-bg-0) !important;
 }
-/* subtle 50% dither track */
+:is([class^="thin_"], [class*=" thin_"])::-webkit-scrollbar {
+    width: 10px !important;
+    height: 10px !important;
+}
+
+/* track: 50% pixel dither, sunken */
 ::-webkit-scrollbar-track {
     background: repeating-conic-gradient(var(--r98-bg-1) 0% 25%, var(--r98-bg-0) 0% 50%) 0 0 / 2px 2px !important;
     border: none !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
 }
+
+/* thumb: square, raised bevel, little 3-line grip in the middle */
 ::-webkit-scrollbar-thumb {
-    background: var(--r98-bg-3) !important;
-    box-shadow: var(--r98-raised);
+    background-color: var(--r98-bg-3) !important;
+    background-image: repeating-linear-gradient(
+        to bottom,
+        var(--r98-bevel-light) 0 1px,
+        var(--r98-bevel-dark) 1px 2px,
+        transparent 2px 4px
+    ) !important;
+    background-size: 6px 10px !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+    background-clip: border-box !important;
+    box-shadow: var(--r98-raised) !important;
     border: none !important;
-    min-height: 24px;
+    border-radius: 0 !important;
+    min-height: 28px;
+    min-width: 28px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background-color: var(--r98-bg-4) !important;
 }
 ::-webkit-scrollbar-thumb:active {
-    background: var(--r98-bg-4) !important;
+    background-color: var(--r98-accent) !important;
 }
 ::-webkit-scrollbar-corner {
-    background: var(--r98-bg-3) !important;
+    background: var(--r98-bg-1) !important;
+}
+
+/* arrow buttons: one at each end, raised squares with pixel-art arrows */
+::-webkit-scrollbar-button:single-button {
+    display: block;
+    width: 14px;
+    height: 14px;
+    background-color: var(--r98-bg-3);
+    background-repeat: no-repeat;
+    background-position: center;
+    box-shadow: var(--r98-raised);
+}
+::-webkit-scrollbar-button:single-button:active {
+    box-shadow: var(--r98-sunken);
+    background-color: var(--r98-bg-2);
+}
+::-webkit-scrollbar-button:vertical:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath fill='%23b3b8b1' d='M3 0h1v1h1v1h1v1h1v1H0V3h1V2h1V1h1z'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:vertical:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4' shape-rendering='crispEdges'%3E%3Cpath fill='%23b3b8b1' d='M0 0h7v1H6v1H5v1H4v1H3V3H2V2H1V1H0z'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:horizontal:decrement {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath fill='%23b3b8b1' d='M4 0H3v1H2v1H1v1H0v1h1v1h1v1h1v1h1z'/%3E%3C/svg%3E");
+}
+::-webkit-scrollbar-button:horizontal:increment {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath fill='%23b3b8b1' d='M0 0h1v1h1v1h1v1h1v1H3v1H2v1H1v1H0z'/%3E%3C/svg%3E");
+}
+/* no arrows on the slim sidebar scrollers — keeps them tidy */
+:is([class^="thin_"], [class*=" thin_"])::-webkit-scrollbar-button {
+    display: none;
 }
