@@ -6,6 +6,7 @@
     "license": "MIT",
     "scripts": {
         "build": "node scripts/build.js",
-        "dev": "node scripts/build.js --watch"
+        "dev": "node scripts/build.js --watch",
+        "screenshot": "node scripts/screenshot.js"
     }
 }

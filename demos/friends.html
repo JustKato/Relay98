@@ -15,12 +15,12 @@
         </header>
         <div class="demo-workspace">
             <nav class="guilds__5e434 demo-rail" aria-label="Servers">
-                <div class="demo-server is-selected" aria-label="Direct messages, selected"><svg><use href="#i-home"/></svg></div>
+                <div class="demo-server is-selected" aria-label="Direct messages, selected"><svg><use href="#i-discord"/></svg></div>
                 <div class="demo-rail-divider"></div>
-                <a class="demo-server" href="chat.html" aria-label="Relay98 Lounge"><svg><use href="#i-leaf"/></svg></a>
-                <div class="demo-server is-unread" aria-label="Game night">GN</div>
-                <div class="demo-server" aria-label="Studio"><svg><use href="#i-folder"/></svg></div>
-                <div class="demo-server" aria-label="Pixel club">px</div>
+                <a class="demo-server" href="chat.html" aria-label="Relay98 Lounge" data-server="relay98"><img src="images/cat-danlegt.jpg" alt="Cat server icon"></a>
+                <div class="demo-server is-unread" aria-label="Game night" data-server="game-night"><img src="images/cat-kit.jpg" alt="Cat server icon"></div>
+                <div class="demo-server" aria-label="Studio" data-server="studio"><img src="images/cat-ash.jpg" alt="Cat server icon"></div>
+                <div class="demo-server" aria-label="Pixel club" data-server="pixel-club" data-default-icon="true">PC</div>
                 <div class="demo-rail-divider"></div>
                 <div class="demo-server is-add" aria-label="Add a server"><svg><use href="#i-plus"/></svg></div>
             </nav>
@@ -32,15 +32,15 @@
                     <div class="demo-dm-link"><svg aria-hidden="true"><use href="#i-star"/></svg>Nitro</div>
                     <div class="demo-dm-link"><svg aria-hidden="true"><use href="#i-folder"/></svg>Shop</div>
                     <div class="demo-category">Direct messages<span class="demo-spacer"></span><svg aria-hidden="true"><use href="#i-plus"/></svg></div>
-                    <div class="demo-dm-link"><div class="demo-avatar demo-avatar--mint">M<span class="demo-status"></span></div><div class="demo-user-info"><strong>mara</strong><small>Keeping the kettle on</small></div></div>
-                    <div class="demo-dm-link"><div class="demo-avatar demo-avatar--amber">K<span class="demo-status"></span></div><div class="demo-user-info"><strong>kit</strong><small>Drawing pixels</small></div></div>
-                    <div class="demo-dm-link"><div class="demo-avatar demo-avatar--rose">N<span class="demo-status demo-status--dnd"></span></div><div class="demo-user-info"><strong>noa</strong><small>In a game</small></div></div>
-                    <div class="demo-dm-link"><div class="demo-avatar demo-avatar--mint">R<span class="demo-status"></span></div><div class="demo-user-info"><strong>ren</strong><small>Listening to music</small></div></div>
-                    <div class="demo-dm-link"><div class="demo-avatar">S<span class="demo-status demo-status--idle"></span></div><div class="demo-user-info"><strong>sol</strong><small>Idle</small></div></div>
-                    <div class="demo-dm-link demo-offline"><div class="demo-avatar">J<span class="demo-status demo-status--offline"></span></div><div class="demo-user-info"><strong>jules</strong><small>Offline</small></div></div>
+                    <div class="demo-dm-link"><div class="demo-avatar" data-user="mara"><img src="images/cat-mara.jpg" alt="Cat avatar for mara"><span class="demo-status"></span></div><div class="demo-user-info"><strong>mara</strong><small>Keeping the kettle on</small></div></div>
+                    <div class="demo-dm-link"><div class="demo-avatar" data-user="kit"><img src="images/cat-kit.jpg" alt="Cat avatar for kit"><span class="demo-status"></span></div><div class="demo-user-info"><strong>kit</strong><small>Drawing pixels</small></div></div>
+                    <div class="demo-dm-link"><div class="demo-avatar" data-user="noa"><img src="images/cat-noa.jpg" alt="Cat avatar for noa"><span class="demo-status demo-status--dnd"></span></div><div class="demo-user-info"><strong>noa</strong><small>In a game</small></div></div>
+                    <div class="demo-dm-link"><div class="demo-avatar" data-user="ren"><img src="images/cat-ren.jpg" alt="Cat avatar for ren"><span class="demo-status"></span></div><div class="demo-user-info"><strong>ren</strong><small>Listening to music</small></div></div>
+                    <div class="demo-dm-link"><div class="demo-avatar" data-user="sol"><img src="images/cat-sol.jpg" alt="Cat avatar for sol"><span class="demo-status demo-status--idle"></span></div><div class="demo-user-info"><strong>sol</strong><small>Idle</small></div></div>
+                    <div class="demo-dm-link demo-offline"><div class="demo-avatar" data-user="jules"><img src="images/discord-default.png" alt="Default Discord avatar for Jules"><span class="demo-status demo-status--offline"></span></div><div class="demo-user-info"><strong>jules</strong><small>Offline</small></div></div>
                 </div>
                 <footer class="panels__5e434 demo-user-panel">
-                    <div class="demo-avatar demo-avatar--pine">D<span class="demo-status"></span></div>
+                    <div class="demo-avatar" data-user="danlegt"><img src="images/cat-danlegt.jpg" alt="Cat avatar for danlegt"><span class="demo-status"></span></div>
                     <div class="demo-user-info"><strong>danlegt</strong><small>Online</small></div>
                     <button class="demo-icon-button" aria-label="Mute"><svg><use href="#i-mic"/></svg></button>
                     <button class="demo-icon-button" aria-label="Deafen"><svg><use href="#i-headphones"/></svg></button>
@@ -66,27 +66,27 @@
                             <label class="searchBar_demo demo-friends-search"><input type="search" placeholder="Search" aria-label="Search friends"><svg aria-hidden="true"><use href="#i-search"/></svg></label>
                             <h2 class="demo-section-label">Online — 5</h2>
                             <div class="demo-friend-row">
-                                <div class="demo-avatar demo-avatar--mint">M<span class="demo-status"></span></div>
+                                <div class="demo-avatar" data-user="mara"><img src="images/cat-mara.jpg" alt="Cat avatar for mara"><span class="demo-status"></span></div>
                                 <div class="demo-user-info"><strong>mara</strong><small>Keeping the kettle on</small></div>
                                 <button class="demo-friend-action" aria-label="Message mara"><svg><use href="#i-chat"/></svg></button><button class="demo-friend-action" aria-label="More options for mara"><svg><use href="#i-more"/></svg></button>
                             </div>
                             <div class="demo-friend-row">
-                                <div class="demo-avatar demo-avatar--amber">K<span class="demo-status"></span></div>
+                                <div class="demo-avatar" data-user="kit"><img src="images/cat-kit.jpg" alt="Cat avatar for kit"><span class="demo-status"></span></div>
                                 <div class="demo-user-info"><strong>kit</strong><small>Drawing pixels</small></div>
                                 <button class="demo-friend-action" aria-label="Message kit"><svg><use href="#i-chat"/></svg></button><button class="demo-friend-action" aria-label="More options for kit"><svg><use href="#i-more"/></svg></button>
                             </div>
                             <div class="demo-friend-row">
-                                <div class="demo-avatar demo-avatar--rose">N<span class="demo-status demo-status--dnd"></span></div>
+                                <div class="demo-avatar" data-user="noa"><img src="images/cat-noa.jpg" alt="Cat avatar for noa"><span class="demo-status demo-status--dnd"></span></div>
                                 <div class="demo-user-info"><strong>noa</strong><small>Playing Stardew Valley</small></div>
                                 <button class="demo-friend-action" aria-label="Message noa"><svg><use href="#i-chat"/></svg></button><button class="demo-friend-action" aria-label="More options for noa"><svg><use href="#i-more"/></svg></button>
                             </div>
                             <div class="demo-friend-row">
-                                <div class="demo-avatar demo-avatar--mint">R<span class="demo-status"></span></div>
+                                <div class="demo-avatar" data-user="ren"><img src="images/cat-ren.jpg" alt="Cat avatar for ren"><span class="demo-status"></span></div>
                                 <div class="demo-user-info"><strong>ren</strong><small>Listening to late night radio</small></div>
                                 <button class="demo-friend-action" aria-label="Message ren"><svg><use href="#i-chat"/></svg></button><button class="demo-friend-action" aria-label="More options for ren"><svg><use href="#i-more"/></svg></button>
                             </div>
                             <div class="demo-friend-row">
-                                <div class="demo-avatar">S<span class="demo-status demo-status--idle"></span></div>
+                                <div class="demo-avatar" data-user="sol"><img src="images/cat-sol.jpg" alt="Cat avatar for sol"><span class="demo-status demo-status--idle"></span></div>
                                 <div class="demo-user-info"><strong>sol</strong><small>Idle</small></div>
                                 <button class="demo-friend-action" aria-label="Message sol"><svg><use href="#i-chat"/></svg></button><button class="demo-friend-action" aria-label="More options for sol"><svg><use href="#i-more"/></svg></button>
                             </div>
@@ -95,17 +95,17 @@
                         <aside class="nowPlayingColumn__133bf demo-activity thin_demo" aria-label="Active now">
                             <h2>Active Now</h2>
                             <article class="demo-activity-card">
-                                <div class="demo-activity-person"><div class="demo-avatar demo-avatar--rose">N</div><div><strong>noa</strong><small>Playing a game</small></div></div>
+                                <div class="demo-activity-person"><div class="demo-avatar" data-user="noa"><img src="images/cat-noa.jpg" alt="Cat avatar for noa"></div><div><strong>noa</strong><small>Playing a game</small></div></div>
                                 <div class="demo-activity-game"><div class="demo-game-icon"><svg aria-hidden="true"><use href="#i-leaf"/></svg></div><div><strong>Stardew Valley</strong><small>Pelican Town · 42 minutes</small></div></div>
                                 <div class="demo-activity-footer">A quiet evening on the farm.</div>
                             </article>
                             <article class="demo-activity-card">
-                                <div class="demo-activity-person"><div class="demo-avatar demo-avatar--mint">R</div><div><strong>ren &amp; kit</strong><small>Hanging out in voice</small></div></div>
+                                <div class="demo-activity-person"><div class="demo-avatar" data-user="ren"><img src="images/cat-ren.jpg" alt="Cat avatar for ren"></div><div><strong>ren &amp; kit</strong><small>Hanging out in voice</small></div></div>
                                 <div class="demo-activity-game"><div class="demo-game-icon"><svg aria-hidden="true"><use href="#i-voice"/></svg></div><div><strong>The quiet room</strong><small>Relay98 Lounge</small></div></div>
                                 <div class="demo-activity-footer">2 people · There's room for one more.</div>
                             </article>
                             <article class="demo-activity-card">
-                                <div class="demo-activity-person"><div class="demo-avatar demo-avatar--amber">K</div><div><strong>kit</strong><small>Sharing something new</small></div></div>
+                                <div class="demo-activity-person"><div class="demo-avatar" data-user="kit"><img src="images/cat-kit.jpg" alt="Cat avatar for kit"></div><div><strong>kit</strong><small>Sharing something new</small></div></div>
                                 <div class="demo-activity-game"><div class="demo-game-icon"><svg aria-hidden="true"><use href="#i-folder"/></svg></div><div><strong>A cabin in the pines</strong><small>Community art showcase</small></div></div>
                             </article>
                         </aside>

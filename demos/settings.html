@@ -49,9 +49,9 @@
                     <section class="demo-settings-section">
                         <h2>Theme</h2>
                         <div class="demo-theme-options">
-                            <label class="demo-theme-option"><input type="radio" name="theme-mode" value="light"><svg aria-hidden="true"><use href="#i-sun"/></svg>Light</label>
-                            <label class="demo-theme-option"><input type="radio" name="theme-mode" value="dark" checked><svg aria-hidden="true"><use href="#i-moon"/></svg>Dark</label>
-                            <label class="demo-theme-option"><input type="radio" name="theme-mode" value="system"><svg aria-hidden="true"><use href="#i-monitor"/></svg>Sync with computer</label>
+                            <label class="demo-theme-option"><input type="radio" name="theme-mode" value="light"><span class="demo-radio-mark" aria-hidden="true"></span><svg aria-hidden="true"><use href="#i-sun"/></svg>Light</label>
+                            <label class="demo-theme-option"><input type="radio" name="theme-mode" value="dark" checked><span class="demo-radio-mark" aria-hidden="true"></span><svg aria-hidden="true"><use href="#i-moon"/></svg>Dark</label>
+                            <label class="demo-theme-option"><input type="radio" name="theme-mode" value="system"><span class="demo-radio-mark" aria-hidden="true"></span><svg aria-hidden="true"><use href="#i-monitor"/></svg>Sync with computer</label>
                         </div>
                         <p>Give your eyes a little rest. Settle into the dark side.</p>
                         <div class="demo-setting-row">
@@ -63,13 +63,13 @@
                         <h2>Message display</h2>
                         <div class="demo-preview-message">
                             <article class="demo-message">
-                                <div class="demo-avatar demo-avatar--mint">M</div>
+                                <div class="demo-avatar" data-user="mara"><img src="images/cat-mara.jpg" alt="Cat avatar for mara"></div>
                                 <div class="demo-message-body"><div class="demo-message-heading"><strong>mara</strong><time datetime="2026-10-18T20:14">Today at 20:14</time></div><p>A familiar place, a softer glow.<br>Make a little room for the things you love.</p></div>
                             </article>
                         </div>
                         <div class="demo-theme-options">
-                            <label class="demo-theme-option"><input type="radio" name="message-display" value="cozy" checked>Cozy</label>
-                            <label class="demo-theme-option"><input type="radio" name="message-display" value="compact">Compact</label>
+                            <label class="demo-theme-option"><input type="radio" name="message-display" value="cozy" checked><span class="demo-radio-mark" aria-hidden="true"></span>Cozy</label>
+                            <label class="demo-theme-option"><input type="radio" name="message-display" value="compact"><span class="demo-radio-mark" aria-hidden="true"></span>Compact</label>
                         </div>
                         <div class="demo-setting-row">
                             <div><h3>Show avatars in chat</h3><p>Put a face to the conversation.</p></div>
@@ -79,7 +79,7 @@
                     <section class="demo-settings-section">
                         <h2>Chat font scaling</h2>
                         <div class="demo-slider-labels"><span>12px</span><span>14px</span><strong>16px</strong><span>20px</span><span>24px</span></div>
-                        <input class="demo-range" type="range" min="12" max="24" value="16" aria-label="Chat font scaling">
+                        <div class="demo-slider" style="--demo-range-value: 33.3333%"><input class="demo-range" type="range" min="12" max="24" value="16" aria-label="Chat font scaling"><span class="demo-slider-track" aria-hidden="true"><span class="demo-slider-fill"></span><span class="demo-slider-thumb"></span></span></div>
                         <div class="demo-setting-row"><div><h3>Space between message groups</h3><p>A little breathing room between conversations.</p></div><label class="demo-setting-inline"><input type="number" value="16" min="0" max="48" aria-label="Space between message groups"><small>px</small></label></div>
                         <div class="demo-setting-row"><div><h3>Show compact timestamps</h3><p>Keep the time visible beside every message.</p></div><label class="demo-switch"><input type="checkbox" aria-label="Show compact timestamps"><span class="demo-switch-track"></span></label></div>
                     </section>

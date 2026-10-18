@@ -7,12 +7,13 @@
         else document.addEventListener('DOMContentLoaded', resolve, { once: true });
     });
 
-    // Local SVGs keep avatars and icons independent of Discord's CDN.
+    // Local SVGs keep interface icons independent of Discord's CDN.
     domReady.then(() => {
         const icons = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         icons.setAttribute('class', 'icon-definitions');
         icons.setAttribute('aria-hidden', 'true');
         icons.innerHTML = `
+            <symbol id="i-discord" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" d="M20.3 4.4a20 20 0 0 0-4.9-1.5l-.6 1.2a18 18 0 0 0-5.6 0l-.6-1.2a20 20 0 0 0-4.9 1.5C.6 9 .1 13.5.4 17.9a20 20 0 0 0 6 3l1.2-2-1.8-.9.4-.3c3.8 1.8 7.8 1.8 11.6 0l.4.3-1.8.9 1.2 2a20 20 0 0 0 6-3c.4-5.1-.8-9.6-3.3-13.5ZM8.2 15.3c-1.2 0-2.2-1.1-2.2-2.5s1-2.5 2.2-2.5 2.2 1.1 2.2 2.5-1 2.5-2.2 2.5Zm7.6 0c-1.2 0-2.2-1.1-2.2-2.5s1-2.5 2.2-2.5 2.2 1.1 2.2 2.5-1 2.5-2.2 2.5Z"/></symbol>
             <symbol id="i-hash" viewBox="0 0 24 24"><path d="M5 9h15M4 15h15M11 3 7 21M18 3l-4 18"/></symbol>
             <symbol id="i-home" viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v11h-6v-7H9v7H3Z"/></symbol>
             <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></symbol>
@@ -45,6 +46,12 @@
             <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 0v4M12 20v4M0 12h4M20 12h4M3 3l3 3M18 18l3 3M3 21l3-3M18 6l3-3"/></symbol>
         `;
         document.body.prepend(icons);
+        for (const slider of document.querySelectorAll('.demo-range')) {
+            slider.addEventListener('input', () => {
+                const percent = (Number(slider.value) - Number(slider.min)) / (Number(slider.max) - Number(slider.min)) * 100;
+                slider.parentElement.style.setProperty('--demo-range-value', `${percent}%`);
+            });
+        }
         if (new URLSearchParams(window.location.search).has('theme')) {
             for (const anchor of document.querySelectorAll('a[href$=".html"]')) {
                 const destination = new URL(anchor.href);
@@ -73,6 +80,14 @@
 
     window.demoReady = (async () => {
         await Promise.all([themeReady, domReady]);
+        await Promise.all(Array.from(document.images, (image) => new Promise((resolve, reject) => {
+            const loaded = () => image.naturalWidth > 0 ? resolve() : reject(new Error(`Could not load image: ${image.src}`));
+            if (image.complete) loaded();
+            else {
+                image.addEventListener('load', loaded, { once: true });
+                image.addEventListener('error', () => reject(new Error(`Could not load image: ${image.src}`)), { once: true });
+            }
+        })));
         await document.fonts.ready;
         await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
         root.dataset.demoStatus = 'ready';
@@ -87,7 +102,7 @@
         const notice = document.createElement('aside');
         notice.className = 'demo-error';
         notice.setAttribute('role', 'alert');
-        notice.textContent = `${error.message}. Run npm run build or supply a CSS URL with ?theme=...`;
+        notice.textContent = `${error.message}. Run npm run build and check the demo assets, or supply a CSS URL with ?theme=...`;
         document.body.append(notice);
         console.error(error);
     });

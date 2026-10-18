@@ -1,6 +1,8 @@
 /* A small stand-in for Discord's own layout CSS, not a copy of the theme.
    Colors use Discord tokens with stock fallbacks. The built theme supplies
    its palette, textures, fonts, bevels and hashed-selector overrides. */
+@font-face { font-family: 'Pixelify Sans'; src: url('fonts/PixelifySans.ttf') format('truetype'); font-weight: 400 700; font-display: block; }
+@font-face { font-family: 'VT323'; src: url('fonts/VT323-Regular.ttf') format('truetype'); font-weight: 400; font-display: block; }
 * { box-sizing: border-box; }
 html, body { margin: 0; width: 100%; height: 100%; }
 html { color-scheme: dark; }
@@ -77,10 +79,7 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .demo-date::before, .demo-date::after { content: ''; flex: 1; height: 1px; background: var(--background-modifier-accent, #41434a); }
 .demo-message { position: relative; display: flex; gap: 14px; padding: 7px 24px; margin-bottom: 4px; }
 .demo-avatar { position: relative; flex-shrink: 0; display: grid; place-items: center; width: 40px; height: 40px; background: var(--background-accent, #41434a); color: var(--header-primary, #f2f3f5); font-size: 18px; font-weight: 700; border-radius: 50%; }
-.demo-avatar--pine { background: var(--background-brand, #5865f2); color: white; }
-.demo-avatar--amber { background: var(--background-feedback-warning, #5c4930); color: var(--text-feedback-warning, #f0b232); }
-.demo-avatar--rose { background: var(--background-feedback-critical, #623b43); color: var(--text-feedback-critical, #f23f43); }
-.demo-avatar--mint { background: var(--background-feedback-positive, #2b5141); color: var(--text-feedback-positive, #23a55a); }
+.demo-avatar img, .demo-server img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
 .demo-avatar svg { width: 25px; height: 25px; }
 .demo-message-body { min-width: 0; flex: 1; }
 .demo-message-heading { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
@@ -123,7 +122,7 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .demo-dm-link .demo-avatar { width: 32px; height: 32px; font-size: 14px; }
 .demo-tab { font-size: 14px; padding: 3px 9px; background: transparent; color: var(--interactive-normal, #b5bac1); white-space: nowrap; }
 .demo-tab.is-selected { background: var(--background-modifier-selected, #404249); color: white; }
-.demo-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 17px; background: var(--control-secondary-background-default, #4e5058); color: var(--control-secondary-text-default, white); font-size: 14px; }
+.demo-button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 9px 17px; background: var(--control-secondary-background-default, #4e5058); color: var(--control-secondary-text-default, white); font-size: 14px; flex-shrink: 0; white-space: nowrap; }
 .demo-button--primary { background: var(--control-primary-background-default, #5865f2); color: var(--control-primary-text-default, white); }
 .demo-button--danger { background: var(--control-critical-primary-background-default, #da373c); color: var(--control-critical-primary-text-default, white); }
 .demo-button--small { padding: 4px 11px; font-size: 13px; }
@@ -167,7 +166,11 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .demo-theme-options { display: flex; gap: 12px; margin-bottom: 10px; }
 .demo-theme-option { display: flex; align-items: center; gap: 9px; padding: 12px 17px; background: var(--background-secondary, #2b2d31); border: 1px solid var(--border-normal, #41434a); font-size: 14px; }
 .demo-theme-option:has(input:checked) { border-color: var(--border-focus, #5865f2); background: var(--background-modifier-selected, #404249); }
-input[type='radio'], input[type='checkbox'] { accent-color: var(--checkbox-background-selected-default, #5865f2); width: 17px; height: 17px; margin: 0; }
+.demo-theme-option input[type='radio'] { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.demo-radio-mark { position: relative; display: inline-block; flex-shrink: 0; width: 17px; height: 17px; border: 2px solid var(--radio-border-default, #80848e); background: var(--radio-background-default, #1e1f22); }
+.demo-theme-option input:checked + .demo-radio-mark { border-color: var(--radio-border-selected-default, #5865f2); background: var(--radio-background-selected-default, #5865f2); }
+.demo-theme-option input:checked + .demo-radio-mark::after { content: ''; position: absolute; inset: 3px; background: var(--radio-thumb-background-active, white); }
+.demo-theme-option input:focus-visible + .demo-radio-mark { outline: 2px solid var(--border-focus, #5865f2); outline-offset: 3px; }
 .demo-setting-row { display: flex; align-items: center; gap: 20px; margin-top: 14px; }
 .demo-setting-row > div:first-child { flex: 1; }
 .demo-setting-row h3 { font-size: 15px; font-weight: 500; }
@@ -182,7 +185,12 @@ input[type='radio'], input[type='checkbox'] { accent-color: var(--checkbox-backg
 .demo-preview-message .demo-message { padding: 0; margin: 0; }
 .demo-preview-message .demo-message p { font-size: 14px; }
 .demo-slider-labels { display: flex; justify-content: space-between; color: var(--text-muted, #949ba4); font-size: 11px; }
-.demo-range { width: 100%; accent-color: var(--progressbar-indicator-background, #5865f2); margin: 11px 0 2px; }
+.demo-slider { position: relative; height: 20px; margin: 11px 0 2px; }
+.demo-range { position: absolute; inset: 0; z-index: 1; width: 100%; height: 20px; margin: 0; opacity: 0; cursor: pointer; }
+.demo-slider-track { position: absolute; left: 0; right: 0; top: 7px; height: 6px; background: var(--slider-track-background, #4e5058); }
+.demo-slider-fill { position: absolute; left: 0; top: 0; bottom: 0; width: var(--demo-range-value); background: var(--progressbar-indicator-background, #5865f2); }
+.demo-slider-thumb { position: absolute; left: calc(var(--demo-range-value) - 5px); top: -5px; width: 10px; height: 16px; background: var(--header-primary, white); }
+.demo-range:focus-visible + .demo-slider-track { outline: 2px solid var(--border-focus, #5865f2); outline-offset: 5px; }
 .demo-setting-inline { display: flex; align-items: center; gap: 12px; }
 .demo-setting-inline input { width: 80px; padding: 9px 10px; background: var(--input-background-default, #1e1f22); color: inherit; }
 .demo-settings-actions { display: flex; justify-content: flex-end; gap: 10px; }

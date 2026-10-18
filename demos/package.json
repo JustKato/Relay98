@@ -1,0 +1,7 @@
+{
+    "name": "relay98-screenshot-tools",
+    "private": true,
+    "devDependencies": {
+        "playwright": "1.64.1"
+    }
+}

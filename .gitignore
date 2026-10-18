@@ -3,3 +3,6 @@ node_modules/
 
 # graft's local graph cache — regenerable, not committed (run `graft build`).
 /graft/
+
+# Local screenshot browser binaries; never part of the CSS build or release.
+/.tools/
