@@ -1,0 +1,109 @@
+/* ==========================================================================
+   Relay98 — variables.css
+   Fonts + color palette, mapped onto Discord's native CSS custom properties.
+   Discord renames internal component classnames on every build, but it has
+   kept these custom property names stable for years, so this is the safest
+   surface to theme against for a "basic" theme like this one.
+   ========================================================================== */
+
+/* classic win98 pixel font, served from the 98.css project on unpkg */
+@font-face {
+    font-family: 'Relay98 Sans';
+    src:
+        url('https://unpkg.com/98.css@0.1.20/dist/ms_sans_serif.woff2') format('woff2'),
+        url('https://unpkg.com/98.css@0.1.20/dist/ms_sans_serif.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Relay98 Sans';
+    src:
+        url('https://unpkg.com/98.css@0.1.20/dist/ms_sans_serif_bold.woff2') format('woff2'),
+        url('https://unpkg.com/98.css@0.1.20/dist/ms_sans_serif_bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
+:root, .theme-dark, .theme-light {
+    /* ---- core win98/steam2004 chrome ---- */
+    --r98-face: #c0c0c0; /* button/panel face */
+    --r98-face-alt: #b4b4b4;
+    --r98-highlight: #ffffff; /* bevel light edge */
+    --r98-highlight-soft: #dfdfdf;
+    --r98-shadow: #808080; /* bevel dark edge */
+    --r98-shadow-dark: #404040;
+    --r98-black: #000000;
+
+    /* titlebar blue, straight out of win98/steam2004 */
+    --r98-titlebar-start: #000080;
+    --r98-titlebar-end: #1084d0;
+    --r98-titlebar-text: #ffffff;
+
+    /* cs 1.6 / hl1 hud mustard, used for accents + mentions */
+    --r98-accent: #a59263;
+    --r98-accent-hover: #bfae84;
+    --r98-accent-active: #8a7a4f;
+
+    --r98-link: #0000ee;
+    --r98-text: #101010;
+    --r98-text-muted: #4b4b4b;
+
+    --r98-font: 'Relay98 Sans', Tahoma, Geneva, 'MS Sans Serif', sans-serif;
+    --r98-font-code: 'Perfect DOS VGA 437', 'Courier New', monospace;
+
+    /* bevel border thickness, kept consistent across all components */
+    --r98-border: 2px;
+
+    /* ---- map onto discord's classic variable set ---- */
+    --background-primary: var(--r98-face);
+    --background-secondary: var(--r98-face-alt);
+    --background-secondary-alt: var(--r98-face);
+    --background-tertiary: #9c9c9c;
+    --background-floating: var(--r98-face);
+    --background-mobile-primary: var(--r98-face);
+    --background-mobile-secondary: var(--r98-face-alt);
+    --background-accent: var(--r98-accent);
+    --background-message-hover: rgba(0, 0, 0, 0.06);
+    --background-modifier-hover: rgba(0, 0, 0, 0.08);
+    --background-modifier-active: rgba(0, 0, 0, 0.14);
+    --background-modifier-selected: var(--r98-accent);
+    --background-modifier-accent: var(--r98-shadow);
+    --channeltextarea-background: #ffffff;
+
+    --text-normal: var(--r98-text);
+    --text-muted: var(--r98-text-muted);
+    --text-link: var(--r98-link);
+    --header-primary: var(--r98-text);
+    --header-secondary: var(--r98-text-muted);
+    --interactive-normal: #2b2b2b;
+    --interactive-hover: #000000;
+    --interactive-active: #000000;
+    --interactive-muted: #7a7a7a;
+
+    --brand-experiment: var(--r98-accent);
+    --brand-experiment-560: var(--r98-accent-active);
+
+    --font-primary: var(--r98-font);
+    --font-display: var(--r98-font);
+    --font-code: var(--r98-font-code);
+
+    --scrollbar-thin-thumb: var(--r98-shadow);
+    --scrollbar-auto-thumb: var(--r98-shadow);
+    --scrollbar-auto-track: var(--r98-face);
+
+    /* newer semantic tokens, best-effort fallback for current clients */
+    --bg-base-primary: var(--r98-face);
+    --bg-base-secondary: var(--r98-face-alt);
+    --bg-base-tertiary: #9c9c9c;
+    --bg-surface-raised: var(--r98-face);
+    --bg-surface-overlay: var(--r98-face);
+    --bg-mod-subtle: rgba(0, 0, 0, 0.08);
+    --bg-mod-strong: rgba(0, 0, 0, 0.16);
+    --text-default: var(--r98-text);
+    --border-subtle: var(--r98-shadow);
+    --border-strong: var(--r98-shadow-dark);
+    --radius-xs: 0px;
+    --radius-sm: 0px;
+    --radius-md: 0px;
+    --radius-lg: 0px;
+}

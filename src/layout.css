@@ -1,0 +1,75 @@
+/* ==========================================================================
+   Relay98 — layout.css
+   Square corners everywhere + win98-style inset/outset bevel borders on the
+   main app panels. Discord's hashed classnames rotate their suffix on every
+   build (e.g. "sidebar-xYz123"), but the readable prefix stays put, so we
+   target those prefixes with [class*="..."] instead of exact hashes. This
+   keeps the theme working across client updates without a build pipeline
+   that re-scrapes Discord's DOM.
+   ========================================================================== */
+
+html, body {
+    font-family: var(--r98-font) !important;
+    background: var(--r98-face) !important;
+}
+
+/* kill rounded corners app-wide; avatars/pills opt back in further down */
+*, *::before, *::after {
+    border-radius: 0 !important;
+}
+
+/* keep round avatars + status pips circular, that's a different aesthetic */
+img[class*="avatar"],
+[class*="avatarContainer"] img,
+[class*="pointerEvents"][class*="avatar"] {
+    border-radius: 50% !important;
+}
+
+/* outset "raised" bevel helper, applied to the main chrome panels below */
+[class*="guilds"],
+[class*="sidebar"],
+[class*="chat"][class*="content"],
+[class*="membersWrap"],
+[class*="members"][class*="themed"],
+[class*="searchBar"],
+[class*="toolbar"],
+[class*="form"][class*="attachWrapper"],
+[class*="channelTextArea"] {
+    border-style: solid !important;
+    border-width: var(--r98-border) !important;
+    border-color: var(--r98-highlight) var(--r98-shadow-dark) var(--r98-shadow-dark) var(--r98-highlight) !important;
+}
+
+/* flatten the guild/server rail onto the same gray chrome */
+[class*="guilds"] {
+    background: var(--r98-face-alt) !important;
+    padding-top: 6px !important;
+}
+
+/* chat panel: inset "recessed" bevel, like a win98 textbox/viewport */
+[class*="chat"][class*="content"],
+[class*="scrollerContent"] {
+    border-color: var(--r98-shadow-dark) var(--r98-highlight) var(--r98-highlight) var(--r98-shadow-dark) !important;
+}
+
+/* message groups + dividers, flattened to simple rules instead of cards */
+[class*="message"][class*="cozy"],
+[class*="message"][class*="compact"] {
+    border-radius: 0 !important;
+}
+
+[class*="divider"] {
+    border-color: var(--r98-shadow) !important;
+}
+
+/* popouts/menus/modals get the same raised bevel as windows */
+[class*="menu"][class*="theme"],
+[class*="popout"],
+[class*="layerContainer"] [class*="modal"],
+[class*="tooltip"] {
+    background: var(--r98-face) !important;
+    border: var(--r98-border) solid var(--r98-highlight) !important;
+    border-right-color: var(--r98-shadow-dark) !important;
+    border-bottom-color: var(--r98-shadow-dark) !important;
+    box-shadow: 1px 1px 0 var(--r98-black) !important;
+}

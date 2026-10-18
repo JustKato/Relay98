@@ -1,0 +1,11 @@
+{
+    "name": "relay98",
+    "version": "0.1.0",
+    "description": "A Windows 98 / Steam 2004 / CS 1.6 / neocities inspired theme for Discord (Vesktop / BetterDiscord).",
+    "author": "danlegt",
+    "license": "MIT",
+    "scripts": {
+        "build": "node scripts/build.js",
+        "dev": "node scripts/build.js --watch"
+    }
+}
