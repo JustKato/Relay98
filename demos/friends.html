@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en" class="theme-dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Friends · Relay98 demo</title>
+    <link rel="stylesheet" href="discord.css">
+    <script src="demo.js"></script>
+</head>
+<body class="theme-dark" data-demo="friends">
+    <div class="demo-window">
+        <header class="bar_c38106 demo-titlebar">
+            <svg aria-hidden="true"><use href="#i-chat"/></svg><span class="title_c38106">Friends</span>
+            <div class="demo-window-actions" aria-hidden="true"><svg><use href="#i-min"/></svg><svg><use href="#i-max"/></svg><svg><use href="#i-close"/></svg></div>
+        </header>
+        <div class="demo-workspace">
+            <nav class="guilds__5e434 demo-rail" aria-label="Servers">
+                <div class="demo-server is-selected" aria-label="Direct messages, selected"><svg><use href="#i-home"/></svg></div>
+                <div class="demo-rail-divider"></div>
+                <a class="demo-server" href="chat.html" aria-label="Relay98 Lounge"><svg><use href="#i-leaf"/></svg></a>
+                <div class="demo-server is-unread" aria-label="Game night">GN</div>
+                <div class="demo-server" aria-label="Studio"><svg><use href="#i-folder"/></svg></div>
+                <div class="demo-server" aria-label="Pixel club">px</div>
+                <div class="demo-rail-divider"></div>
+                <div class="demo-server is-add" aria-label="Add a server"><svg><use href="#i-plus"/></svg></div>
+            </nav>
+            <aside class="sidebarList__5e434 demo-sidebar" aria-label="Direct messages">
+                <div class="demo-dm-search"><input type="search" placeholder="Find or start a conversation" aria-label="Find a conversation"></div>
+                <div class="scroller__99e7c thin_demo demo-sidebar-scroll">
+                    <div class="interactive__972a0 interactiveSelected__972a0 demo-dm-link is-selected"><svg aria-hidden="true"><use href="#i-members"/></svg><strong>Friends</strong></div>
+                    <div class="demo-dm-link"><svg aria-hidden="true"><use href="#i-inbox"/></svg>Message requests<span class="demo-count">2</span></div>
+                    <div class="demo-dm-link"><svg aria-hidden="true"><use href="#i-star"/></svg>Nitro</div>
+                    <div class="demo-dm-link"><svg aria-hidden="true"><use href="#i-folder"/></svg>Shop</div>
+                    <div class="demo-category">Direct messages<span class="demo-spacer"></span><svg aria-hidden="true"><use href="#i-plus"/></svg></div>
+                    <div class="demo-dm-link"><div class="demo-avatar demo-avatar--mint">M<span class="demo-status"></span></div><div class="demo-user-info"><strong>mara</strong><small>Keeping the kettle on</small></div></div>
+                    <div class="demo-dm-link"><div class="demo-avatar demo-avatar--amber">K<span class="demo-status"></span></div><div class="demo-user-info"><strong>kit</strong><small>Drawing pixels</small></div></div>
+                    <div class="demo-dm-link"><div class="demo-avatar demo-avatar--rose">N<span class="demo-status demo-status--dnd"></span></div><div class="demo-user-info"><strong>noa</strong><small>In a game</small></div></div>
+                    <div class="demo-dm-link"><div class="demo-avatar demo-avatar--mint">R<span class="demo-status"></span></div><div class="demo-user-info"><strong>ren</strong><small>Listening to music</small></div></div>
+                    <div class="demo-dm-link"><div class="demo-avatar">S<span class="demo-status demo-status--idle"></span></div><div class="demo-user-info"><strong>sol</strong><small>Idle</small></div></div>
+                    <div class="demo-dm-link demo-offline"><div class="demo-avatar">J<span class="demo-status demo-status--offline"></span></div><div class="demo-user-info"><strong>jules</strong><small>Offline</small></div></div>
+                </div>
+                <footer class="panels__5e434 demo-user-panel">
+                    <div class="demo-avatar demo-avatar--pine">D<span class="demo-status"></span></div>
+                    <div class="demo-user-info"><strong>danlegt</strong><small>Online</small></div>
+                    <button class="demo-icon-button" aria-label="Mute"><svg><use href="#i-mic"/></svg></button>
+                    <button class="demo-icon-button" aria-label="Deafen"><svg><use href="#i-headphones"/></svg></button>
+                    <a class="demo-icon-button" href="settings.html" aria-label="User settings"><svg><use href="#i-settings"/></svg></a>
+                </footer>
+            </aside>
+            <main class="page__5e434 demo-main">
+                <div class="container__133bf demo-main" style="flex: 1">
+                    <section class="container__9293f demo-header" aria-label="Friends header">
+                        <svg aria-hidden="true"><use href="#i-members"/></svg><h1>Friends</h1>
+                        <button class="demo-tab is-selected" aria-pressed="true">Online</button>
+                        <button class="demo-tab">All</button>
+                        <button class="demo-tab">Pending</button>
+                        <button class="demo-tab">Blocked</button>
+                        <button class="demo-button demo-button--primary demo-button--small lookFilled_demo colorBrand_demo">Add Friend</button>
+                        <span class="demo-spacer"></span>
+                        <button class="demo-icon-button" aria-label="New group message"><svg><use href="#i-chat"/></svg></button>
+                        <button class="demo-icon-button" aria-label="Inbox"><svg><use href="#i-inbox"/></svg></button>
+                        <button class="demo-icon-button" aria-label="Help"><svg><use href="#i-help"/></svg></button>
+                    </section>
+                    <div class="tabBody__133bf demo-friends-grid">
+                        <section class="demo-friends-list" aria-label="Online friends">
+                            <label class="searchBar_demo demo-friends-search"><input type="search" placeholder="Search" aria-label="Search friends"><svg aria-hidden="true"><use href="#i-search"/></svg></label>
+                            <h2 class="demo-section-label">Online — 5</h2>
+                            <div class="demo-friend-row">
+                                <div class="demo-avatar demo-avatar--mint">M<span class="demo-status"></span></div>
+                                <div class="demo-user-info"><strong>mara</strong><small>Keeping the kettle on</small></div>
+                                <button class="demo-friend-action" aria-label="Message mara"><svg><use href="#i-chat"/></svg></button><button class="demo-friend-action" aria-label="More options for mara"><svg><use href="#i-more"/></svg></button>
+                            </div>
+                            <div class="demo-friend-row">
+                                <div class="demo-avatar demo-avatar--amber">K<span class="demo-status"></span></div>
+                                <div class="demo-user-info"><strong>kit</strong><small>Drawing pixels</small></div>
+                                <button class="demo-friend-action" aria-label="Message kit"><svg><use href="#i-chat"/></svg></button><button class="demo-friend-action" aria-label="More options for kit"><svg><use href="#i-more"/></svg></button>
+                            </div>
+                            <div class="demo-friend-row">
+                                <div class="demo-avatar demo-avatar--rose">N<span class="demo-status demo-status--dnd"></span></div>
+                                <div class="demo-user-info"><strong>noa</strong><small>Playing Stardew Valley</small></div>
+                                <button class="demo-friend-action" aria-label="Message noa"><svg><use href="#i-chat"/></svg></button><button class="demo-friend-action" aria-label="More options for noa"><svg><use href="#i-more"/></svg></button>
+                            </div>
+                            <div class="demo-friend-row">
+                                <div class="demo-avatar demo-avatar--mint">R<span class="demo-status"></span></div>
+                                <div class="demo-user-info"><strong>ren</strong><small>Listening to late night radio</small></div>
+                                <button class="demo-friend-action" aria-label="Message ren"><svg><use href="#i-chat"/></svg></button><button class="demo-friend-action" aria-label="More options for ren"><svg><use href="#i-more"/></svg></button>
+                            </div>
+                            <div class="demo-friend-row">
+                                <div class="demo-avatar">S<span class="demo-status demo-status--idle"></span></div>
+                                <div class="demo-user-info"><strong>sol</strong><small>Idle</small></div>
+                                <button class="demo-friend-action" aria-label="Message sol"><svg><use href="#i-chat"/></svg></button><button class="demo-friend-action" aria-label="More options for sol"><svg><use href="#i-more"/></svg></button>
+                            </div>
+                            <div class="demo-friends-note"><svg aria-hidden="true"><use href="#i-voice"/></svg><div><strong>Better with company.</strong><p>Pick a friend and catch up. Your next good conversation is one message away.</p></div></div>
+                        </section>
+                        <aside class="nowPlayingColumn__133bf demo-activity thin_demo" aria-label="Active now">
+                            <h2>Active Now</h2>
+                            <article class="demo-activity-card">
+                                <div class="demo-activity-person"><div class="demo-avatar demo-avatar--rose">N</div><div><strong>noa</strong><small>Playing a game</small></div></div>
+                                <div class="demo-activity-game"><div class="demo-game-icon"><svg aria-hidden="true"><use href="#i-leaf"/></svg></div><div><strong>Stardew Valley</strong><small>Pelican Town · 42 minutes</small></div></div>
+                                <div class="demo-activity-footer">A quiet evening on the farm.</div>
+                            </article>
+                            <article class="demo-activity-card">
+                                <div class="demo-activity-person"><div class="demo-avatar demo-avatar--mint">R</div><div><strong>ren &amp; kit</strong><small>Hanging out in voice</small></div></div>
+                                <div class="demo-activity-game"><div class="demo-game-icon"><svg aria-hidden="true"><use href="#i-voice"/></svg></div><div><strong>The quiet room</strong><small>Relay98 Lounge</small></div></div>
+                                <div class="demo-activity-footer">2 people · There's room for one more.</div>
+                            </article>
+                            <article class="demo-activity-card">
+                                <div class="demo-activity-person"><div class="demo-avatar demo-avatar--amber">K</div><div><strong>kit</strong><small>Sharing something new</small></div></div>
+                                <div class="demo-activity-game"><div class="demo-game-icon"><svg aria-hidden="true"><use href="#i-folder"/></svg></div><div><strong>A cabin in the pines</strong><small>Community art showcase</small></div></div>
+                            </article>
+                        </aside>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en" class="theme-dark">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Appearance settings · Relay98 demo</title>
+    <link rel="stylesheet" href="discord.css">
+    <script src="demo.js"></script>
+</head>
+<body class="theme-dark" data-demo="settings">
+    <div class="demo-window">
+        <header class="bar_c38106 demo-titlebar">
+            <svg aria-hidden="true"><use href="#i-chat"/></svg><span class="title_c38106">User Settings</span>
+            <div class="demo-window-actions" aria-hidden="true"><svg><use href="#i-min"/></svg><svg><use href="#i-max"/></svg><svg><use href="#i-close"/></svg></div>
+        </header>
+        <main class="demo-settings">
+            <aside class="demo-settings-sidebar thin_demo" aria-label="Settings navigation">
+                <nav class="side_aa8da2 demo-settings-nav">
+                    <div class="demo-settings-label">User settings</div>
+                    <span class="item_aa8da2 demo-settings-item">My Account</span>
+                    <span class="item_aa8da2 demo-settings-item">Profiles</span>
+                    <span class="item_aa8da2 demo-settings-item">Content &amp; Social</span>
+                    <span class="item_aa8da2 demo-settings-item">Data &amp; Privacy</span>
+                    <span class="item_aa8da2 demo-settings-item">Authorized Apps</span>
+                    <span class="item_aa8da2 demo-settings-item">Connections</span>
+                    <div class="demo-settings-divider"></div>
+                    <div class="demo-settings-label">App settings</div>
+                    <span class="item_aa8da2 selected_aa8da2 demo-settings-item" aria-current="page">Appearance</span>
+                    <span class="item_aa8da2 demo-settings-item">Accessibility</span>
+                    <span class="item_aa8da2 demo-settings-item">Voice &amp; Video</span>
+                    <span class="item_aa8da2 demo-settings-item">Chat</span>
+                    <span class="item_aa8da2 demo-settings-item">Notifications</span>
+                    <span class="item_aa8da2 demo-settings-item">Keybinds</span>
+                    <span class="item_aa8da2 demo-settings-item">Language</span>
+                    <span class="item_aa8da2 demo-settings-item">Advanced</span>
+                    <div class="demo-settings-divider"></div>
+                    <div class="demo-settings-label">Activity settings</div>
+                    <span class="item_aa8da2 demo-settings-item">Activity Privacy</span>
+                    <span class="item_aa8da2 demo-settings-item">Registered Games</span>
+                    <div class="demo-settings-divider"></div>
+                    <span class="item_aa8da2 demo-settings-item">Log Out</span>
+                    <small style="display: block; padding: 15px 10px">Relay98 · A quieter kind of Discord.</small>
+                </nav>
+            </aside>
+            <section class="demo-settings-content" aria-label="Appearance settings">
+                <div class="demo-settings-close"><a href="chat.html" class="demo-icon-button" aria-label="Close settings"><svg><use href="#i-close"/></svg></a><span>ESC</span></div>
+                <div class="demo-settings-inner">
+                    <h1>Appearance</h1>
+                    <section class="demo-settings-section">
+                        <h2>Theme</h2>
+                        <div class="demo-theme-options">
+                            <label class="demo-theme-option"><input type="radio" name="theme-mode" value="light"><svg aria-hidden="true"><use href="#i-sun"/></svg>Light</label>
+                            <label class="demo-theme-option"><input type="radio" name="theme-mode" value="dark" checked><svg aria-hidden="true"><use href="#i-moon"/></svg>Dark</label>
+                            <label class="demo-theme-option"><input type="radio" name="theme-mode" value="system"><svg aria-hidden="true"><use href="#i-monitor"/></svg>Sync with computer</label>
+                        </div>
+                        <p>Give your eyes a little rest. Settle into the dark side.</p>
+                        <div class="demo-setting-row">
+                            <div><h3>Sync across clients</h3><p>Use the same appearance wherever you sign in.</p></div>
+                            <label class="demo-switch"><input type="checkbox" checked aria-label="Sync across clients"><span class="demo-switch-track"></span></label>
+                        </div>
+                    </section>
+                    <section class="demo-settings-section">
+                        <h2>Message display</h2>
+                        <div class="demo-preview-message">
+                            <article class="demo-message">
+                                <div class="demo-avatar demo-avatar--mint">M</div>
+                                <div class="demo-message-body"><div class="demo-message-heading"><strong>mara</strong><time datetime="2026-10-18T20:14">Today at 20:14</time></div><p>A familiar place, a softer glow.<br>Make a little room for the things you love.</p></div>
+                            </article>
+                        </div>
+                        <div class="demo-theme-options">
+                            <label class="demo-theme-option"><input type="radio" name="message-display" value="cozy" checked>Cozy</label>
+                            <label class="demo-theme-option"><input type="radio" name="message-display" value="compact">Compact</label>
+                        </div>
+                        <div class="demo-setting-row">
+                            <div><h3>Show avatars in chat</h3><p>Put a face to the conversation.</p></div>
+                            <label class="demo-switch"><input type="checkbox" checked aria-label="Show avatars in chat"><span class="demo-switch-track"></span></label>
+                        </div>
+                    </section>
+                    <section class="demo-settings-section">
+                        <h2>Chat font scaling</h2>
+                        <div class="demo-slider-labels"><span>12px</span><span>14px</span><strong>16px</strong><span>20px</span><span>24px</span></div>
+                        <input class="demo-range" type="range" min="12" max="24" value="16" aria-label="Chat font scaling">
+                        <div class="demo-setting-row"><div><h3>Space between message groups</h3><p>A little breathing room between conversations.</p></div><label class="demo-setting-inline"><input type="number" value="16" min="0" max="48" aria-label="Space between message groups"><small>px</small></label></div>
+                        <div class="demo-setting-row"><div><h3>Show compact timestamps</h3><p>Keep the time visible beside every message.</p></div><label class="demo-switch"><input type="checkbox" aria-label="Show compact timestamps"><span class="demo-switch-track"></span></label></div>
+                    </section>
+                    <div class="demo-settings-actions">
+                        <button class="demo-button lookFilled_demo colorPrimary_demo">Reset to Default</button>
+                        <button class="demo-button demo-button--primary lookFilled_demo colorBrand_demo"><svg aria-hidden="true"><use href="#i-check"/></svg>Save Changes</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
