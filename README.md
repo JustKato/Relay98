@@ -6,7 +6,7 @@ Structurally inspired by [system24](https://github.com/refact0r/system24)
 
 ## Install
 
-1. Build the theme (see below), or just grab `build/relay98.theme.css` directly.
+1. Download `relay98.theme.css` from the [latest release](https://github.com/danlegt/Relay98/releases/latest), or build the theme (see below).
 2. Drop `relay98.theme.css` into your themes folder:
    - **Vesktop**: Settings → Vesktop Settings → Themes → open the themes folder, copy the file in, then enable it.
    - **BetterDiscord**: Settings → Themes → open the themes folder, copy the file in, then enable it.
