@@ -18,10 +18,9 @@
 
 
 :root {
-    /* Use PixeloidSans and PixelOperatorMono when installed, as on danlegt.com.
-       Fall back to Google's Pixelify Sans and VT323. */
-    --r98-font: 'PixeloidSans', 'Pixelify Sans', 'Tahoma', sans-serif;
-    --r98-font-code: 'PixelOperatorMono', 'VT323', 'Courier New', monospace;
+    /* Prefer Monocraft when installed, then the other pixel fonts. */
+    --r98-font: 'Monocraft', 'PixeloidSans', 'Pixelify Sans', 'Tahoma', sans-serif;
+    --r98-font-code: 'Monocraft', 'PixelOperatorMono', 'VT323', 'Courier New', monospace;
 
     /* Charcoal surfaces, darkest to lightest.
        A slight green cast matches the pine/sage window bar. */

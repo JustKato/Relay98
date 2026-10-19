@@ -55,7 +55,9 @@ To change the colors, edit the `--r98-*` variables at the top of `src/00-variabl
 
 ## Fonts
 
-Vesktop allows external resources from GitHub, GitLab, Codeberg, Imgur, Discord and Google Fonts, and blocks the rest. The theme uses `PixeloidSans` and `PixelOperatorMono` when they're installed locally. Otherwise, it uses Google's `Pixelify Sans` and `VT323`.
+The theme prefers [Monocraft](https://github.com/IdreesInc/Monocraft) for interface text and code when it's installed on your computer. Otherwise, it uses `PixeloidSans` and `PixelOperatorMono` if available, then Google's `Pixelify Sans` and `VT323`. The demos use the same font choices, with bundled copies of the Google fonts for screenshots.
+
+I recommend installing [Monocraft](https://github.com/IdreesInc/Monocraft) as it's a cool font anyway, but you can still have a more than decent experience with the google pixel-art fonts too.
 
 ## Discord updates
 
