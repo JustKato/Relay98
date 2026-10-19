@@ -1,8 +1,8 @@
 node_modules/
 *.log
 
-# graft's local graph cache — regenerable, not committed (run `graft build`).
+# Local graft cache. Rebuild it with `graft build`.
 /graft/
 
-# Local screenshot browser binaries; never part of the CSS build or release.
+# Browser downloads for the screenshot command.
 /.tools/

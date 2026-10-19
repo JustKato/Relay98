@@ -1,9 +1,6 @@
-// Relay98 build script.
-// Concatenates every file in /src (in filename order) into one self-contained
-// BetterDiscord/Vesktop theme file at build/relay98.theme.css, with the
-// metadata header BD/Vesktop need to recognize it as a theme.
-//
-// No dependencies required: `node scripts/build.js`
+// Combine src/*.css in filename order into build/relay98.theme.css.
+// BetterDiscord and Vesktop use the metadata header to recognize the theme.
+// Run with `node scripts/build.js`; no dependencies are needed.
 
 const fs = require('fs');
 const path = require('path');
@@ -17,7 +14,7 @@ const pkg = require(path.join(root, 'package.json'));
 
 const header = `/**
  * @name Relay98
- * @description A retro-inspired, modern dark theme with pixel fonts.
+ * @description A dark Discord theme with pixel fonts and retro window styling.
  * @author ${pkg.author}
  * @version ${pkg.version}
  * @source https://github.com/${pkg.author}/Relay98
@@ -31,10 +28,9 @@ function build() {
         .filter((file) => file.endsWith('.css'))
         .sort((a, b) => a.localeCompare(b));
 
-    // @import is only valid at the very top of a stylesheet, so pull every
-    // @import out of the source files and hoist them above everything else.
+    // Keep @import rules before the rest of the CSS, where browsers require them.
     const imports = [];
-    // line-based on purpose: google fonts urls contain ';' (wght@400;700)
+    // Match whole lines: Google Fonts URLs contain semicolons (wght@400;700).
     const importRe = /^[ \t]*@import\b.*;[ \t]*$/gm;
 
     const body = files

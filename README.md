@@ -1,8 +1,8 @@
 # Relay98
 
-A retro-inspired, modern dark theme for Discord, built for **Vesktop** and **BetterDiscord**.
+A dark Discord theme for Vesktop and BetterDiscord, with pixel fonts and retro window styling.
 
-Structurally inspired by [system24](https://github.com/refact0r/system24)
+The layout takes cues from [system24](https://github.com/refact0r/system24).
 
 ![Relay98 server chat demo](assets/chat.png)
 ![Relay98 friends demo](assets/friends.png)
@@ -10,15 +10,15 @@ Structurally inspired by [system24](https://github.com/refact0r/system24)
 
 ## Install
 
-1. Download `relay98.theme.css` from the [latest release](https://github.com/danlegt/Relay98/releases/latest), or build the theme (see below).
-2. Drop `relay98.theme.css` into your themes folder:
-   - **Vesktop**: Settings → Vesktop Settings → Themes → open the themes folder, copy the file in, then enable it.
-   - **BetterDiscord**: Settings → Themes → open the themes folder, copy the file in, then enable it.
+1. Download `relay98.theme.css` from the [latest release](https://github.com/danlegt/Relay98/releases/latest), or build it using the commands below.
+2. Copy the file into your themes folder and enable it:
+   - Vesktop: Settings → Vesktop Settings → Themes → open the themes folder.
+   - BetterDiscord: Settings → Themes → open the themes folder.
 3. Reload Discord (Ctrl+R).
 
 ## Build
 
-Node/Npm required
+You'll need Node.js and npm.
 
 ```sh
 npm run build   # builds build/relay98.theme.css once
@@ -31,11 +31,11 @@ npm run dev     # rebuilds automatically when files in src/ change
 npm run screenshot
 ```
 
-This rebuilds the theme and captures the three Discord demo pages at **1920 × 1080** using [Playwright and Chromium](https://playwright.dev/docs/library). Each run overwrites `assets/chat.png`, `assets/friends.png`, and `assets/settings.png`, which are displayed above.
+The command rebuilds the theme and uses [Playwright and Chromium](https://playwright.dev/docs/library) to take `1920`×`1080` screenshots of the three demo pages. It replaces `assets/chat.png`, `assets/friends.png`, and `assets/settings.png`, the pictures shown above.
 
-The first run requires Node.js 20+ and internet access to install the isolated screenshot dependency in `demos/node_modules/` and download Chromium into `.tools/chromium/`. Both directories are ignored by Git. Later captures use the local cat pictures and pixel fonts without fetching external resources. Set `CHROMIUM_BIN=/path/to/chromium` to use an existing browser instead of downloading one.
+Screenshots need Node.js 20 or newer. On the first run, the script downloads Playwright into `demos/node_modules/` and Chromium into `.tools/chromium/`, so you'll need internet access. Git ignores both folders. After setup, screenshots use the cat photos and pixel fonts in this repo without fetching external resources. You can use an existing browser by setting `CHROMIUM_BIN=/path/to/chromium`.
 
-The fixtures are `demos/chat.html`, `demos/friends.html`, and `demos/settings.html`. Each loads the built theme automatically, accepts `?theme=...` for a different CSS URL, and exposes `window.demoReady` for browser automation. Avatar photo credits and font licenses are included in `demos/images/` and `demos/fonts/`.
+Open `demos/chat.html`, `demos/friends.html`, or `demos/settings.html` to inspect a demo in your browser. They load the built theme automatically; use `?theme=...` to point at another CSS URL. Screenshot scripts can wait for `window.demoReady`. Photo credits are in `demos/images/`, and font licenses are in `demos/fonts/`.
 
 ## Structure
 
@@ -51,12 +51,20 @@ demos/               three static Discord views for screenshots, plus shared lay
 assets/              generated 1920 × 1080 PNGs used above
 ```
 
-To recolor, edit the `--r98-*` variables at the top of `src/00-variables.css`.
+To change the colors, edit the `--r98-*` variables at the top of `src/00-variables.css`.
 
 ## Fonts
 
-Vesktop blocks external resources unless they come from GitHub, GitLab, Codeberg, Imgur, Discord or Google Fonts. The theme uses `PixeloidSans` / `PixelOperatorMono` if they're installed locally, otherwise it falls back to Google Fonts' `Pixelify Sans` / `VT323`.
+Vesktop allows external resources from GitHub, GitLab, Codeberg, Imgur, Discord and Google Fonts, and blocks the rest. The theme uses `PixeloidSans` and `PixelOperatorMono` when they're installed locally. Otherwise, it uses Google's `Pixelify Sans` and `VT323`.
 
-## Notes
+## Discord updates
 
-Like system24/midnight, layout rules target Discord's current hashed class names (e.g. `.guilds__5e434`). If Discord renames one in an update, only that rule stops applying; the colors keep working because they come from Discord's CSS variables.
+Like system24 and midnight, the layout rules use Discord's hashed class names, such as `.guilds__5e434`. If Discord renames a class, its layout rule will stop matching. 
+
+Colors still work because they use Discord's CSS variables.
+
+## AI assistance
+
+I originally used this as a sketchy theme that I was basically maintaining along the time, but the theme's colours and styling are completely written by me basically with some AI cleanup.
+
+AI has helped with parts of the theme code, the demo pages and the screenshot tooling.

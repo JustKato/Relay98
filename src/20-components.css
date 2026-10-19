@@ -1,13 +1,9 @@
-/* ==========================================================================
-   Relay98 — 20-components.css
-   Soft retro bevels for real buttons + text fields, and dithered scrollbars.
-   Bevels are inset box-shadows so they never change element sizes/layout.
-   Colors come from the control-* tokens in 00-variables.css — this file
-   only adds the 3D edges.
-   ========================================================================== */
+/* Button and input bevels, plus dithered scrollbars.
+   Inset shadows add edges without changing element sizes or layout.
+   The control-* tokens in 00-variables.css supply the colors. */
 
-/* ---------- push buttons ---------- */
-/* only Discord's actual text buttons, NOT every icon/role=button */
+/* Push buttons. */
+/* Limit bevels to Discord text buttons, excluding icons and generic role=button elements. */
 button:is([class*="lookFilled"], [class*="colorBrand"], [class*="colorPrimary"], [class*="colorGreen"], [class*="colorRed"]),
 button[class*="button_"]:is([class*="primary_"], [class*="secondary_"], [class*="critical"], [class*="active_"]) {
     box-shadow: var(--r98-raised) !important;
@@ -19,7 +15,7 @@ button[class*="button_"]:is([class*="primary_"], [class*="secondary_"], [class*=
     box-shadow: var(--r98-sunken) !important;
 }
 
-/* ---------- text fields: sunken dark wells ---------- */
+/* Inset text fields. */
 input[type='text'],
 input[type='search'],
 input[type='email'],
@@ -35,7 +31,7 @@ textarea,
     border: none !important;
 }
 
-/* inputs nested inside an already-sunken wrapper shouldn't double-bevel */
+/* Apply the bevel to the wrapper once, without repeating it on nested inputs. */
 .channelTextArea_f75fb0 :is(input, textarea),
 :is([class^="searchBar_"], [class*=" searchBar_"]) input {
     box-shadow: none !important;
@@ -46,7 +42,7 @@ textarea,
     color: var(--r98-text-5) !important;
 }
 
-/* ---------- code blocks: pixel mono terminal ---------- */
+/* Code blocks use the pixel monospace font. */
 code,
 pre code {
     font-family: var(--r98-font-code) !important;
@@ -54,11 +50,9 @@ pre code {
     border: 1px solid var(--r98-border) !important;
 }
 
-/* ---------- scrollbars: square + retro ----------
-   Chromium ignores ::-webkit-scrollbar as soon as an element sets
-   scrollbar-color / scrollbar-width (Discord does on most scrollers, which
-   is why they looked like default rounded blobs). Reset those everywhere so
-   our styling actually applies, but keep hidden scrollers hidden. */
+/* Chromium prefers scrollbar-color/scrollbar-width over ::-webkit-scrollbar.
+   Discord sets them on most scrollers, so reset them to allow the square
+   scrollbars below. Hidden scrollers still stay hidden. */
 * {
     scrollbar-width: auto !important;
     scrollbar-color: auto !important;
@@ -72,7 +66,7 @@ pre code {
     display: none !important;
 }
 
-/* sizes: chunky on main scrollers, slimmer on discord's "thin" ones */
+/* Wide main scrollbars and slimmer Discord "thin" scrollbars. */
 ::-webkit-scrollbar {
     width: 14px !important;
     height: 14px !important;
@@ -83,7 +77,7 @@ pre code {
     height: 10px !important;
 }
 
-/* track: 50% pixel dither, sunken */
+/* Inset track with a 50% dither pattern. */
 ::-webkit-scrollbar-track {
     background: repeating-conic-gradient(var(--r98-bg-1) 0% 25%, var(--r98-bg-0) 0% 50%) 0 0 / 2px 2px !important;
     border: none !important;
@@ -91,7 +85,7 @@ pre code {
     margin: 0 !important;
 }
 
-/* thumb: square, raised bevel, little 3-line grip in the middle */
+/* Square thumb with a raised bevel and a three-line grip. */
 ::-webkit-scrollbar-thumb {
     background-color: var(--r98-bg-3) !important;
     background-image: repeating-linear-gradient(
@@ -120,7 +114,7 @@ pre code {
     background: var(--r98-bg-1) !important;
 }
 
-/* arrow buttons: one at each end, raised squares with pixel-art arrows */
+/* Raised buttons with pixel arrows at each end of the scrollbar. */
 ::-webkit-scrollbar-button:single-button {
     display: block;
     width: 14px;
@@ -146,7 +140,7 @@ pre code {
 ::-webkit-scrollbar-button:horizontal:increment {
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='7' shape-rendering='crispEdges'%3E%3Cpath fill='%23b3b8b1' d='M0 0h1v1h1v1h1v1h1v1H3v1H2v1H1v1H0z'/%3E%3C/svg%3E");
 }
-/* no arrows on the slim sidebar scrollers — keeps them tidy */
+/* Hide arrow buttons on the slim sidebar scrollbars. */
 :is([class^="thin_"], [class*=" thin_"])::-webkit-scrollbar-button {
     display: none;
 }

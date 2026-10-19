@@ -1,71 +1,61 @@
-/* ==========================================================================
-   Relay98 — 00-variables.css
-   Palette + fonts, mapped onto ALL of Discord's color tokens (old + new).
+/* Colors and fonts for Discord's current and older tokens.
+   Charcoal panels with a slight green tint, pixel fonts, a pine/sage window
+   bar, soft bevels and faint CSS textures. */
 
-   Direction: retro-inspired but modern. Pixel font, soft charcoal grays
-   with a hint of green, muted pine -> sage title bars, soft bevels, and a
-   few barely-there patterns on selected areas instead of flat black.
-   ========================================================================== */
-
-/* Vesktop only allows fonts from Google Fonts / GitHub / GitLab / Codeberg.
-   Anything else (unpkg, personal sites...) gets silently blocked. */
+/* Vesktop allows fonts from Google Fonts, GitHub, GitLab and Codeberg.
+   It silently blocks other hosts, including unpkg and personal sites. */
 @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;700&family=VT323&display=swap');
 
 :root {
-    /* ---------- fonts ----------
-       PixeloidSans / PixelOperatorMono are used if installed locally
-       (same fonts as danlegt.com), otherwise Google's Pixelify Sans / VT323. */
+    /* Use PixeloidSans and PixelOperatorMono when installed, as on danlegt.com.
+       Fall back to Google's Pixelify Sans and VT323. */
     --r98-font: 'PixeloidSans', 'Pixelify Sans', 'Tahoma', sans-serif;
     --r98-font-code: 'PixelOperatorMono', 'VT323', 'Courier New', monospace;
 
-    /* ---------- charcoal surfaces (darkest -> lightest) ----------
-       neutral grays with a faint green cast so they sit naturally under the
-       pine/sage title bars */
+    /* Charcoal surfaces, darkest to lightest.
+       A slight green cast matches the pine/sage window bar. */
     --r98-bg-0: #1b1d1c; /* wells: inputs, chat bar, code, server rail */
     --r98-bg-1: #222524; /* side panels: channel list, members */
     --r98-bg-2: #292c2b; /* chat */
     --r98-bg-3: #323634; /* raised: cards, popouts, buttons */
     --r98-bg-4: #3c403e; /* raised + hovered */
 
-    /* ---------- soft bevel tones ---------- */
+    /* Soft bevel tones. */
     --r98-bevel-light: #5a5f5c; /* outer top-left */
     --r98-bevel-mid: #454a47; /* inner top-left */
     --r98-bevel-dim: #1f2221; /* inner bottom-right */
     --r98-bevel-dark: #121413; /* outer bottom-right */
     --r98-line: #161817; /* 1px panel separators */
 
-    /* ---------- text ---------- */
+    /* Text. */
     --r98-text-1: #eef0ec; /* headings, names, strong */
     --r98-text-2: #d9dcd6; /* message text */
     --r98-text-3: #b3b8b1; /* secondary text */
     --r98-text-4: #959b94; /* channels, icons */
     --r98-text-5: #6e746d; /* muted, timestamps, placeholders */
 
-    /* ---------- title bars: muted pine -> sage ----------
-       from the classic "forest & sage" family (hunter #3e5641,
-       torrey pine #527a54, sage #7a9167), kept dusty so white text reads
-       well and it never feels loud */
+    /* Muted pine/sage window bar, inspired by hunter (#3e5641), Torrey pine
+       (#527a54) and sage (#7a9167). Darker shades keep white text readable. */
     --r98-titlebar: linear-gradient(to right, #2e4a3b, 75%, #5b8360);
 
-    /* ---------- accents ---------- */
+    /* Accents. */
     --r98-accent: #4a7a54; /* primary buttons (torrey pine) */
     --r98-accent-hover: #568a61;
     --r98-accent-active: #3e6647;
     --r98-accent-light: #7fae86; /* focus rings, progress bars */
     --r98-select: #3b5c45; /* selected channel / dm / menu item */
     --r98-link: #8cc7a6; /* soft seafoam */
-    --r98-amber: #e8b04a; /* mentions, idle — retro CRT amber */
+    --r98-amber: #e8b04a; /* mentions and idle status (CRT amber) */
     --r98-green: #6fbf73;
     --r98-red: #e0635a;
     --r98-red-dark: #b23f37;
 
-    /* ---------- states ---------- */
+    /* States. */
     --r98-hover: rgba(255, 255, 255, 0.045);
     --r98-active: rgba(255, 255, 255, 0.08);
     --r98-border: #3a3f3c;
 
-    /* ---------- patterns ----------
-       each area gets its own, all barely visible. pure css, no assets. */
+    /* Faint panel textures use CSS and need no image files. */
     /* chat + friends: soft CRT scanlines */
     --r98-pat-scan: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.016) 0 1px, transparent 1px 3px);
     /* server rail + user panel: 2px pixel dither */
@@ -77,18 +67,18 @@
     /* title bars: darker scanlines laid over the gradient */
     --r98-pat-bar: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 2px);
 
-    /* hard pixel drop shadow for floating things */
+    /* Hard-edged shadow for floating panels. */
     --r98-drop: 3px 3px 0 rgba(0, 0, 0, 0.35);
 
-    /* bevel recipes (box-shadow so they never shift layout) */
+    /* Inset shadows add bevels without changing element sizes. */
     --r98-raised: inset -1px -1px var(--r98-bevel-dark), inset 1px 1px var(--r98-bevel-light),
         inset -2px -2px var(--r98-bevel-dim), inset 2px 2px var(--r98-bevel-mid);
     --r98-sunken: inset -1px -1px var(--r98-bevel-light), inset 1px 1px var(--r98-bevel-dark),
         inset -2px -2px var(--r98-bevel-mid), inset 2px 2px var(--r98-bevel-dim);
 }
 
-/* same selector set midnight/system24 use, so we beat Discord's own
-   per-theme variable blocks (.theme-dark etc.) */
+/* Use midnight/system24's selectors to override Discord's theme variables
+   on body, .theme-dark and .theme-light. */
 body,
 .theme-dark:not(.custom-user-profile-theme),
 .theme-light:not(.custom-user-profile-theme) {
@@ -97,7 +87,7 @@ body,
     --font-headline: var(--r98-font);
     --font-code: var(--r98-font-code);
 
-    /* ---- backgrounds ---- */
+    /* Backgrounds. */
     --app-frame-background: var(--r98-bg-0);
     --app-frame-border: var(--r98-line);
     --background-primary: var(--r98-bg-2);
@@ -142,7 +132,7 @@ body,
     --background-code-addition: rgba(111, 191, 115, 0.18);
     --background-code-deletion: rgba(224, 99, 90, 0.18);
 
-    /* ---- text ---- */
+    /* Text. */
     --text-normal: var(--r98-text-2);
     --text-default: var(--r98-text-2);
     --text-strong: var(--r98-text-1);
@@ -165,7 +155,7 @@ body,
     --text-feedback-positive: var(--r98-green);
     --text-feedback-warning: var(--r98-amber);
 
-    /* ---- interactive (channels, dms, list items, icon buttons) ---- */
+    /* Interactive (channels, dms, list items, icon buttons). */
     --interactive-normal: var(--r98-text-4);
     --interactive-hover: var(--r98-text-1);
     --interactive-active: var(--r98-text-1);
@@ -180,7 +170,7 @@ body,
     --interactive-background-active: var(--r98-active);
     --interactive-background-selected: var(--r98-select);
 
-    /* ---- icons ---- */
+    /* Icons. */
     --icon-default: var(--r98-text-4);
     --icon-strong: var(--r98-text-1);
     --icon-subtle: var(--r98-text-4);
@@ -192,7 +182,7 @@ body,
     --icon-feedback-positive: var(--r98-green);
     --icon-feedback-warning: var(--r98-amber);
 
-    /* ---- borders ---- */
+    /* Borders. */
     --border-subtle: var(--r98-line);
     --border-muted: var(--r98-line);
     --border-normal: var(--r98-border);
@@ -201,7 +191,7 @@ body,
     --border-feedback-critical: var(--r98-red);
     --divider-color: var(--r98-red);
 
-    /* ---- buttons (control-*) ---- */
+    /* Buttons (control-*). */
     --control-primary-background-default: var(--r98-accent);
     --control-primary-background-hover: var(--r98-accent-hover);
     --control-primary-background-active: var(--r98-accent-active);
@@ -269,7 +259,7 @@ body,
     --redesign-button-secondary-text: var(--r98-text-1);
     --button-outline-primary-text: var(--r98-text-1);
 
-    /* ---- inputs ---- */
+    /* Inputs. */
     --input-background-default: var(--r98-bg-0);
     --input-background-error-default: rgba(224, 99, 90, 0.1);
     --input-border-default: transparent;
@@ -280,7 +270,7 @@ body,
     --input-placeholder-text-default: var(--r98-text-5);
     --channeltextarea-background: var(--r98-bg-0);
 
-    /* ---- checkbox / radio / switch / slider ---- */
+    /* Checkbox / radio / switch / slider. */
     --checkbox-background-default: var(--r98-bg-0);
     --checkbox-background-hover: var(--r98-bg-1);
     --checkbox-background-selected-default: var(--r98-accent);
@@ -313,7 +303,7 @@ body,
     --progressbar-track-background: var(--r98-bg-0);
     --progressbar-indicator-background: var(--r98-accent-light);
 
-    /* ---- messages / mentions / reactions ---- */
+    /* Messages / mentions / reactions. */
     --message-background-hover: rgba(255, 255, 255, 0.025);
     --message-mentioned-background-default: rgba(232, 176, 74, 0.08);
     --message-mentioned-background-hover: rgba(232, 176, 74, 0.12);
@@ -340,7 +330,7 @@ body,
     --polls-victor-fill: rgba(111, 191, 115, 0.2);
     --spine-default: var(--r98-text-5);
 
-    /* ---- badges / notices ---- */
+    /* Badges / notices. */
     --badge-background-default: var(--r98-accent);
     --badge-text-default: #ffffff;
     --badge-notification-background: var(--r98-red);
@@ -355,7 +345,7 @@ body,
     --notice-text-warning: var(--r98-bg-0);
     --notice-text-critical: #ffffff;
 
-    /* ---- status ---- */
+    /* Status. */
     --status-online: var(--r98-green);
     --status-positive: var(--r98-green);
     --status-positive-background: var(--r98-green);
@@ -371,7 +361,7 @@ body,
     --text-status-dnd: var(--r98-red);
     --text-status-offline: var(--r98-text-5);
 
-    /* ---- user profiles ---- */
+    /* User profiles. */
     --user-profile-border: var(--r98-border);
     --user-profile-overlay-background: var(--r98-bg-2);
     --user-profile-overlay-background-hover: var(--r98-hover);
@@ -380,13 +370,13 @@ body,
     --user-profile-toolbar-border: var(--r98-border);
     --user-profile-note-background-focus: var(--r98-bg-0);
 
-    /* ---- scrollbars (real retro bars live in 20-components) ---- */
+    /* Scrollbar colors. See 20-components.css for their shape and texture. */
     --scrollbar-thin-thumb: var(--r98-bg-4);
     --scrollbar-thin-track: transparent;
     --scrollbar-auto-thumb: var(--r98-bg-4);
     --scrollbar-auto-track: var(--r98-bg-1);
 
-    /* ---- legacy brand + raw palette tokens (plugins still use these) ---- */
+    /* Legacy brand and palette tokens used by plugins. */
     --brand-experiment: var(--r98-accent);
     --brand-experiment-560: var(--r98-accent-active);
     --brand-260: var(--r98-link);
@@ -399,7 +389,7 @@ body,
     --yellow-300: var(--r98-amber);
     --primary-400: var(--r98-text-4);
 
-    /* ---- square, pixel-y corners ---- */
+    /* Square corners. */
     --radius-xs: 0px;
     --radius-sm: 0px;
     --radius-md: 0px;

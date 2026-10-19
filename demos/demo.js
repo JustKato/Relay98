@@ -1,4 +1,4 @@
-// Classic script so the demos also work when opened directly with file://.
+// Use a regular script so the pages also work over file://.
 (() => {
     const root = document.documentElement;
     const theme = new URLSearchParams(window.location.search).get('theme') || '../build/relay98.theme.css';
@@ -7,7 +7,7 @@
         else document.addEventListener('DOMContentLoaded', resolve, { once: true });
     });
 
-    // Local SVGs keep interface icons independent of Discord's CDN.
+    // Bundle the icons so the demos don't need Discord's CDN.
     domReady.then(() => {
         const icons = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         icons.setAttribute('class', 'icon-definitions');
@@ -94,7 +94,7 @@
         root.dataset.demoReady = 'true';
     })();
 
-    // Keep failures visible to people and automation without an unhandled rejection.
+    // Show load errors on the page. Screenshot scripts can still catch demoReady.
     window.demoReady.catch(async (error) => {
         root.dataset.demoStatus = 'error';
         root.dataset.demoError = error.message;

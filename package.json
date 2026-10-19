@@ -1,7 +1,7 @@
 {
     "name": "relay98",
     "version": "0.1.0",
-    "description": "A retro-inspired, modern dark Discord theme with pixel fonts (Vesktop / BetterDiscord).",
+    "description": "A dark Discord theme with pixel fonts and retro window styling (Vesktop / BetterDiscord).",
     "author": "danlegt",
     "license": "MIT",
     "scripts": {

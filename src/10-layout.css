@@ -1,19 +1,14 @@
-/* ==========================================================================
-   Relay98 — 10-layout.css
-   App chrome: texture overlay, blue title bars, selection, floating panels.
+/* Panels, window bar, toolbars and selection styles.
+   These selectors use Discord's hashed class names, as midnight/system24 do.
+   If a class changes, that rule stops matching; the color variables still work. */
 
-   Class names are Discord's current hashed names (same approach as
-   midnight/system24). If Discord renames one after an update, only that
-   single rule stops applying — colors still come from the variables.
-   ========================================================================== */
-
-/* ---------- global ---------- */
+/* Global. */
 body {
     font-family: var(--r98-font);
     -webkit-font-smoothing: none;
 }
 
-/* square, pixel-y corners (svg avatar masks are unaffected) */
+/* Square corners; SVG avatar masks keep their shape. */
 *,
 *::before,
 *::after {
@@ -25,10 +20,8 @@ body {
     color: #ffffff;
 }
 
-/* ---------- per-area patterns ----------
-   each region gets its own barely-visible texture; floating stuff (menus,
-   popouts, modals) stays flat so it reads as "in front".
-   inner wrappers are made transparent so the outer pattern shows through. */
+/* Panel textures. Inner wrappers stay transparent so the texture shows
+   through. Menus, popouts and modals stay flat to stand out from the panels. */
 
 /* chat + friends page: soft CRT scanlines */
 .chatContent_f75fb0,
@@ -50,6 +43,10 @@ body {
 .guilds__5e434 .wrapper_ef3116 {
     background: transparent !important;
 }
+/* Center the 48px home button in the 52px channel/search header row. */
+.guilds__5e434 .scroller_ef3116 {
+    padding-top: 2px !important;
+}
 
 /* channel/dm list + member list + active now: tiny dot grid */
 .sidebarList__5e434,
@@ -68,7 +65,7 @@ body {
     background: transparent !important;
 }
 
-/* ---------- title bars (the retro bit) ---------- */
+/* Window bar and toolbars. */
 /* top window bar ("Friends", "Direct Messages", back/forward, inbox) */
 .bar_c38106 {
     background: var(--r98-pat-bar), var(--r98-titlebar) !important;
@@ -82,25 +79,26 @@ body {
     color: #ffffff;
 }
 
-/* chat / friends / message-requests / vc chat headers */
+/* Chat / friends / message-requests / vc toolbars use raised charcoal.
+   Keep the pine/sage gradient on the window bar above these panels. */
 .subtitleContainer_f75fb0 > section,
 .container__133bf > .container__9293f,
 .container_f391e3 > .container__9293f,
 .container__01ae2 > .container__9293f {
-    background: var(--r98-pat-bar), var(--r98-titlebar) !important;
+    background: var(--r98-bg-3) var(--r98-pat-scan) !important;
     border-bottom: 1px solid var(--r98-line) !important;
-    box-shadow: none !important;
+    box-shadow: inset 0 1px var(--r98-bevel-mid) !important;
 }
 .subtitleContainer_f75fb0 > section :is(h1, h2, h3, [class*="title"]),
 .container__9293f :is(h1, h2, h3, [class*="title"]) {
-    color: #ffffff;
+    color: var(--r98-text-1);
 }
 .subtitleContainer_f75fb0 > section svg,
 .container__9293f svg {
-    color: #ffffff !important;
+    color: var(--r98-text-3) !important;
 }
 
-/* ---------- panel separation: quiet 1px lines, nothing loud ---------- */
+/* Separate panels with 1px borders. */
 .guilds__5e434 {
     border-right: 1px solid var(--r98-line) !important;
 }
@@ -118,7 +116,7 @@ body {
     border: none !important;
 }
 
-/* ---------- selection ---------- */
+/* Selection. */
 .side_aa8da2 .item_aa8da2.selected_aa8da2 /* settings tabs */,
 .interactive__972a0.interactiveSelected__972a0 /* dm list */ {
     background-color: var(--r98-select) !important;
@@ -131,7 +129,7 @@ body {
     background-color: var(--r98-hover) !important;
 }
 
-/* ---------- messages ---------- */
+/* Messages. */
 .mentioned__5126c::before /* mention left edge */ {
     background: var(--r98-amber) !important;
 }
@@ -139,8 +137,8 @@ body {
     background: var(--r98-titlebar) !important;
 }
 
-/* ---------- floating panels: menus, popouts, tooltips ---------- */
-/* flat surface + 1px border + hard pixel drop shadow (retro, not windows) */
+/* Floating panels: menus, popouts, tooltips. */
+/* Flat panels with a 1px border and a hard-edged shadow. */
 [class^="menu_"],
 [class*=" menu_"],
 .container__8a031 /* popout modals */ {

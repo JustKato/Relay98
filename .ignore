@@ -1,5 +1,5 @@
-# graft's cards are gitignored but should stay greppable: ripgrep reads
-# .ignore before .gitignore, so this re-admits the tree to search only.
+# Keep graft's cards searchable even though Git ignores them.
+# .ignore takes precedence over .gitignore for searches.
 !graft/
 graft/.cache/
 graft/.graph/

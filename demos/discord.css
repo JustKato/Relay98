@@ -1,6 +1,6 @@
-/* A small stand-in for Discord's own layout CSS, not a copy of the theme.
-   Colors use Discord tokens with stock fallbacks. The built theme supplies
-   its palette, textures, fonts, bevels and hashed-selector overrides. */
+/* Discord layout for the demo pages, using Discord color tokens with stock
+   fallbacks. The built theme supplies the palette, fonts, textures, bevels
+   and overrides for Discord's hashed selectors. */
 @font-face { font-family: 'Pixelify Sans'; src: url('fonts/PixelifySans.ttf') format('truetype'); font-weight: 400 700; font-display: block; }
 @font-face { font-family: 'VT323'; src: url('fonts/VT323-Regular.ttf') format('truetype'); font-weight: 400; font-display: block; }
 * { box-sizing: border-box; }
@@ -12,7 +12,7 @@ body {
     background: var(--background-primary, #313338);
     font: 16px/1.4 var(--font-primary, Arial, sans-serif);
 }
-/* Fixed content, no flashing caret or moving UI in screenshots. */
+/* Keep animations and the text caret out of screenshots. */
 *, *::before, *::after { animation: none !important; transition: none !important; caret-color: transparent !important; }
 button, input, textarea, select { font: inherit; }
 button, a, input { outline-offset: 3px; }
@@ -35,7 +35,8 @@ svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width:
 .demo-window-actions { display: flex; gap: 16px; align-items: center; }
 .demo-window-actions svg { width: 12px; height: 12px; }
 .demo-workspace { flex: 1; min-height: 0; display: grid; grid-template-columns: 72px 232px minmax(0, 1fr); }
-.demo-rail { padding: 14px 10px; display: flex; flex-direction: column; align-items: center; gap: 12px; background: var(--background-tertiary, #1e1f22); }
+.demo-rail { padding: 0 10px; background: var(--background-tertiary, #1e1f22); }
+.demo-server-list { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
 .demo-server { position: relative; width: 48px; height: 48px; display: grid; place-items: center; background: var(--background-accent, #383a40); color: var(--header-primary, #f2f3f5); font-size: 20px; font-weight: 700; border-radius: 16px; }
 .demo-server svg { width: 27px; height: 27px; }
 .demo-server.is-selected { background: var(--background-brand, #5865f2); color: white; }

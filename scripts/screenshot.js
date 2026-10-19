@@ -1,4 +1,4 @@
-// Local documentation tooling. The CSS build and release workflow never load it.
+// Capture the README images separately from the CSS build and release workflow.
 const { spawn } = require('node:child_process');
 const { existsSync } = require('node:fs');
 const fs = require('node:fs/promises');
@@ -25,8 +25,7 @@ function run(executable, args) {
 
 async function prepareBrowser() {
     if (Number(process.versions.node.split('.')[0]) < 20) throw new Error('Screenshots require Node.js 20 or newer.');
-    // Keep the screenshot dependency and downloaded browser out of the main
-    // package. They are installed only when this command is explicitly run.
+    // Install Playwright and Chromium here so normal builds don't need them.
     const packageRoot = path.join(demosRoot, 'node_modules', 'playwright');
     const expected = require('../demos/package.json').devDependencies.playwright;
     let installed;
@@ -34,7 +33,7 @@ async function prepareBrowser() {
     catch (error) { if (error.code !== 'ENOENT') throw error; }
     if (installed !== expected) {
         if (!process.env.npm_execpath) throw new Error('Run npm run screenshot to install its local dependencies.');
-        console.log('Installing isolated screenshot dependencies in demos/node_modules...');
+        console.log('Installing screenshot dependencies in demos/node_modules...');
         await run(process.execPath, [process.env.npm_execpath, 'ci', '--prefix', demosRoot, '--include=dev', '--ignore-scripts', '--no-audit', '--no-fund']);
     }
 
@@ -88,12 +87,11 @@ async function main() {
             viewport: { width, height }, deviceScaleFactor: 1,
             colorScheme: 'dark', reducedMotion: 'reduce', locale: 'en-US', timezoneId: 'UTC',
         });
-        // Photos and fonts are vendored. No external resources enter a capture.
+        // Load photos and fonts from the repo; block external requests.
         await context.route('**/*', (route) => {
             const url = new URL(route.request().url());
             if (url.origin === origin) return route.continue();
-            // Satisfy the theme's Google Fonts import without a network fetch;
-            // discord.css has already declared the same fonts from local TTFs.
+            // discord.css loads the bundled TTFs, so this import can be empty.
             if (url.hostname === 'fonts.googleapis.com') return route.fulfill({ status: 200, contentType: 'text/css', body: '' });
             return route.abort();
         });
@@ -114,7 +112,7 @@ async function main() {
             captures.push({ scene, png });
         }
 
-        // Keep existing README images until all three captures have succeeded.
+        // Replace the README images only after every capture succeeds.
         await fs.mkdir(path.join(root, 'assets'), { recursive: true });
         for (const { scene, png } of captures) {
             await fs.writeFile(path.join(root, 'assets', `${scene}.png`), png);
