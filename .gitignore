@@ -6,3 +6,6 @@ node_modules/
 
 # Browser downloads for the screenshot command.
 /.tools/
+
+# Personal customizer output; the standard release CSS remains tracked.
+/build/relay98-custom.theme.css

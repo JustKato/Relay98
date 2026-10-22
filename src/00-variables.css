@@ -11,6 +11,15 @@
     --r98-font: 'Monocraft', 'PixeloidSans', 'Pixelify Sans', 'Tahoma', sans-serif;
     --r98-font-code: 'Monocraft', 'PixelOperatorMono', 'VT323', 'Courier New', monospace;
 
+    /* Sizes used by Discord panels, messages and controls. */
+    --r98-font-size: 16px;
+    --r98-code-size: 15px;
+    --r98-message-spacing: 4px;
+    --r98-sidebar-width: 240px;
+    --r98-member-width: 240px;
+    --r98-radius: 0px;
+    --r98-scrollbar-width: 14px;
+
     /* Charcoal surfaces, darkest to lightest.
        A slight green cast matches the pine/sage window bar. */
     --r98-bg-0: #1b1d1c; /* wells: inputs, chat bar, code, server rail */
@@ -65,6 +74,8 @@
     --r98-pat-dots-size: 6px 6px;
     /* title bars: darker scanlines laid over the gradient */
     --r98-pat-bar: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 2px);
+    --r98-pat-scrollbar-track: repeating-conic-gradient(var(--r98-bg-1) 0% 25%, var(--r98-bg-0) 0% 50%);
+    --r98-pat-scrollbar-thumb: repeating-linear-gradient(to bottom, var(--r98-bevel-light) 0 1px, var(--r98-bevel-dark) 1px 2px, transparent 2px 4px);
 
     /* Hard-edged shadow for floating panels. */
     --r98-drop: 3px 3px 0 rgba(0, 0, 0, 0.35);
@@ -74,6 +85,7 @@
         inset -2px -2px var(--r98-bevel-dim), inset 2px 2px var(--r98-bevel-mid);
     --r98-sunken: inset -1px -1px var(--r98-bevel-light), inset 1px 1px var(--r98-bevel-dark),
         inset -2px -2px var(--r98-bevel-mid), inset 2px 2px var(--r98-bevel-dim);
+    --r98-toolbar-shadow: inset 0 1px var(--r98-bevel-mid);
 }
 
 /* Use midnight/system24's selectors to override Discord's theme variables
@@ -123,13 +135,13 @@ body,
     --background-modifier-selected: var(--r98-select);
     --background-modifier-accent: var(--r98-border);
 
-    --background-feedback-critical: rgba(224, 99, 90, 0.14);
-    --background-feedback-info: rgba(140, 199, 166, 0.14);
-    --background-feedback-positive: rgba(111, 191, 115, 0.14);
-    --background-feedback-warning: rgba(232, 176, 74, 0.14);
+    --background-feedback-critical: color-mix(in srgb, var(--r98-red) 14%, transparent);
+    --background-feedback-info: color-mix(in srgb, var(--r98-link) 14%, transparent);
+    --background-feedback-positive: color-mix(in srgb, var(--r98-green) 14%, transparent);
+    --background-feedback-warning: color-mix(in srgb, var(--r98-amber) 14%, transparent);
     --background-feedback-notification: var(--r98-red);
-    --background-code-addition: rgba(111, 191, 115, 0.18);
-    --background-code-deletion: rgba(224, 99, 90, 0.18);
+    --background-code-addition: color-mix(in srgb, var(--r98-green) 18%, transparent);
+    --background-code-deletion: color-mix(in srgb, var(--r98-red) 18%, transparent);
 
     /* Text. */
     --text-normal: var(--r98-text-2);
@@ -219,7 +231,7 @@ body,
 
     --control-critical-primary-background-default: var(--r98-red-dark);
     --control-critical-primary-background-hover: var(--r98-red);
-    --control-critical-primary-background-active: #8f322c;
+    --control-critical-primary-background-active: color-mix(in srgb, var(--r98-red-dark) 80%, black);
     --control-critical-primary-text-default: #ffffff;
     --control-critical-primary-text-hover: #ffffff;
     --control-critical-primary-text-active: #ffffff;
@@ -236,9 +248,9 @@ body,
     --control-critical-secondary-icon-hover: var(--r98-red);
     --control-critical-secondary-icon-active: var(--r98-red);
 
-    --control-connect-background-default: #4a8f4f;
+    --control-connect-background-default: color-mix(in srgb, var(--r98-green) 75%, black);
     --control-connect-background-hover: var(--r98-green);
-    --control-connect-background-active: #3d7741;
+    --control-connect-background-active: color-mix(in srgb, var(--r98-green) 62%, black);
     --control-connect-text-default: #ffffff;
     --control-connect-text-hover: #ffffff;
     --control-connect-text-active: #ffffff;
@@ -260,7 +272,7 @@ body,
 
     /* Inputs. */
     --input-background-default: var(--r98-bg-0);
-    --input-background-error-default: rgba(224, 99, 90, 0.1);
+    --input-background-error-default: color-mix(in srgb, var(--r98-red) 10%, transparent);
     --input-border-default: transparent;
     --input-border-hover: transparent;
     --input-border-active: var(--r98-accent-light);
@@ -304,19 +316,19 @@ body,
 
     /* Messages / mentions / reactions. */
     --message-background-hover: rgba(255, 255, 255, 0.025);
-    --message-mentioned-background-default: rgba(232, 176, 74, 0.08);
-    --message-mentioned-background-hover: rgba(232, 176, 74, 0.12);
-    --message-highlight-background-default: rgba(140, 199, 166, 0.07);
-    --message-highlight-background-hover: rgba(140, 199, 166, 0.1);
-    --message-reacted-background-default: rgba(74, 122, 84, 0.25);
+    --message-mentioned-background-default: color-mix(in srgb, var(--r98-amber) 8%, transparent);
+    --message-mentioned-background-hover: color-mix(in srgb, var(--r98-amber) 12%, transparent);
+    --message-highlight-background-default: color-mix(in srgb, var(--r98-link) 7%, transparent);
+    --message-highlight-background-hover: color-mix(in srgb, var(--r98-link) 10%, transparent);
+    --message-reacted-background-default: color-mix(in srgb, var(--r98-accent) 25%, transparent);
     --message-reacted-text-default: var(--r98-text-1);
-    --mention-background: rgba(232, 176, 74, 0.16);
+    --mention-background: color-mix(in srgb, var(--r98-amber) 16%, transparent);
     --mention-foreground: var(--r98-amber);
     --reaction-background-default: var(--r98-bg-3);
     --reaction-background-hover: var(--r98-bg-4);
     --reaction-background-active: var(--r98-bg-4);
-    --reaction-background-reacted-default: rgba(74, 122, 84, 0.28);
-    --reaction-background-reacted-hover: rgba(74, 122, 84, 0.38);
+    --reaction-background-reacted-default: color-mix(in srgb, var(--r98-accent) 28%, transparent);
+    --reaction-background-reacted-hover: color-mix(in srgb, var(--r98-accent) 38%, transparent);
     --reaction-border-default: transparent;
     --reaction-border-hover: var(--r98-bevel-light);
     --reaction-border-active: var(--r98-bevel-light);
@@ -325,8 +337,8 @@ body,
     --reaction-text-hover: var(--r98-text-1);
     --reaction-text-active: var(--r98-text-1);
     --reaction-text-reacted-default: var(--r98-text-1);
-    --polls-voted-fill: rgba(74, 122, 84, 0.22);
-    --polls-victor-fill: rgba(111, 191, 115, 0.2);
+    --polls-voted-fill: color-mix(in srgb, var(--r98-accent) 22%, transparent);
+    --polls-victor-fill: color-mix(in srgb, var(--r98-green) 20%, transparent);
     --spine-default: var(--r98-text-5);
 
     /* Badges / notices. */
@@ -336,7 +348,7 @@ body,
     --badge-expressive-background-default: var(--r98-accent);
     --badge-expressive-text-default: #ffffff;
     --notice-background-info: var(--r98-accent);
-    --notice-background-positive: #4a8f4f;
+    --notice-background-positive: var(--control-connect-background-default);
     --notice-background-warning: var(--r98-amber);
     --notice-background-critical: var(--r98-red-dark);
     --notice-text-info: #ffffff;
@@ -388,10 +400,10 @@ body,
     --yellow-300: var(--r98-amber);
     --primary-400: var(--r98-text-4);
 
-    /* Square corners. */
-    --radius-xs: 0px;
-    --radius-sm: 0px;
-    --radius-md: 0px;
-    --radius-lg: 0px;
-    --radius-xl: 0px;
+    /* Corner sizes shared by Discord controls. */
+    --radius-xs: var(--r98-radius);
+    --radius-sm: var(--r98-radius);
+    --radius-md: var(--r98-radius);
+    --radius-lg: var(--r98-radius);
+    --radius-xl: var(--r98-radius);
 }

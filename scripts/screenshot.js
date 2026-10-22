@@ -51,6 +51,7 @@ async function serveDemos() {
     const server = http.createServer(async (request, response) => {
         try {
             const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
+            if (pathname.includes('\0')) throw new URIError('Invalid path');
             const file = pathname === '/theme.css'
                 ? path.join(root, 'build', 'relay98.theme.css')
                 : path.resolve(root, `.${pathname}`);
@@ -62,7 +63,10 @@ async function serveDemos() {
             response.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
             response.end(body);
         } catch (error) {
-            response.writeHead(error.code === 'ENOENT' ? 404 : 500).end();
+            const status = error instanceof URIError || error.code === 'ERR_INVALID_URL'
+                ? 400
+                : ['ENOENT', 'ENOTDIR', 'EISDIR'].includes(error.code) ? 404 : 500;
+            response.writeHead(status).end();
         }
     });
     await new Promise((resolve, reject) => {
@@ -129,4 +133,8 @@ async function main() {
     }
 }
 
-main().catch((error) => { console.error(error.message); process.exitCode = 1; });
+if (require.main === module) {
+    main().catch((error) => { console.error(error.message); process.exitCode = 1; });
+}
+
+module.exports = { prepareBrowser, serveDemos, main };

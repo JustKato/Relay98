@@ -3,16 +3,20 @@
    If a class changes, that rule stops matching; the color variables still work. */
 
 /* Global. */
+html {
+    font-size: var(--r98-font-size);
+}
 body {
     font-family: var(--r98-font);
+    font-size: var(--r98-font-size);
     -webkit-font-smoothing: none;
 }
 
-/* Square corners; SVG avatar masks keep their shape. */
+/* Configurable corners; SVG avatar masks keep their shape. */
 *,
 *::before,
 *::after {
-    border-radius: 0 !important;
+    border-radius: var(--r98-radius) !important;
 }
 
 ::selection {
@@ -87,7 +91,7 @@ body {
 .container__01ae2 > .container__9293f {
     background: var(--r98-bg-3) var(--r98-pat-scan) !important;
     border-bottom: 1px solid var(--r98-line) !important;
-    box-shadow: inset 0 1px var(--r98-bevel-mid) !important;
+    box-shadow: var(--r98-toolbar-shadow) !important;
 }
 .subtitleContainer_f75fb0 > section :is(h1, h2, h3, [class*="title"]),
 .container__9293f :is(h1, h2, h3, [class*="title"]) {
@@ -103,7 +107,16 @@ body {
     border-right: 1px solid var(--r98-line) !important;
 }
 .sidebarList__5e434 {
+    width: var(--r98-sidebar-width) !important;
+    min-width: var(--r98-sidebar-width) !important;
     border-right: 1px solid var(--r98-line) !important;
+}
+.container_c8ffbb {
+    width: var(--r98-member-width) !important;
+    min-width: var(--r98-member-width) !important;
+}
+.container_c8ffbb .members_c8ffbb {
+    width: 100% !important;
 }
 .container_c8ffbb /* member list */,
 .nowPlayingColumn__133bf /* active now */ {
@@ -130,6 +143,12 @@ body {
 }
 
 /* Messages. */
+.chatContent_f75fb0 [id^="chat-messages-"] {
+    margin-bottom: var(--r98-message-spacing) !important;
+}
+.chatContent_f75fb0 :is([class^="markup_"], [class*=" markup_"]) {
+    font-size: var(--r98-font-size) !important;
+}
 .mentioned__5126c::before /* mention left edge */ {
     background: var(--r98-amber) !important;
 }

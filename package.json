@@ -4,9 +4,14 @@
     "description": "A dark Discord theme with pixel fonts and retro window styling (Vesktop / BetterDiscord).",
     "author": "danlegt",
     "license": "MIT",
+    "engines": {
+        "node": ">=20"
+    },
     "scripts": {
         "build": "node scripts/build.js",
         "dev": "node scripts/build.js --watch",
-        "screenshot": "node scripts/screenshot.js"
+        "screenshot": "node scripts/screenshot.js",
+        "test": "node --test tests/*.test.js",
+        "test:browser": "node scripts/test-browser.js"
     }
 }

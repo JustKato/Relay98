@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark light">
+    <meta name="description" content="Make Relay98 your own. Pick a palette, adjust fonts and sizing, then copy a command to build your Discord theme.">
+    <title>Relay98 — Theme workshop</title>
+    <link rel="stylesheet" href="customize.css">
+    <script src="scripts/customization.js" defer></script>
+    <script src="customize.js" defer></script>
+</head>
+<body>
+    <a class="skip-link" href="#settings">Skip to theme settings</a>
+    <main class="workshop">
+        <header class="masthead">
+            <a class="brand" href="README.md" aria-label="Relay98 readme"><span class="brand-icon" aria-hidden="true">r<span>98</span></span><span>RELAY<span class="brand-number">98</span><small>A LITTLE OLD SCHOOL.</small></span></a>
+            <div class="masthead-meta"><span class="status-dot" aria-hidden="true"></span> LOCAL THEME WORKSHOP <span class="version-label">/ 01</span></div>
+        </header>
+        <div class="intro">
+            <div><p class="eyebrow">PERSONALIZE YOUR CORNER OF DISCORD</p><h1>Same nostalgia.<br><span>Your kind of desktop.</span></h1></div>
+            <p>Choose your colours, get the spacing right, and find your font. Copy one command to build a theme that feels like yours.</p>
+        </div>
+        <noscript><p class="alert">This workshop needs JavaScript to generate the build command. Enable it, then reopen this file.</p></noscript>
+        <p id="fatal-error" class="alert" hidden></p>
+        <div class="workspace">
+            <section class="settings-window window" id="settings" aria-labelledby="settings-title">
+                <div class="window-bar"><h2 id="settings-title"><span aria-hidden="true">▦</span> Appearance settings</h2><span class="window-mark" aria-hidden="true">− □</span></div>
+                <form id="theme-settings">
+                    <fieldset class="settings-section">
+                        <legend><span class="step">01</span> Colour palette</legend>
+                        <p class="section-note">Start with a mood. Make every shade your own.</p>
+                        <div class="palette-presets" id="palette-presets"></div>
+                        <div class="section-subhead"><span>ESSENTIAL COLOURS</span><span id="palette-state">Pine</span></div>
+                        <div class="color-grid" id="main-colors"></div>
+                        <details class="advanced-colors"><summary>Fine-tune every colour <span id="advanced-count"></span></summary><div class="color-grid" id="advanced-colors"></div></details>
+                    </fieldset>
+                    <fieldset class="settings-section">
+                        <legend><span class="step">02</span> Typography</legend>
+                        <div class="font-fields" id="font-fields"></div>
+                        <p class="field-note">Pixel fonts are bundled for this preview. Custom fonts need to be installed on your device.</p>
+                    </fieldset>
+                    <fieldset class="settings-section">
+                        <legend><span class="step">03</span> Size &amp; spacing</legend>
+                        <div id="size-controls" class="size-controls"></div>
+                        <p class="field-note">Widths apply in Discord. The preview fits this window.</p>
+                    </fieldset>
+                    <fieldset class="settings-section">
+                        <legend><span class="step">04</span> Finishing touches</legend>
+                        <div class="effect-options">
+                            <label class="toggle-row"><span><strong>Pixel textures</strong><small>Subtle scanlines, dots and dither</small></span><input type="checkbox" id="effect-textures" data-effect="textures" role="switch"><span class="toggle" aria-hidden="true"></span></label>
+                            <label class="toggle-row"><span><strong>Classic bevels</strong><small>Raised buttons and inset panels</small></span><input type="checkbox" id="effect-bevels" data-effect="bevels" role="switch"><span class="toggle" aria-hidden="true"></span></label>
+                            <label class="toggle-row"><span><strong>Window shadows</strong><small>A hard shadow under floating panels</small></span><input type="checkbox" id="effect-shadows" data-effect="shadows" role="switch"><span class="toggle" aria-hidden="true"></span></label>
+                            <label class="toggle-row"><span><strong>Google Fonts import</strong><small>Let the built theme load the original pixel fonts</small></span><input type="checkbox" id="google-fonts" role="switch"><span class="toggle" aria-hidden="true"></span></label>
+                        </div>
+                        <p class="field-note">This workshop makes no external requests. Google Fonts is only used by the built theme when enabled.</p>
+                    </fieldset>
+                    <div class="settings-footer"><button type="button" id="reset-settings" class="quiet-button">↺ Reset to original</button><span id="save-state">Saved on this device</span></div>
+                </form>
+            </section>
+            <div class="output-column">
+                <section class="preview-window window" aria-labelledby="preview-title">
+                    <div class="window-bar"><h2 id="preview-title"><span aria-hidden="true">▣</span> Your theme, at a glance</h2><span class="live-label"><span aria-hidden="true">●</span> LIVE PREVIEW</span></div>
+                    <div class="preview" id="theme-preview">
+                        <div class="preview-title"><span>Relay98 — the clubhouse</span><span aria-hidden="true">− □ ×</span></div>
+                        <div class="preview-body">
+                            <aside class="preview-sidebar" aria-label="Sample channels">
+                                <div class="server-name">the clubhouse <span aria-hidden="true">⌄</span></div>
+                                <p class="channel-group">TEXT CHANNELS</p>
+                                <div class="sample-channel selected"><span aria-hidden="true">#</span> general</div>
+                                <div class="sample-channel"><span aria-hidden="true">#</span> screenshots</div>
+                                <div class="sample-channel"><span aria-hidden="true">#</span> good-finds</div>
+                                <p class="channel-group">VOICE CHANNELS</p>
+                                <div class="sample-channel"><span aria-hidden="true">♫</span> the lounge</div>
+                                <div class="voice-member"><span class="presence" aria-hidden="true"></span> noa</div>
+                                <div class="voice-member"><span class="presence amber" aria-hidden="true"></span> kit</div>
+                                <div class="preview-user"><span class="mini-avatar" aria-hidden="true">r98</span><div>you<small>All systems go</small></div><span aria-hidden="true">⚙</span></div>
+                            </aside>
+                            <div class="preview-chat">
+                                <div class="channel-heading"><span aria-hidden="true">#</span> general <span class="channel-topic">a nice place to be</span></div>
+                                <div class="messages">
+                                    <div class="channel-welcome"><span class="welcome-icon" aria-hidden="true">#</span><h3>Welcome to general.</h3><p>Pull up a chair. Stay a while.</p></div>
+                                    <div class="sample-message"><img class="avatar" src="demos/images/cat-noa.jpg" alt="" width="34" height="34"><div class="message-content"><p class="message-meta"><strong>noa</strong><span>Today at 16:08</span></p><p>Found my old desktop theme. Had to bring it back.</p><div class="sample-embed"><span class="embed-eyebrow">CURRENT SETUP</span><strong>A familiar kind of future.</strong><p>Pixel fonts. Quiet colours. Just the right amount of bevel.</p><span class="preview-link">relay98 / make yourself at home ↗</span></div><div class="sample-reaction">✦ <span>3</span></div></div></div>
+                                    <div class="sample-message"><img class="avatar" src="demos/images/cat-kit.jpg" alt="" width="34" height="34"><div class="message-content"><p class="message-meta"><strong>kit</strong><span>Today at 16:09</span></p><p><span class="sample-mention">@noa</span> this is the one. <span class="sample-code">hello, world_</span></p></div></div>
+                                    <div class="preview-notice"><span class="presence" aria-hidden="true"></span><span>Looking good. Ready when you are.</span><span class="preview-button">Let's go</span></div>
+                                </div>
+                                <div class="sample-composer"><span aria-hidden="true">⊕</span><span>Message #general</span><span aria-hidden="true">☺</span></div>
+                                <div class="sample-typing"><strong>noa</strong> is typing<span aria-hidden="true">...</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="preview-caption"><span><span class="status-dot" aria-hidden="true"></span> Illustrative preview</span><span>Your colours. Your fonts. Instantly.</span></div>
+                </section>
+                <section class="build-window window" aria-labelledby="build-title">
+                    <div class="window-bar"><h2 id="build-title"><span aria-hidden="true">›_</span> Build your theme</h2><span class="window-mark" aria-hidden="true">.CSS</span></div>
+                    <div class="build-content"><div class="build-heading"><div><p class="eyebrow">READY TO MAKE IT YOURS?</p><h3>One command. Your theme.</h3></div><span class="file-icon" aria-hidden="true">CSS</span></div>
+                        <p class="build-help" id="command-help">Run this in the Relay98 project folder with Node.js and npm installed, or send it to your coding assistant.</p>
+                        <label class="visually-hidden" for="build-command">Theme build command</label><textarea id="build-command" rows="4" spellcheck="false" readonly aria-describedby="command-help"></textarea>
+                        <div class="command-actions"><button type="button" class="primary-button" id="copy-command">Copy build command <span aria-hidden="true">↗</span></button><span class="output-path">OUTPUT <code>build/relay98-custom.theme.css</code></span></div>
+                        <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+                        <div class="file-actions"><span>Keep this setup for later</span><div><button type="button" id="export-settings">↓ Save JSON</button><button type="button" id="import-settings">↑ Load JSON</button><input type="file" id="import-file" accept="application/json,.json" hidden></div></div>
+                    </div>
+                </section>
+                <p class="workshop-tip"><span aria-hidden="true">i</span> Colours and sizes stay in your browser. Nothing is uploaded. Your original theme is kept as it is.</p>
+            </div>
+        </div>
+        <footer class="page-footer"><span>RELAY98 <span aria-hidden="true">/</span> A theme with a little history.</span><a href="README.md">Read the guide ↗</a></footer>
+    </main>
+</body>
+</html>

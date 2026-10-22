@@ -8,7 +8,7 @@
     });
 
     // Bundle the icons so the demos don't need Discord's CDN.
-    domReady.then(() => {
+    const viewReady = domReady.then(() => {
         const icons = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         icons.setAttribute('class', 'icon-definitions');
         icons.setAttribute('aria-hidden', 'true');
@@ -79,7 +79,7 @@
     });
 
     window.demoReady = (async () => {
-        await Promise.all([themeReady, domReady]);
+        await Promise.all([themeReady, viewReady]);
         await Promise.all(Array.from(document.images, (image) => new Promise((resolve, reject) => {
             const loaded = () => image.naturalWidth > 0 ? resolve() : reject(new Error(`Could not load image: ${image.src}`));
             if (image.complete) loaded();

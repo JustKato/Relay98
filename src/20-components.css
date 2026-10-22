@@ -10,8 +10,8 @@ button[class*="button_"]:is([class*="primary_"], [class*="secondary_"], [class*=
     border: none !important;
     font-family: var(--r98-font);
 }
-button:is([class*="lookFilled"], [class*="colorBrand"], [class*="colorPrimary"], [class*="colorGreen"], [class*="colorRed"]):active,
-button[class*="button_"]:is([class*="primary_"], [class*="secondary_"], [class*="critical"], [class*="active_"]):active {
+button:is([class*="lookFilled"], [class*="colorBrand"], [class*="colorPrimary"], [class*="colorGreen"], [class*="colorRed"]):active:not(:disabled):not([aria-disabled="true"]),
+button[class*="button_"]:is([class*="primary_"], [class*="secondary_"], [class*="critical"], [class*="active_"]):active:not(:disabled):not([aria-disabled="true"]) {
     box-shadow: var(--r98-sunken) !important;
 }
 
@@ -29,6 +29,7 @@ textarea,
     color: var(--r98-text-1) !important;
     box-shadow: var(--r98-sunken) !important;
     border: none !important;
+    font-family: var(--r98-font);
 }
 
 /* Apply the bevel to the wrapper once, without repeating it on nested inputs. */
@@ -43,9 +44,9 @@ textarea,
 }
 
 /* Code blocks use the pixel monospace font. */
-code,
-pre code {
+code {
     font-family: var(--r98-font-code) !important;
+    font-size: var(--r98-code-size) !important;
     background: var(--r98-bg-0) !important;
     border: 1px solid var(--r98-border) !important;
 }
@@ -68,39 +69,34 @@ pre code {
 
 /* Wide main scrollbars and slimmer Discord "thin" scrollbars. */
 ::-webkit-scrollbar {
-    width: 14px !important;
-    height: 14px !important;
+    width: var(--r98-scrollbar-width) !important;
+    height: var(--r98-scrollbar-width) !important;
     background: var(--r98-bg-0) !important;
 }
 :is([class^="thin_"], [class*=" thin_"])::-webkit-scrollbar {
-    width: 10px !important;
-    height: 10px !important;
+    width: max(4px, calc(var(--r98-scrollbar-width) - 4px)) !important;
+    height: max(4px, calc(var(--r98-scrollbar-width) - 4px)) !important;
 }
 
 /* Inset track with a 50% dither pattern. */
 ::-webkit-scrollbar-track {
-    background: repeating-conic-gradient(var(--r98-bg-1) 0% 25%, var(--r98-bg-0) 0% 50%) 0 0 / 2px 2px !important;
+    background: var(--r98-bg-0) var(--r98-pat-scrollbar-track) 0 0 / 2px 2px !important;
     border: none !important;
-    border-radius: 0 !important;
+    border-radius: var(--r98-radius) !important;
     margin: 0 !important;
 }
 
 /* Square thumb with a raised bevel and a three-line grip. */
 ::-webkit-scrollbar-thumb {
     background-color: var(--r98-bg-3) !important;
-    background-image: repeating-linear-gradient(
-        to bottom,
-        var(--r98-bevel-light) 0 1px,
-        var(--r98-bevel-dark) 1px 2px,
-        transparent 2px 4px
-    ) !important;
+    background-image: var(--r98-pat-scrollbar-thumb) !important;
     background-size: 6px 10px !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
     background-clip: border-box !important;
     box-shadow: var(--r98-raised) !important;
     border: none !important;
-    border-radius: 0 !important;
+    border-radius: var(--r98-radius) !important;
     min-height: 28px;
     min-width: 28px;
 }
@@ -117,8 +113,8 @@ pre code {
 /* Raised buttons with pixel arrows at each end of the scrollbar. */
 ::-webkit-scrollbar-button:single-button {
     display: block;
-    width: 14px;
-    height: 14px;
+    width: var(--r98-scrollbar-width);
+    height: var(--r98-scrollbar-width);
     background-color: var(--r98-bg-3);
     background-repeat: no-repeat;
     background-position: center;
