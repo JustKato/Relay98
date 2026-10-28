@@ -43,13 +43,14 @@ test('colour overrides select the base and readable palette text independently o
     assert.equal(theme.colors.window, '#ffffff');
     assert.equal(theme.colors.on_accent, '#101010');
     assert.equal(theme.colors.tint, '#abcdef28');
-    assert.equal(customization.toSpotifast({ colors: { ...input.colors, accent: '#000000', 'bg-2': '#000000' } }).colors.on_accent, '#fafafa');
+    assert.equal(customization.toSpotifast({ colors: { ...input.colors, accent: '#000000', 'accent-hover': '#111111', 'bg-2': '#000000' } }).colors.on_accent, '#fafafa');
     assert.deepEqual(customization.toSpotifast({ ...input, sizes: { fontSize: 24 }, fonts: { ui: 'Arial' }, effects: { textures: false, shadows: false }, googleFonts: false }), theme);
     assert.throws(() => customization.toSpotifast({ colors: { accent: '#fff' } }), /six-digit/);
 
     const context = vm.createContext({});
     vm.runInContext(fs.readFileSync(path.join(root, 'scripts/customization.js'), 'utf8'), context);
     assert.equal(JSON.stringify(context.Relay98Customization.toSpotifast(input)), JSON.stringify(theme));
+    assert.equal(JSON.stringify(context.Relay98Customization.toPalette(input)), JSON.stringify(customization.toPalette(input)));
 });
 
 test('Spotifast builds use separate defaults and preserve unchanged files', (t) => {

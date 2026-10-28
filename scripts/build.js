@@ -6,6 +6,16 @@ const pkg = require('../package.json');
 
 const root = path.resolve(__dirname, '..');
 const srcDir = path.join(root, 'src');
+const formats = {
+    css: { suffix: '.theme.css' },
+    palette: { suffix: '.palette.json', convert: customization.toPalette, label: 'colour palette' },
+    spotifast: { suffix: '.spotifast.json', convert: customization.toSpotifast, label: 'Spotifast' },
+};
+
+function getFormat(name = 'css') {
+    if (!Object.hasOwn(formats, name)) throw new Error('--format must be css, palette, or spotifast.');
+    return formats[name];
+}
 
 const header = `/**
  * @name Relay98
@@ -77,10 +87,8 @@ function canonicalPath(file) {
 
 function outputPath(options = {}) {
     const custom = options.custom !== undefined || options.configPath !== undefined;
-    const format = options.format ?? 'css';
-    if (!['css', 'spotifast'].includes(format)) throw new Error('--format must be css or spotifast.');
-    const extension = format === 'spotifast' ? '.json' : '.css';
-    const suffix = format === 'spotifast' ? '.spotifast.json' : '.theme.css';
+    const { suffix } = getFormat(options.format);
+    const extension = path.extname(suffix);
     const output = options.output
         ? path.resolve(options.output)
         : path.join(root, 'build', `relay98${custom ? '-custom' : ''}${suffix}`);
@@ -103,11 +111,12 @@ function build(options = {}) {
         catch (error) { throw new Error(`Could not load configuration ${options.configPath}: ${error.message}`); }
     } else if (options.custom !== undefined) config = customization.normalize(options.custom);
     const output = outputPath(options);
-    if (options.format === 'spotifast') {
-        const theme = customization.toSpotifast(config);
+    const format = getFormat(options.format);
+    if (format.convert) {
+        const theme = format.convert(config);
         const json = `${JSON.stringify(theme, null, 2)}\n`;
         const changed = writeOutput(output, json);
-        if (!options.quiet) console.log(`${changed ? 'Built' : 'Unchanged'} ${path.relative(root, output)} for Spotifast.`);
+        if (!options.quiet) console.log(`${changed ? 'Built' : 'Unchanged'} ${path.relative(root, output)} (${format.label}).`);
         return { output, theme, json, changed };
     }
     const files = fs.readdirSync(srcDir, { withFileTypes: true })
@@ -137,7 +146,7 @@ function writeOutput(output, content) {
     const changed = previous !== content;
     if (changed) {
         fs.mkdirSync(path.dirname(output), { recursive: true });
-        // Keep a failed write from leaving a partially written installable theme.
+        // Leave the last good export in place if writing fails.
         const temporary = `${output}.${process.pid}.tmp`;
         try {
             fs.writeFileSync(temporary, content);
@@ -164,7 +173,7 @@ function parseArgs(args) {
         } else throw new Error(`Unknown option: ${flag}. Run npm run build -- --help.`);
     }
     if (options.custom !== undefined && options.configPath !== undefined) throw new Error('Use either --custom or --config, not both.');
-    if (options.format !== undefined && !['css', 'spotifast'].includes(options.format)) throw new Error('--format must be css or spotifast.');
+    getFormat(options.format);
     return options;
 }
 
@@ -197,15 +206,17 @@ function main(args = process.argv.slice(2)) {
         console.log(`Usage: npm run build -- [options]
   --custom TOKEN    Settings copied from customize.html (URL-safe base64 JSON)
   --config FILE     Read settings from a JSON file
-  --format FORMAT   Export css (default) or spotifast
-  --output FILE     Write a .css or Spotifast .json file at this path
+  --format FORMAT   Export css (default), palette, or spotifast
+  --output FILE     Write the exported .css or .json file at this path
   --watch           Rebuild when source or configuration changes
   --help            Show this help
 
 Default output: build/relay98.theme.css
 Customized output: build/relay98-custom.theme.css
 Spotifast output: build/relay98.spotifast.json
-Customized Spotifast output: build/relay98-custom.spotifast.json`);
+Customized Spotifast output: build/relay98-custom.spotifast.json
+Palette output: build/relay98.palette.json
+Customized palette output: build/relay98-custom.palette.json`);
     } else if (options.watch) watch(options);
     else build(options);
 }

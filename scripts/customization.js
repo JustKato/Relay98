@@ -8,20 +8,20 @@
 
     const colors = [
         ['bg-0', 'Wells and inputs', '#1b1d1c'], ['bg-1', 'Side panels', '#222524'],
-        ['bg-2', 'Chat background', '#292c2b'], ['bg-3', 'Raised surfaces', '#323634'],
+        ['bg-2', 'Main background', '#292c2b'], ['bg-3', 'Raised surfaces', '#323634'],
         ['bg-4', 'Hovered surfaces', '#3c403e'],
         ['bevel-light', 'Bevel highlight', '#5a5f5c'], ['bevel-mid', 'Bevel midtone', '#454a47'],
         ['bevel-dim', 'Bevel shade', '#1f2221'], ['bevel-dark', 'Bevel shadow', '#121413'],
         ['line', 'Panel separators', '#161817'], ['border', 'Borders', '#3a3f3c'],
-        ['text-1', 'Headings', '#eef0ec'], ['text-2', 'Message text', '#d9dcd6'],
-        ['text-3', 'Secondary text', '#b3b8b1'], ['text-4', 'Channels and icons', '#959b94'],
-        ['text-5', 'Muted text', '#6e746d'],
+        ['text-1', 'Primary text', '#eef0ec'], ['text-2', 'Body text', '#d9dcd6'],
+        ['text-3', 'Secondary text', '#b3b8b1'], ['text-4', 'Muted text and icons', '#959b94'],
+        ['text-5', 'Faint text', '#6e746d'],
         ['titlebar-start', 'Title bar start', '#2e4a3b'], ['titlebar-end', 'Title bar end', '#5b8360'],
         ['accent', 'Accent', '#4a7a54'], ['accent-hover', 'Accent hover', '#568a61'],
         ['accent-active', 'Accent pressed', '#3e6647'], ['accent-light', 'Focus and progress', '#7fae86'],
         ['select', 'Selection', '#3b5c45'], ['link', 'Links', '#8cc7a6'],
-        ['amber', 'Mentions and idle', '#e8b04a'], ['green', 'Online and success', '#6fbf73'],
-        ['red', 'Errors and busy', '#e0635a'], ['red-dark', 'Destructive buttons', '#b23f37'],
+        ['amber', 'Warning', '#e8b04a'], ['green', 'Success', '#6fbf73'],
+        ['red', 'Error', '#e0635a'], ['red-dark', 'Destructive buttons', '#b23f37'],
     ].map(([key, label, value]) => ({ key, label, default: value }));
 
     const original = Object.fromEntries(colors.map(({ key, default: value }) => [key, value]));
@@ -162,35 +162,85 @@
         return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
     }
 
-    // Spotifast's palette format: https://spotifast.rocks/settings-and-files/#custom-themes
-    function toSpotifast(input) {
+    function contrast(first, second) {
+        const a = luminance(first), b = luminance(second);
+        return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+    }
+
+    function accentText(c) {
+        const score = (text) => Math.min(contrast(text, c.accent), contrast(text, c['accent-hover']));
+        const best = (choices) => choices.reduce((a, b) => score(a) >= score(b) ? a : b);
+        const text = best([c['text-1'], c['bg-0']]);
+        // Keep the palette's own text where possible. Fall back for custom colours
+        // that make both candidates hard to read, including on hovered buttons.
+        return score(text) >= 3 ? text : best([text, '#ffffff', '#000000']);
+    }
+
+    function toPalette(input) {
         const { colors: c } = normalize(input);
-        const contrast = (hex) => {
-            const values = [luminance(hex), luminance(c.accent)].sort((a, b) => a - b);
-            return (values[1] + 0.05) / (values[0] + 0.05);
-        };
         return {
-            // Use the base with the stronger black/white text contrast so standard
-            // controls also follow a manually customized light palette.
+            // The crossover between black and white text contrast is about 0.179.
             base: luminance(c['bg-2']) > 0.179 ? 'light' : 'dark',
             colors: {
-                window: c['bg-2'],
+                background: c['bg-2'],
+                input: c['bg-0'],
                 panel: c['bg-1'],
                 surface: c['bg-3'],
-                surface_hover: c['bg-4'],
-                surface_active: c.select,
-                outline: c.border,
+                surfaceHover: c['bg-4'],
+                selection: c.select,
+                border: c.border,
+                separator: c.line,
+                bevelLight: c['bevel-light'],
+                bevelMid: c['bevel-mid'],
+                bevelDim: c['bevel-dim'],
+                bevelDark: c['bevel-dark'],
                 text: c['text-1'],
-                secondary: c['text-3'],
-                dim: c['text-4'],
+                textBody: c['text-2'],
+                textSecondary: c['text-3'],
+                textMuted: c['text-4'],
+                textFaint: c['text-5'],
                 accent: c.accent,
-                accent_hover: c['accent-hover'],
-                on_accent: contrast(c['text-1']) >= contrast(c['bg-0']) ? c['text-1'] : c['bg-0'],
+                accentHover: c['accent-hover'],
+                accentActive: c['accent-active'],
+                accentFocus: c['accent-light'],
+                onAccent: accentText(c),
+                titlebarStart: c['titlebar-start'],
+                titlebarEnd: c['titlebar-end'],
+                link: c.link,
                 danger: c.red,
+                dangerStrong: c['red-dark'],
                 warning: c.amber,
-                overlay: '#00000080',
-                shadow: '#00000066',
+                success: c.green,
+                overlay: `${c['bg-0']}80`,
+                shadow: `${c['bevel-dark']}66`,
                 tint: `${c['titlebar-start']}28`,
+            },
+        };
+    }
+
+    // https://spotifast.rocks/settings-and-files/#custom-themes
+    function toSpotifast(input) {
+        const { base, colors: c } = toPalette(input);
+        return {
+            base,
+            colors: {
+                window: c.background,
+                panel: c.panel,
+                surface: c.surface,
+                surface_hover: c.surfaceHover,
+                surface_active: c.selection,
+                outline: c.border,
+                text: c.text,
+                secondary: c.textSecondary,
+                dim: c.textMuted,
+                accent: c.accent,
+                accent_hover: c.accentHover,
+                on_accent: c.onAccent,
+                danger: c.danger,
+                warning: c.warning,
+                overlay: c.overlay,
+                shadow: c.shadow,
+                tint: c.tint,
             },
         };
     }
@@ -219,5 +269,5 @@
         return `npm run build -- --custom ${encode(input)}`;
     }
 
-    return { colors, sizes, palettes, fontPresets, defaults: normalize(), normalize, toVariables, toCSS, toSpotifast, encode, decode, command };
+    return { colors, sizes, palettes, fontPresets, defaults: normalize(), normalize, toVariables, toCSS, toPalette, toSpotifast, encode, decode, command };
 }));

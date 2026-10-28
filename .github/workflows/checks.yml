@@ -25,4 +25,5 @@ jobs:
       - run: npm test
       - run: npm run build
       - run: npm run build -- --format spotifast
-      - run: git diff --exit-code -- build/relay98.theme.css build/relay98.spotifast.json
+      - run: npm run build -- --format palette
+      - run: git diff --exit-code -- build/relay98.theme.css build/relay98.spotifast.json build/relay98.palette.json

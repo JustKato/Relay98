@@ -30,8 +30,10 @@ jobs:
           npm test
           npm run build
           npm run build -- --format spotifast
+          npm run build -- --format palette
           test -s build/relay98.theme.css
           test -s build/relay98.spotifast.json
+          test -s build/relay98.palette.json
 
       - name: Create GitHub release
         env:
@@ -39,7 +41,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
           TAG_NAME: ${{ github.ref_name }}
         run: |
-          gh release create "$TAG_NAME" build/relay98.theme.css build/relay98.spotifast.json \
+          gh release create "$TAG_NAME" build/relay98.theme.css build/relay98.spotifast.json build/relay98.palette.json \
             --verify-tag \
             --title "$TAG_NAME" \
             --generate-notes

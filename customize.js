@@ -164,7 +164,7 @@
             return true;
         } catch (error) {
             if (input) input.setAttribute('aria-invalid', 'true');
-            feedback(`${error.message} The command still uses your last valid settings.`, true);
+            feedback(`${error.message} Your exports still use the last valid settings.`, true);
             return false;
         }
     }
@@ -207,7 +207,11 @@
         if (!file) return;
         try {
             if (file.size > 65536) throw new Error('Choose a settings JSON file smaller than 64 KB.');
-            const next = api.normalize(JSON.parse(await file.text()));
+            const settings = JSON.parse(await file.text());
+            if (settings && typeof settings === 'object' && Object.hasOwn(settings, 'base') && Object.hasOwn(settings, 'colors')) {
+                throw new Error('This is a colour palette. Load relay98-settings.json to continue editing.');
+            }
+            const next = api.normalize(settings);
             state = next;
             render();
             feedback(`Loaded ${file.name}. Your build command is ready.`);
@@ -247,7 +251,11 @@
         });
         $('export-spotifast').addEventListener('click', () => {
             downloadJSON(api.toSpotifast(state), 'relay98-custom.spotifast.json');
-            feedback('Spotifast theme saved. Copy it into Spotifast\'s themes folder, then select it in Settings > Appearance > Theme.');
+            feedback('Saved relay98-custom.spotifast.json. Copy it into Spotifast\'s themes folder.');
+        });
+        $('export-palette').addEventListener('click', () => {
+            downloadJSON(api.toPalette(state), 'relay98-custom.palette.json');
+            feedback('Saved relay98-custom.palette.json.');
         });
         $('import-settings').addEventListener('click', () => $('import-file').click());
         $('import-file').addEventListener('change', importSettings);

@@ -15,8 +15,8 @@
     "on_accent": "#eef0ec",
     "danger": "#e0635a",
     "warning": "#e8b04a",
-    "overlay": "#00000080",
-    "shadow": "#00000066",
+    "overlay": "#1b1d1c80",
+    "shadow": "#12141366",
     "tint": "#2e4a3b28"
   }
 }
