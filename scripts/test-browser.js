@@ -108,6 +108,16 @@ async function main() {
         const saved = path.join(temporary, download.suggestedFilename());
         await download.saveAs(saved);
         assert.deepEqual(customization.normalize(JSON.parse(await fs.readFile(saved, 'utf8'))), config);
+        const spotifastEvent = page.waitForEvent('download');
+        await page.locator('#export-spotifast').click();
+        const spotifastDownload = await spotifastEvent;
+        assert.equal(spotifastDownload.suggestedFilename(), 'relay98-custom.spotifast.json');
+        const spotifastFile = path.join(temporary, spotifastDownload.suggestedFilename());
+        await spotifastDownload.saveAs(spotifastFile);
+        const spotifast = JSON.parse(await fs.readFile(spotifastFile, 'utf8'));
+        assert.deepEqual(spotifast, customization.toSpotifast(config));
+        assert.equal(spotifast.colors.window, '#18293a');
+        assert.deepEqual(Object.keys(spotifast), ['base', 'colors']);
         await page.reload();
         await page.waitForFunction(() => document.documentElement.dataset.customizerStatus === 'ready');
         assert.equal(await command(), generated, 'saved settings survive a reload');

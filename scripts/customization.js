@@ -154,6 +154,47 @@
         return `:root {\n${Object.entries(toVariables(input)).map(([key, value]) => `    ${key}: ${value};`).join('\n')}\n}\n`;
     }
 
+    function luminance(hex) {
+        const channels = hex.slice(1).match(/../g).map((value) => {
+            const channel = parseInt(value, 16) / 255;
+            return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+        });
+        return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+    }
+
+    // Spotifast's palette format: https://spotifast.rocks/settings-and-files/#custom-themes
+    function toSpotifast(input) {
+        const { colors: c } = normalize(input);
+        const contrast = (hex) => {
+            const values = [luminance(hex), luminance(c.accent)].sort((a, b) => a - b);
+            return (values[1] + 0.05) / (values[0] + 0.05);
+        };
+        return {
+            // Use the base with the stronger black/white text contrast so standard
+            // controls also follow a manually customized light palette.
+            base: luminance(c['bg-2']) > 0.179 ? 'light' : 'dark',
+            colors: {
+                window: c['bg-2'],
+                panel: c['bg-1'],
+                surface: c['bg-3'],
+                surface_hover: c['bg-4'],
+                surface_active: c.select,
+                outline: c.border,
+                text: c['text-1'],
+                secondary: c['text-3'],
+                dim: c['text-4'],
+                accent: c.accent,
+                accent_hover: c['accent-hover'],
+                on_accent: contrast(c['text-1']) >= contrast(c['bg-0']) ? c['text-1'] : c['bg-0'],
+                danger: c.red,
+                warning: c.amber,
+                overlay: '#00000080',
+                shadow: '#00000066',
+                tint: `${c['titlebar-start']}28`,
+            },
+        };
+    }
+
     function encode(input) {
         const json = JSON.stringify(normalize(input));
         if (typeof Buffer !== 'undefined') return Buffer.from(json, 'utf8').toString('base64url');
@@ -178,5 +219,5 @@
         return `npm run build -- --custom ${encode(input)}`;
     }
 
-    return { colors, sizes, palettes, fontPresets, defaults: normalize(), normalize, toVariables, toCSS, encode, decode, command };
+    return { colors, sizes, palettes, fontPresets, defaults: normalize(), normalize, toVariables, toCSS, toSpotifast, encode, decode, command };
 }));

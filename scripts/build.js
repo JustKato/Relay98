@@ -77,10 +77,14 @@ function canonicalPath(file) {
 
 function outputPath(options = {}) {
     const custom = options.custom !== undefined || options.configPath !== undefined;
+    const format = options.format ?? 'css';
+    if (!['css', 'spotifast'].includes(format)) throw new Error('--format must be css or spotifast.');
+    const extension = format === 'spotifast' ? '.json' : '.css';
+    const suffix = format === 'spotifast' ? '.spotifast.json' : '.theme.css';
     const output = options.output
         ? path.resolve(options.output)
-        : path.join(root, 'build', custom ? 'relay98-custom.theme.css' : 'relay98.theme.css');
-    if (path.extname(output).toLowerCase() !== '.css') throw new Error('--output must end in .css.');
+        : path.join(root, 'build', `relay98${custom ? '-custom' : ''}${suffix}`);
+    if (path.extname(output).toLowerCase() !== extension) throw new Error(`--output must end in ${extension}.`);
     // A build should never overwrite its source or configuration.
     const actualOutput = canonicalPath(output);
     const actualSource = canonicalPath(srcDir);
@@ -99,6 +103,13 @@ function build(options = {}) {
         catch (error) { throw new Error(`Could not load configuration ${options.configPath}: ${error.message}`); }
     } else if (options.custom !== undefined) config = customization.normalize(options.custom);
     const output = outputPath(options);
+    if (options.format === 'spotifast') {
+        const theme = customization.toSpotifast(config);
+        const json = `${JSON.stringify(theme, null, 2)}\n`;
+        const changed = writeOutput(output, json);
+        if (!options.quiet) console.log(`${changed ? 'Built' : 'Unchanged'} ${path.relative(root, output)} for Spotifast.`);
+        return { output, theme, json, changed };
+    }
     const files = fs.readdirSync(srcDir, { withFileTypes: true })
         .filter((entry) => entry.isFile() && entry.name.endsWith('.css'))
         .map((entry) => entry.name).sort();
@@ -114,23 +125,28 @@ function build(options = {}) {
     const overrides = config ? `\n/* Custom settings from customize.html or --config. */\n${customization.toCSS(config)}` : '';
     const metadata = config ? header.replace('@name Relay98', '@name Relay98 Custom') : header;
     const css = metadata + (importBlock ? `${importBlock}\n\n` : '') + body + overrides;
+    const changed = writeOutput(output, css);
+    if (!options.quiet) console.log(`${changed ? 'Built' : 'Unchanged'} ${path.relative(root, output)} from ${files.length} source file(s).`);
+    return { output, css, changed };
+}
+
+function writeOutput(output, content) {
     let previous;
     try { previous = fs.readFileSync(output, 'utf8'); }
     catch (error) { if (error.code !== 'ENOENT') throw error; }
-    const changed = previous !== css;
+    const changed = previous !== content;
     if (changed) {
         fs.mkdirSync(path.dirname(output), { recursive: true });
         // Keep a failed write from leaving a partially written installable theme.
         const temporary = `${output}.${process.pid}.tmp`;
         try {
-            fs.writeFileSync(temporary, css);
+            fs.writeFileSync(temporary, content);
             fs.renameSync(temporary, output);
         } finally {
             fs.rmSync(temporary, { force: true });
         }
     }
-    if (!options.quiet) console.log(`${changed ? 'Built' : 'Unchanged'} ${path.relative(root, output)} from ${files.length} source file(s).`);
-    return { output, css, changed };
+    return changed;
 }
 
 function parseArgs(args) {
@@ -139,7 +155,7 @@ function parseArgs(args) {
         const flag = args[i];
         if (flag === '--help' || flag === '-h') options.help = true;
         else if (flag === '--watch') options.watch = true;
-        else if (['--custom', '--config', '--output'].includes(flag)) {
+        else if (['--custom', '--config', '--output', '--format'].includes(flag)) {
             if (!args[i + 1] || args[i + 1].startsWith('--')) throw new Error(`${flag} needs a value.`);
             const value = args[++i];
             const key = flag === '--config' ? 'configPath' : flag.slice(2);
@@ -148,6 +164,7 @@ function parseArgs(args) {
         } else throw new Error(`Unknown option: ${flag}. Run npm run build -- --help.`);
     }
     if (options.custom !== undefined && options.configPath !== undefined) throw new Error('Use either --custom or --config, not both.');
+    if (options.format !== undefined && !['css', 'spotifast'].includes(options.format)) throw new Error('--format must be css or spotifast.');
     return options;
 }
 
@@ -180,12 +197,15 @@ function main(args = process.argv.slice(2)) {
         console.log(`Usage: npm run build -- [options]
   --custom TOKEN    Settings copied from customize.html (URL-safe base64 JSON)
   --config FILE     Read settings from a JSON file
-  --output FILE     Write a .css file at this path
+  --format FORMAT   Export css (default) or spotifast
+  --output FILE     Write a .css or Spotifast .json file at this path
   --watch           Rebuild when source or configuration changes
   --help            Show this help
 
 Default output: build/relay98.theme.css
-Customized output: build/relay98-custom.theme.css`);
+Customized output: build/relay98-custom.theme.css
+Spotifast output: build/relay98.spotifast.json
+Customized Spotifast output: build/relay98-custom.spotifast.json`);
     } else if (options.watch) watch(options);
     else build(options);
 }

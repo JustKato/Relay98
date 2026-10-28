@@ -9,3 +9,4 @@ node_modules/
 
 # Personal customizer output; the standard release CSS remains tracked.
 /build/relay98-custom.theme.css
+/build/relay98-custom.spotifast.json

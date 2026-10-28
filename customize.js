@@ -191,15 +191,14 @@
         }
     }
 
-    function downloadSettings() {
-        const blob = new Blob([`${JSON.stringify(state, null, 2)}\n`], { type: 'application/json' });
+    function downloadJSON(value, filename) {
+        const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
-        const link = element('a', { href: url, download: 'relay98-settings.json' });
+        const link = element('a', { href: url, download: filename });
         document.body.append(link);
         link.click();
         link.remove();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
-        feedback('Settings saved as relay98-settings.json.');
     }
 
     async function importSettings() {
@@ -242,7 +241,14 @@
             feedback('Original Pine settings restored.');
         });
         $('copy-command').addEventListener('click', copyCommand);
-        $('export-settings').addEventListener('click', downloadSettings);
+        $('export-settings').addEventListener('click', () => {
+            downloadJSON(state, 'relay98-settings.json');
+            feedback('Settings saved as relay98-settings.json.');
+        });
+        $('export-spotifast').addEventListener('click', () => {
+            downloadJSON(api.toSpotifast(state), 'relay98-custom.spotifast.json');
+            feedback('Spotifast theme saved. Copy it into Spotifast\'s themes folder, then select it in Settings > Appearance > Theme.');
+        });
         $('import-settings').addEventListener('click', () => $('import-file').click());
         $('import-file').addEventListener('change', importSettings);
         render();

@@ -65,6 +65,28 @@ For hand-written settings, omitted fields use their defaults. This example uses 
 
 Colours use six-digit hex values. Sizes use whole pixels within the ranges shown on the page. The build rejects unknown options and invalid values with an error message. Run `npm run build -- --help` for the available command-line options.
 
+## Spotifast theme
+
+Relay98 can also export a matching [Spotifast colour palette](https://spotifast.rocks/settings-and-files/#custom-themes). For the original Pine colours, use [build/relay98.spotifast.json](build/relay98.spotifast.json). For your own colours, open `customize.html` and click **Spotifast theme JSON**. This downloads `relay98-custom.spotifast.json` directly, using the same palette and colour overrides as your Discord theme.
+
+You can also generate the JSON from the command line:
+
+```sh
+npm run build -- --format spotifast
+npm run build -- --format spotifast --config relay98-settings.json
+npm run build -- --format spotifast --config relay98-settings.json --output build/my-spotifast.json
+npm run dev -- --format spotifast --config relay98-settings.json
+```
+
+The default output is `build/relay98.spotifast.json`, or `build/relay98-custom.spotifast.json` with `--config` or `--custom`. To export the settings from the page's build command, append `--format spotifast` to that command. The settings JSON saved by **Save JSON** is the editable Relay98 configuration. The Spotifast download is the palette you install in the player.
+
+1. In Spotifast, open **Settings > Appearance > Theme** and use **Open themes folder**.
+2. Copy the generated `.json` file into that folder as a regular file.
+3. Run `spotifast reload-themes` if Spotifast is open, then select the filename in the Theme picker. Linux also detects changes automatically.
+4. Turn off **Colour from album art** if you want every page to keep the fixed palette.
+
+The export maps Relay98's surfaces, text, selection, accent, error, and warning colours to Spotifast, with a subtle title-bar-coloured page tint. It chooses the light or dark base from the main background's luminance, and uses the higher-contrast heading or input colour for text on accent buttons. Fonts, sizes, textures, and other Discord effects stay specific to Relay98. Spotifast palettes colour its main window, while its Winamp skins are separate.
+
 ## Screenshots
 
 ```sh
@@ -88,7 +110,7 @@ npm run test:browser  # customizer interactions and compiled CSS in Chromium
 
 Browser checks use the same Playwright and Chromium setup as screenshots. They exercise the local page, the generated build command, and the demo pages without replacing the README pictures.
 
-The unit suite includes a Bash command test, so Bash must be available. GitHub Actions runs these checks on Node.js 20 and 24 and checks that the committed CSS matches the source. Releases run the unit suite before building their CSS.
+The unit suite includes a Bash command test, so Bash must be available. GitHub Actions runs these checks on Node.js 20 and 24 and checks that the committed CSS and Spotifast JSON match the source. Releases run the unit suite before building both files.
 
 ## Structure
 
@@ -105,6 +127,7 @@ customize.html       local theme customizer and build-command generator
 customize.css        customizer layout and preview styles
 customize.js         controls, preview, saved settings, and command copying
 build/relay98.theme.css  the actual file you install
+build/relay98.spotifast.json  matching Spotifast colour palette
 demos/               three static Discord views for screenshots, plus shared layout and loader
 assets/              generated 1920 × 1080 PNGs used above
 ```
