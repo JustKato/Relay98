@@ -81,6 +81,15 @@
         mono: { label: 'Monospace', ui: "'Courier New', Courier, monospace", code: "'Courier New', Courier, monospace" },
     };
 
+    const patterns = [
+        { key: 'scanlines', label: 'Scanlines', hint: 'Chat and toolbars', vars: ['scan'] },
+        { key: 'dots', label: 'Dot grid', hint: 'Channel and member lists', vars: ['dots'] },
+        { key: 'dither', label: 'Dither', hint: 'Server rail and user panel', vars: ['dither'] },
+        { key: 'stripes', label: 'Title bar stripes', hint: 'Lines over the title bar', vars: ['bar'] },
+        { key: 'scrollbar', label: 'Scrollbar pattern', hint: 'Checkered track and grip', vars: ['scrollbar-track', 'scrollbar-thumb'] },
+    ];
+    const effectKeys = [...patterns.map(({ key }) => key), 'bevels', 'shadows'];
+
     function object(value, label, allowed) {
         if (value === null || typeof value !== 'object' || Array.isArray(value)) throw new Error(`${label} must be an object.`);
         for (const key of Object.keys(value)) {
@@ -112,7 +121,7 @@
             colors: { ...palettes[selected].colors },
             sizes: Object.fromEntries(sizes.map(({ key, default: value }) => [key, value])),
             fonts: { ui: fontPresets.retro.ui, code: fontPresets.retro.code },
-            effects: { textures: true, bevels: true, shadows: true },
+            effects: Object.fromEntries(effectKeys.map((key) => [key, true])),
             googleFonts: true,
         };
         if (input.colors !== undefined) {
@@ -136,10 +145,16 @@
             for (const [key, value] of Object.entries(input.fonts)) result.fonts[key] = font(value, `Font ${key}`);
         }
         if (input.effects !== undefined) {
-            object(input.effects, 'effect', ['textures', 'bevels', 'shadows']);
+            object(input.effects, 'effect', [...effectKeys, 'textures']);
             for (const [key, value] of Object.entries(input.effects)) {
                 if (typeof value !== 'boolean') throw new Error(`Effect ${key} must be true or false.`);
-                result.effects[key] = value;
+            }
+            // Older settings used one "textures" switch for every pattern.
+            if (Object.hasOwn(input.effects, 'textures')) {
+                for (const { key } of patterns) result.effects[key] = input.effects.textures;
+            }
+            for (const key of effectKeys) {
+                if (Object.hasOwn(input.effects, key)) result.effects[key] = input.effects[key];
             }
         }
         if (input.googleFonts !== undefined) {
@@ -157,8 +172,8 @@
         vars['--r98-font'] = config.fonts.ui;
         vars['--r98-font-code'] = config.fonts.code;
         for (const { key, variable } of sizes) vars[variable] = `${config.sizes[key]}px`;
-        if (!config.effects.textures) {
-            for (const key of ['scan', 'dither', 'dots', 'bar', 'scrollbar-track', 'scrollbar-thumb']) vars[`--r98-pat-${key}`] = 'none';
+        for (const pattern of patterns) {
+            if (!config.effects[pattern.key]) for (const key of pattern.vars) vars[`--r98-pat-${key}`] = 'none';
         }
         if (!config.effects.bevels) {
             vars['--r98-raised'] = 'none';
@@ -288,5 +303,5 @@
         return `npm run build -- --custom ${encode(input)}`;
     }
 
-    return { colors, sizes, palettes, paletteOptions, variants, avatarShapes, fontPresets, defaults: normalize(), normalize, toVariables, toCSS, toPalette, toSpotifast, encode, decode, command };
+    return { colors, sizes, patterns, palettes, paletteOptions, variants, avatarShapes, fontPresets, defaults: normalize(), normalize, toVariables, toCSS, toPalette, toSpotifast, encode, decode, command };
 }));

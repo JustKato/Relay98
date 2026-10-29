@@ -42,6 +42,21 @@ test('size boundaries and effect switches produce usable CSS variables', () => {
     assert.equal(customization.toVariables({})['--r98-drop'], undefined, 'enabled effects retain the source theme definitions');
 });
 
+test('each pattern switches off on its own, and the old textures switch still works', () => {
+    const dotsOff = customization.toVariables({ effects: { dots: false } });
+    assert.equal(dotsOff['--r98-pat-dots'], 'none');
+    assert.equal(dotsOff['--r98-pat-scan'], undefined);
+    const scrollbarOff = customization.toVariables({ effects: { scrollbar: false } });
+    assert.equal(scrollbarOff['--r98-pat-scrollbar-track'], 'none');
+    assert.equal(scrollbarOff['--r98-pat-scrollbar-thumb'], 'none');
+    assert.equal(customization.toVariables({ effects: { stripes: false } })['--r98-pat-bar'], 'none');
+
+    const legacy = customization.normalize({ effects: { textures: false, dither: true } });
+    assert.equal(Object.hasOwn(legacy.effects, 'textures'), false);
+    assert.deepEqual(legacy.effects, { scanlines: false, dots: false, dither: true, stripes: false, scrollbar: false, bevels: true, shadows: true });
+    assert.deepEqual(customization.decode(customization.encode(legacy)), legacy);
+});
+
 test('untrusted configuration cannot add CSS declarations or unsupported settings', () => {
     const invalid = [
         null, [], { palette: '__proto__' }, { palette: 'unknown' }, { output: 'theme.css' },

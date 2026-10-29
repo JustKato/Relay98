@@ -3,113 +3,280 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="color-scheme" content="dark light">
-    <meta name="description" content="Make Relay98 your own. Pick a palette, adjust fonts and sizing, then copy a command to build your Discord theme.">
-    <title>Relay98 — Theme workshop</title>
+    <meta name="color-scheme" content="dark">
+    <title>Relay98 theme editor</title>
     <link rel="stylesheet" href="customize.css">
     <script src="scripts/customization.js" defer></script>
     <script src="customize.js" defer></script>
 </head>
 <body>
-    <a class="skip-link" href="#settings">Skip to theme settings</a>
-    <main class="workshop">
-        <header class="masthead">
-            <a class="brand" href="README.md" aria-label="Relay98 readme"><span class="brand-icon" aria-hidden="true">r<span>98</span></span><span>RELAY<span class="brand-number">98</span><small>A LITTLE OLD SCHOOL.</small></span></a>
-            <div class="masthead-meta"><span class="status-dot" aria-hidden="true"></span> LOCAL THEME WORKSHOP <span class="version-label">/ 01</span></div>
-        </header>
-        <div class="intro">
-            <div><p class="eyebrow">PERSONALIZE YOUR CORNER OF DISCORD</p><h1>Same nostalgia.<br><span>Your kind of desktop.</span></h1></div>
-            <p>Choose your colours, get the spacing right, and find your font. Copy one command to build a theme that feels like yours.</p>
+    <a class="skip-link" href="#theme-settings">Skip to settings</a>
+    <svg class="icon-sprite" aria-hidden="true">
+        <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v10h-6v-6H9v6H3z"/></symbol>
+        <symbol id="i-search" viewBox="0 0 24 24"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></symbol>
+        <symbol id="i-library" viewBox="0 0 24 24"><path d="M4 3h2v18H4zm5 0h2v18H9zm4.5.6 1.9-.6 5.6 17.4-1.9.6z"/></symbol>
+        <symbol id="i-plus" viewBox="0 0 24 24"><path d="M11 4h2v7h7v2h-7v7h-2v-7H4v-2h7z"/></symbol>
+        <symbol id="i-play" viewBox="0 0 24 24"><path d="M7 4v16l13-8z"/></symbol>
+        <symbol id="i-pause" viewBox="0 0 24 24"><path d="M6 4h4v16H6zm8 0h4v16h-4z"/></symbol>
+        <symbol id="i-prev" viewBox="0 0 24 24"><path d="M5 4h2v16H5zm3 8 11-8v16z"/></symbol>
+        <symbol id="i-next" viewBox="0 0 24 24"><path d="M17 4h2v16h-2zM5 4l11 8-11 8z"/></symbol>
+        <symbol id="i-shuffle" viewBox="0 0 24 24"><path d="M16 4h4v4l-1.5-1.5L6.4 18.6 5 17.2 17.1 5.1zM5 6.8l1.4-1.4 4.2 4.2-1.4 1.4zm8.4 8.4 1.4-1.4 3.7 3.7L20 16v4h-4l1.5-1.5z"/></symbol>
+        <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M7 7h10V4l4 4-4 4V9H7v4H5V9a2 2 0 0 1 2-2zm10 10H7v3l-4-4 4-4v3h10v-4h2v4a2 2 0 0 1-2 2z"/></symbol>
+        <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21 3.5 12.6A5 5 0 0 1 12 6a5 5 0 0 1 8.5 6.6z"/></symbol>
+        <symbol id="i-volume" viewBox="0 0 24 24"><path d="M3 9h4l5-5v16l-5-5H3zm13.5-1.6a6 6 0 0 1 0 9.2l-1.4-1.4a4 4 0 0 0 0-6.4z"/></symbol>
+        <symbol id="i-back" viewBox="0 0 24 24"><path d="M15.4 5 17 6.6 11.6 12l5.4 5.4-1.6 1.6-7-7z"/></symbol>
+        <symbol id="i-forward" viewBox="0 0 24 24"><path d="M8.6 5 7 6.6l5.4 5.4L7 17.4 8.6 19l7-7z"/></symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18zm0 2a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm-1 2h2v4.6l3.2 3.2-1.4 1.4L11 12.4z"/></symbol>
+    </svg>
+
+    <header class="topbar">
+        <a class="brand" href="README.md"><span class="brand-mark" aria-hidden="true">R</span>Relay98 <span>Theme editor</span></a>
+        <div class="topbar-actions">
+            <span id="save-state" class="save-state">Saved in this browser</span>
+            <a href="README.md">Guide</a>
         </div>
-        <noscript><p class="alert">This workshop needs JavaScript to generate the build command. Enable it, then reopen this file.</p></noscript>
-        <p id="fatal-error" class="alert" hidden></p>
-        <div class="workspace">
-            <section class="settings-window window" id="settings" aria-labelledby="settings-title">
-                <div class="window-bar"><h2 id="settings-title"><span aria-hidden="true">▦</span> Appearance settings</h2><span class="window-mark" aria-hidden="true">− □</span></div>
-                <form id="theme-settings">
-                    <fieldset class="settings-section">
-                        <legend><span class="step">01</span> Theme &amp; colours</legend>
-                        <div class="font-field"><label for="theme-version">Theme version</label><select id="theme-version"></select></div>
-                        <div class="font-field"><label for="avatar-shape">Profile pictures</label><select id="avatar-shape"></select></div>
-                        <p class="section-note">Start with a mood. Make every shade your own.</p>
-                        <div class="palette-presets" id="palette-presets"></div>
-                        <div class="section-subhead"><span>ESSENTIAL COLOURS</span><span id="palette-state">Pine</span></div>
-                        <div class="color-grid" id="main-colors"></div>
-                        <details class="advanced-colors"><summary>Fine-tune every colour <span id="advanced-count"></span></summary><div class="color-grid" id="advanced-colors"></div></details>
-                    </fieldset>
-                    <fieldset class="settings-section">
-                        <legend><span class="step">02</span> Typography</legend>
-                        <div class="font-fields" id="font-fields"></div>
-                        <p class="field-note">Pixel fonts are bundled for this preview. Custom fonts need to be installed on your device.</p>
-                    </fieldset>
-                    <fieldset class="settings-section">
-                        <legend><span class="step">03</span> Size &amp; spacing</legend>
-                        <div id="size-controls" class="size-controls"></div>
-                        <p class="field-note">Widths apply in Discord. The preview fits this window.</p>
-                    </fieldset>
-                    <fieldset class="settings-section">
-                        <legend><span class="step">04</span> Finishing touches</legend>
-                        <div class="effect-options">
-                            <label class="toggle-row"><span><strong>Pixel textures</strong><small>Subtle scanlines, dots and dither</small></span><input type="checkbox" id="effect-textures" data-effect="textures" role="switch"><span class="toggle" aria-hidden="true"></span></label>
-                            <label class="toggle-row"><span><strong>Classic bevels</strong><small>Raised buttons and inset panels</small></span><input type="checkbox" id="effect-bevels" data-effect="bevels" role="switch"><span class="toggle" aria-hidden="true"></span></label>
-                            <label class="toggle-row"><span><strong>Window shadows</strong><small>A hard shadow under floating panels</small></span><input type="checkbox" id="effect-shadows" data-effect="shadows" role="switch"><span class="toggle" aria-hidden="true"></span></label>
-                            <label class="toggle-row"><span><strong>Google Fonts import</strong><small>Let the built theme load the original pixel fonts</small></span><input type="checkbox" id="google-fonts" role="switch"><span class="toggle" aria-hidden="true"></span></label>
-                        </div>
-                        <p class="field-note">This workshop makes no external requests. Google Fonts is only used by the built theme when enabled.</p>
-                    </fieldset>
-                    <div class="settings-footer"><button type="button" id="reset-settings" class="quiet-button">↺ Reset to original</button><span id="save-state">Saved on this device</span></div>
-                </form>
+    </header>
+
+    <noscript><p class="alert">The editor needs JavaScript.</p></noscript>
+    <p id="fatal-error" class="alert" hidden></p>
+
+    <main class="layout">
+        <form id="theme-settings" class="panel settings" aria-label="Theme settings">
+            <section class="group" aria-labelledby="theme-heading">
+                <h2 id="theme-heading">Theme</h2>
+                <div class="field-row">
+                    <div class="field"><label for="theme-version">Version</label><select id="theme-version"></select></div>
+                    <div class="field"><label for="avatar-shape">Avatars</label><select id="avatar-shape"></select></div>
+                </div>
+                <div class="palette-presets" id="palette-presets" role="group" aria-label="Palette"></div>
             </section>
-            <div class="output-column">
-                <section class="preview-window window" aria-labelledby="preview-title">
-                    <div class="window-bar"><h2 id="preview-title"><span aria-hidden="true">▣</span> Your theme, at a glance</h2><span class="live-label"><span aria-hidden="true">●</span> LIVE PREVIEW</span></div>
-                    <div class="preview" id="theme-preview">
-                        <div class="preview-title"><span>Relay98 — the clubhouse</span><span aria-hidden="true">− □ ×</span></div>
-                        <div class="preview-body">
-                            <aside class="preview-sidebar" aria-label="Sample channels">
-                                <div class="server-name">the clubhouse <span aria-hidden="true">⌄</span></div>
-                                <p class="channel-group">TEXT CHANNELS</p>
-                                <div class="sample-channel selected"><span aria-hidden="true">#</span> general</div>
-                                <div class="sample-channel"><span aria-hidden="true">#</span> screenshots</div>
-                                <div class="sample-channel"><span aria-hidden="true">#</span> good-finds</div>
-                                <p class="channel-group">VOICE CHANNELS</p>
-                                <div class="sample-channel"><span aria-hidden="true">♫</span> the lounge</div>
-                                <div class="voice-member"><span class="presence" aria-hidden="true"></span> noa</div>
-                                <div class="voice-member"><span class="presence amber" aria-hidden="true"></span> kit</div>
-                                <div class="preview-user"><span class="mini-avatar" aria-hidden="true">r98</span><div>you<small>All systems go</small></div><span aria-hidden="true">⚙</span></div>
-                            </aside>
-                            <div class="preview-chat">
-                                <div class="channel-heading"><span aria-hidden="true">#</span> general <span class="channel-topic">a nice place to be</span></div>
-                                <div class="messages">
-                                    <div class="channel-welcome"><span class="welcome-icon" aria-hidden="true">#</span><h3>Welcome to general.</h3><p>Pull up a chair. Stay a while.</p></div>
-                                    <div class="sample-message"><img class="avatar" src="demos/images/cat-noa.jpg" alt="" width="34" height="34"><div class="message-content"><p class="message-meta"><strong>noa</strong><span>Today at 16:08</span></p><p>Found my old desktop theme. Had to bring it back.</p><div class="sample-embed"><span class="embed-eyebrow">CURRENT SETUP</span><strong>A familiar kind of future.</strong><p>Pixel fonts. Quiet colours. Just the right amount of bevel.</p><span class="preview-link">relay98 / make yourself at home ↗</span></div><div class="sample-reaction">✦ <span>3</span></div></div></div>
-                                    <div class="sample-message"><img class="avatar" src="demos/images/cat-kit.jpg" alt="" width="34" height="34"><div class="message-content"><p class="message-meta"><strong>kit</strong><span>Today at 16:09</span></p><p><span class="sample-mention">@noa</span> this is the one. <span class="sample-code">hello, world_</span></p></div></div>
-                                    <div class="preview-notice"><span class="presence" aria-hidden="true"></span><span>Looking good. Ready when you are.</span><span class="preview-button">Let's go</span></div>
+
+            <section class="group" aria-labelledby="colors-heading">
+                <div class="group-heading"><h2 id="colors-heading">Colours</h2><span id="palette-state" class="tag">Pine</span></div>
+                <div class="color-grid" id="main-colors"></div>
+                <details class="more">
+                    <summary>All colours <span id="advanced-count"></span></summary>
+                    <div class="color-grid" id="advanced-colors"></div>
+                </details>
+            </section>
+
+            <section class="group" aria-labelledby="fonts-heading">
+                <h2 id="fonts-heading">Fonts</h2>
+                <div class="field-stack" id="font-fields"></div>
+                <p class="hint">Custom fonts must be installed on your computer.</p>
+            </section>
+
+            <section class="group" aria-labelledby="sizes-heading">
+                <h2 id="sizes-heading">Sizes</h2>
+                <div id="size-controls" class="size-controls"></div>
+            </section>
+
+            <section class="group" aria-labelledby="effects-heading">
+                <h2 id="effects-heading">Effects</h2>
+                <div class="switch-list">
+                    <label class="switch-row switch-master"><span><strong>Patterns</strong><small id="pattern-summary">All on</small></span><input type="checkbox" id="patterns-all" role="switch"><span class="switch" aria-hidden="true"></span></label>
+                    <div class="switch-group" id="pattern-toggles" role="group" aria-label="Patterns"></div>
+                    <label class="switch-row"><span><strong>Bevels</strong><small>Raised buttons, inset fields</small></span><input type="checkbox" id="effect-bevels" data-effect="bevels" role="switch"><span class="switch" aria-hidden="true"></span></label>
+                    <label class="switch-row"><span><strong>Shadows</strong><small>Under embeds and popouts</small></span><input type="checkbox" id="effect-shadows" data-effect="shadows" role="switch"><span class="switch" aria-hidden="true"></span></label>
+                    <label class="switch-row"><span><strong>Google Fonts</strong><small>Built theme loads the pixel fonts</small></span><input type="checkbox" id="google-fonts" role="switch"><span class="switch" aria-hidden="true"></span></label>
+                </div>
+            </section>
+
+            <div class="settings-footer"><button type="button" id="reset-settings" class="text-button">Reset to defaults</button></div>
+        </form>
+
+        <div class="output">
+            <section class="panel preview-panel" aria-label="Preview">
+                <div class="preview-toolbar">
+                    <div class="segmented" role="tablist" aria-label="App" id="app-tabs">
+                        <button type="button" role="tab" id="tab-discord" data-app="discord" aria-controls="theme-preview">Discord</button>
+                        <button type="button" role="tab" id="tab-spotifast" data-app="spotifast" aria-controls="spotifast-preview">Spotifast</button>
+                    </div>
+                    <div class="segmented segmented-small" role="tablist" aria-label="Page" id="page-tabs"></div>
+                </div>
+
+                <div class="preview" id="theme-preview" role="tabpanel" aria-labelledby="tab-discord">
+                    <div class="preview-title"><span id="discord-title">the clubhouse</span><span aria-hidden="true">− □ ×</span></div>
+
+                    <div class="preview-body" data-page="chat" data-title="the clubhouse">
+                        <nav class="preview-rail" aria-hidden="true">
+                            <span class="rail-icon home">⌂</span><span class="rail-sep"></span>
+                            <img class="rail-icon active" src="demos/images/cat-sol.jpg" alt="">
+                            <img class="rail-icon" src="demos/images/cat-ash.jpg" alt="">
+                            <span class="rail-icon">PC</span>
+                        </nav>
+                        <aside class="preview-sidebar">
+                            <div class="server-name">the clubhouse <span aria-hidden="true">⌄</span></div>
+                            <p class="channel-group">TEXT CHANNELS</p>
+                            <div class="sample-channel selected"><span aria-hidden="true">#</span> general</div>
+                            <div class="sample-channel"><span aria-hidden="true">#</span> screenshots</div>
+                            <div class="sample-channel"><span aria-hidden="true">#</span> now-playing</div>
+                            <p class="channel-group">VOICE</p>
+                            <div class="sample-channel"><span aria-hidden="true">♫</span> lounge</div>
+                            <div class="voice-member"><span class="presence"></span> noa</div>
+                            <div class="voice-member"><span class="presence amber"></span> kit</div>
+                            <div class="preview-user"><img class="mini-avatar" src="demos/images/cat-danlegt.jpg" alt=""><div>danlegt<small>Online</small></div><span aria-hidden="true">⚙</span></div>
+                        </aside>
+                        <div class="preview-chat">
+                            <div class="channel-heading"><span aria-hidden="true">#</span> general <span class="channel-topic">say hi</span></div>
+                            <div class="messages">
+                                <div class="sample-message"><img class="avatar" src="demos/images/cat-noa.jpg" alt="" width="34" height="34"><div class="message-content"><p class="message-meta"><strong>noa</strong><span>Today at 16:08</span></p><p>found my old desktop theme, had to bring it back</p><div class="sample-embed"><span class="embed-eyebrow">SPOTIFAST</span><strong>Fingernails</strong><p>Sub Urban · 3:07</p><span class="preview-link">open in Spotifast ↗</span></div><div class="sample-reaction">♥ <span>3</span></div></div></div>
+                                <div class="sample-message"><img class="avatar" src="demos/images/cat-kit.jpg" alt="" width="34" height="34"><div class="message-content"><p class="message-meta"><strong>kit</strong><span>Today at 16:09</span></p><p><span class="sample-mention">@noa</span> on repeat. try <span class="sample-code">npm run build</span></p></div></div>
+                                <div class="preview-notice"><span class="presence"></span><span>3 new messages</span><span class="preview-button">Mark as read</span></div>
+                            </div>
+                            <div class="sample-composer"><span aria-hidden="true">⊕</span><span>Message #general</span><span aria-hidden="true">☺</span></div>
+                            <div class="sample-typing"><strong>noa</strong> is typing…</div>
+                            <div class="fake-scrollbar" aria-hidden="true"><span></span></div>
+                        </div>
+                    </div>
+
+                    <div class="preview-body friends-body" data-page="friends" data-title="Friends" hidden>
+                        <nav class="preview-rail" aria-hidden="true">
+                            <span class="rail-icon home active">⌂</span><span class="rail-sep"></span>
+                            <img class="rail-icon" src="demos/images/cat-sol.jpg" alt="">
+                            <img class="rail-icon" src="demos/images/cat-ash.jpg" alt="">
+                            <span class="rail-icon">PC</span>
+                        </nav>
+                        <aside class="preview-sidebar">
+                            <div class="server-name dm-search">Find a conversation</div>
+                            <div class="sample-channel selected"><span aria-hidden="true">☺</span> Friends</div>
+                            <div class="sample-channel"><span aria-hidden="true">✉</span> Message requests</div>
+                            <p class="channel-group">DIRECT MESSAGES</p>
+                            <div class="dm-row"><img class="avatar small" src="demos/images/cat-noa.jpg" alt="">noa</div>
+                            <div class="dm-row"><img class="avatar small" src="demos/images/cat-kit.jpg" alt="">kit</div>
+                            <div class="dm-row"><img class="avatar small" src="demos/images/cat-mara.jpg" alt="">mara</div>
+                            <div class="dm-row"><img class="avatar small" src="demos/images/cat-ren.jpg" alt="">ren</div>
+                            <div class="preview-user"><img class="mini-avatar" src="demos/images/cat-danlegt.jpg" alt=""><div>danlegt<small>Online</small></div><span aria-hidden="true">⚙</span></div>
+                        </aside>
+                        <div class="preview-chat friends-main">
+                            <div class="channel-heading"><span aria-hidden="true">☺</span> Friends <span class="friend-tab active">Online</span><span class="friend-tab">All</span><span class="friend-tab">Pending</span><span class="preview-button add-friend">Add Friend</span></div>
+                            <div class="messages">
+                                <div class="friend-search">Search</div>
+                                <p class="channel-group">ONLINE — 3</p>
+                                <div class="friend-row"><img class="avatar" src="demos/images/cat-noa.jpg" alt=""><div><strong>noa</strong><small>Listening to Spotifast</small></div><span class="round-action" aria-hidden="true">✉</span></div>
+                                <div class="friend-row"><img class="avatar" src="demos/images/cat-kit.jpg" alt=""><div><strong>kit</strong><small>Idle</small></div><span class="round-action" aria-hidden="true">✉</span></div>
+                                <div class="friend-row"><img class="avatar" src="demos/images/cat-mara.jpg" alt=""><div><strong>mara</strong><small>Playing Minecraft</small></div><span class="round-action" aria-hidden="true">✉</span></div>
+                            </div>
+                        </div>
+                        <aside class="active-now">
+                            <p class="active-title">Active now</p>
+                            <div class="active-card"><div class="active-head"><img class="avatar small" src="demos/images/cat-noa.jpg" alt=""><strong>noa</strong></div><p>Spotifast</p><div class="active-track"><span class="cover-fallback" aria-hidden="true"></span><span><strong>Glimpse of Us</strong><small>Joji</small></span></div></div>
+                        </aside>
+                    </div>
+                </div>
+
+                <div class="sf" id="spotifast-preview" role="tabpanel" aria-labelledby="tab-spotifast" hidden>
+                    <div class="sf-body">
+                        <aside class="sf-side">
+                            <nav class="sf-card sf-nav">
+                                <span class="sf-nav-item" data-sf-link="home"><svg><use href="#i-home"/></svg>Home</span>
+                                <span class="sf-nav-item"><svg><use href="#i-search"/></svg>Search</span>
+                            </nav>
+                            <div class="sf-card sf-library">
+                                <div class="sf-library-head"><span><svg><use href="#i-library"/></svg>Library</span><svg><use href="#i-plus"/></svg></div>
+                                <div class="sf-chips"><span class="sf-chip active">Playlists</span><span class="sf-chip">Albums</span><span class="sf-chip">Artists</span></div>
+                                <ul class="sf-list">
+                                    <li data-sf-link="liked"><span class="sf-cover liked"><svg><use href="#i-heart"/></svg></span><span><strong>Liked Songs</strong><small>Playlist · 9 songs</small></span></li>
+                                    <li><span class="sf-cover" data-cover="joji-nectar.jpg"></span><span><strong>Nectar</strong><small>Album · Joji</small></span></li>
+                                    <li><span class="sf-cover" data-cover="xxxtentacion-question-mark.jpg"></span><span><strong>?</strong><small>Album · XXXTENTACION</small></span></li>
+                                    <li><span class="sf-cover" data-cover="sub-urban-hive.jpg"></span><span><strong>HIVE</strong><small>Album · Sub Urban</small></span></li>
+                                    <li><span class="sf-cover" data-cover="joji-smithereens.jpg"></span><span><strong>Smithereens</strong><small>Album · Joji</small></span></li>
+                                    <li><span class="sf-cover" data-cover="xxxtentacion-17.jpg"></span><span><strong>17</strong><small>Album · XXXTENTACION</small></span></li>
+                                    <li><span class="sf-cover" data-cover="joji-ballads-1.jpg"></span><span><strong>Ballads 1</strong><small>Album · Joji</small></span></li>
+                                    <li><span class="sf-cover" data-cover="xxxtentacion-skins.jpg"></span><span><strong>Skins</strong><small>Album · XXXTENTACION</small></span></li>
+                                </ul>
+                            </div>
+                        </aside>
+
+                        <div class="sf-main">
+                            <div class="sf-topbar">
+                                <span class="sf-round"><svg><use href="#i-back"/></svg></span>
+                                <span class="sf-round"><svg><use href="#i-forward"/></svg></span>
+                                <span class="sf-search"><svg><use href="#i-search"/></svg>sub urban fingernails</span>
+                                <img class="sf-me" src="demos/images/cat-danlegt.jpg" alt="">
+                            </div>
+
+                            <div class="sf-page" data-page="home">
+                                <h3 class="sf-greeting">Good evening</h3>
+                                <div class="sf-quick">
+                                    <span class="sf-tile"><span class="sf-cover liked"><svg><use href="#i-heart"/></svg></span>Liked Songs</span>
+                                    <span class="sf-tile"><span class="sf-cover" data-cover="joji-nectar.jpg"></span>Nectar</span>
+                                    <span class="sf-tile"><span class="sf-cover" data-cover="xxxtentacion-question-mark.jpg"></span>?</span>
+                                    <span class="sf-tile"><span class="sf-cover" data-cover="sub-urban-hive.jpg"></span>HIVE</span>
+                                    <span class="sf-tile"><span class="sf-cover" data-cover="joji-ballads-1.jpg"></span>Ballads 1</span>
+                                    <span class="sf-tile"><span class="sf-cover" data-cover="xxxtentacion-17.jpg"></span>17</span>
                                 </div>
-                                <div class="sample-composer"><span aria-hidden="true">⊕</span><span>Message #general</span><span aria-hidden="true">☺</span></div>
-                                <div class="sample-typing"><strong>noa</strong> is typing<span aria-hidden="true">...</span></div>
+                                <h4 class="sf-section">Made for you</h4>
+                                <div class="sf-row">
+                                    <div class="sf-album"><span class="sf-cover" data-cover="joji.jpg"><b>01</b></span><strong>Daily Mix 1</strong><small>Joji, Sub Urban and more</small></div>
+                                    <div class="sf-album"><span class="sf-cover" data-cover="xxxtentacion.jpg"><b>02</b></span><strong>Daily Mix 2</strong><small>XXXTENTACION, Joji and more</small></div>
+                                    <div class="sf-album"><span class="sf-cover" data-cover="sub-urban.jpg"><b>03</b></span><strong>Daily Mix 3</strong><small>Sub Urban, XXXTENTACION and more</small></div>
+                                    <div class="sf-album"><span class="sf-cover" data-cover="joji-smithereens.jpg"></span><strong>Smithereens</strong><small>Joji · 2022</small></div>
+                                    <div class="sf-album"><span class="sf-cover" data-cover="xxxtentacion-skins.jpg"></span><strong>Skins</strong><small>XXXTENTACION · 2018</small></div>
+                                </div>
+                            </div>
+
+                            <div class="sf-page" data-page="liked" hidden>
+                                <div class="sf-hero">
+                                    <span class="sf-cover liked big"><svg><use href="#i-heart"/></svg></span>
+                                    <div><small>Playlist</small><h3>Liked Songs</h3><small>danlegt · 9 songs</small></div>
+                                </div>
+                                <div class="sf-actions"><span class="sf-play"><svg><use href="#i-play"/></svg></span><svg class="sf-dim-icon"><use href="#i-shuffle"/></svg></div>
+                                <table class="sf-tracks">
+                                    <thead><tr><th>#</th><th>Title</th><th>Album</th><th><svg><use href="#i-clock"/></svg></th></tr></thead>
+                                    <tbody>
+                                        <tr class="playing"><td>1</td><td><strong>Fingernails</strong><small>Sub Urban</small></td><td>Fingernails</td><td>3:07</td></tr>
+                                        <tr><td>2</td><td><strong>Glimpse of Us</strong><small>Joji</small></td><td>Smithereens</td><td>3:53</td></tr>
+                                        <tr><td>3</td><td><strong>SAD!</strong><small>XXXTENTACION</small></td><td>?</td><td>2:46</td></tr>
+                                        <tr class="hover"><td>4</td><td><strong>Slow Dancing in the Dark</strong><small>Joji</small></td><td>Ballads 1</td><td>3:29</td></tr>
+                                        <tr><td>5</td><td><strong>Jocelyn Flores</strong><small>XXXTENTACION</small></td><td>17</td><td>1:59</td></tr>
+                                        <tr><td>6</td><td><strong>Sanctuary</strong><small>Joji</small></td><td>Nectar</td><td>3:00</td></tr>
+                                        <tr><td>7</td><td><strong>Moonlight</strong><small>XXXTENTACION</small></td><td>?</td><td>2:15</td></tr>
+                                        <tr><td>8</td><td><strong>Gimme Love</strong><small>Joji</small></td><td>Nectar</td><td>3:34</td></tr>
+                                        <tr><td>9</td><td><strong>changes</strong><small>XXXTENTACION</small></td><td>?</td><td>2:01</td></tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
-                    <div class="preview-caption"><span><span class="status-dot" aria-hidden="true"></span> Illustrative preview</span><span>Your colours. Your fonts. Instantly.</span></div>
-                </section>
-                <section class="build-window window" aria-labelledby="build-title">
-                    <div class="window-bar"><h2 id="build-title"><span aria-hidden="true">›_</span> Build your theme</h2><span class="window-mark" aria-hidden="true">.CSS</span></div>
-                    <div class="build-content"><div class="build-heading"><div><p class="eyebrow">READY TO MAKE IT YOURS?</p><h3>One command. Your theme.</h3></div><span class="file-icon" aria-hidden="true">CSS</span></div>
-                        <p class="build-help" id="command-help">Run this in the Relay98 project folder with Node.js 20 or newer and npm installed.</p>
-                        <label class="visually-hidden" for="build-command">Theme build command</label><textarea id="build-command" rows="4" spellcheck="false" readonly aria-describedby="command-help"></textarea>
-                        <div class="command-actions"><button type="button" class="primary-button" id="copy-command">Copy build command <span aria-hidden="true">↗</span></button><span class="output-path">OUTPUT <code>build/relay98-custom.theme.css</code></span></div>
-                        <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
-                        <div class="file-actions"><span>Keep editing later</span><div><button type="button" id="export-settings">↓ Save settings</button><button type="button" id="import-settings">↑ Load settings</button><input type="file" id="import-file" accept="application/json,.json" hidden></div></div>
-                        <div class="file-actions"><span>Export colours</span><div><button type="button" id="export-spotifast" aria-describedby="spotifast-help">↓ Spotifast theme</button><button type="button" id="export-palette" aria-describedby="palette-help">↓ Palette JSON</button></div></div>
-                        <p class="build-help" id="spotifast-help">For Spotifast, copy the file into its themes folder and select it in Settings &gt; Appearance &gt; Theme. Turn off Colour from album art to keep these colours on every page.</p>
-                        <p class="build-help" id="palette-help">Palette JSON contains the colours with names like background, text and accent, ready to use in other projects.</p>
+
+                    <div class="sf-player">
+                        <div class="sf-track"><span class="sf-cover" data-cover="sub-urban-fingernails.jpg"></span><span><strong>Fingernails</strong><small>Sub Urban</small></span><svg class="sf-liked"><use href="#i-heart"/></svg></div>
+                        <div class="sf-controls">
+                            <div class="sf-buttons"><svg><use href="#i-shuffle"/></svg><svg><use href="#i-prev"/></svg><span class="sf-play small"><svg><use href="#i-pause"/></svg></span><svg><use href="#i-next"/></svg><svg><use href="#i-repeat"/></svg></div>
+                            <div class="sf-progress"><small>0:55</small><span class="sf-bar"><span style="width:30%"></span></span><small>3:07</small></div>
+                        </div>
+                        <div class="sf-volume"><svg><use href="#i-volume"/></svg><span class="sf-bar"><span style="width:70%"></span></span></div>
                     </div>
-                </section>
-                <p class="workshop-tip"><span aria-hidden="true">i</span> Colours and sizes stay in your browser. Nothing is uploaded. Your original theme is kept as it is.</p>
-            </div>
+                </div>
+
+                <p class="preview-note" id="preview-note"></p>
+            </section>
+
+            <section class="panel build" aria-labelledby="build-heading">
+                <h2 id="build-heading">Build</h2>
+                <p class="hint" id="command-help">Run this in the Relay98 folder (Node.js 20+). It writes <code>build/relay98-custom.theme.css</code>.</p>
+                <label class="visually-hidden" for="build-command">Build command</label>
+                <div class="command">
+                    <textarea id="build-command" rows="3" spellcheck="false" readonly aria-describedby="command-help"></textarea>
+                    <button type="button" class="primary-button" id="copy-command">Copy</button>
+                </div>
+                <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+                <div class="downloads">
+                    <div class="download-group">
+                        <span class="download-label">Settings</span>
+                        <button type="button" id="export-settings">Save</button>
+                        <button type="button" id="import-settings">Load</button>
+                        <input type="file" id="import-file" accept="application/json,.json" hidden>
+                    </div>
+                    <div class="download-group">
+                        <span class="download-label">Export</span>
+                        <button type="button" id="export-spotifast" title="Copy into Spotifast's themes folder">Spotifast theme</button>
+                        <button type="button" id="export-palette" title="Colours with plain names, for other apps">Palette JSON</button>
+                    </div>
+                </div>
+            </section>
         </div>
-        <footer class="page-footer"><span>RELAY98 <span aria-hidden="true">/</span> A theme with a little history.</span><a href="README.md">Read the guide ↗</a></footer>
     </main>
 </body>
 </html>
