@@ -37,7 +37,8 @@
     }
 
     function makePalettes() {
-        for (const [key, palette] of Object.entries(api.palettes)) {
+        for (const key of api.paletteOptions) {
+            const palette = api.palettes[key];
             const button = element('button', { type: 'button', class: 'palette-preset', 'data-palette': key, 'aria-pressed': 'false', 'aria-label': `${palette.label} palette` });
             const swatches = element('span', { class: 'preset-swatches', 'aria-hidden': 'true' });
             for (const color of ['bg-0', 'bg-2', 'accent', 'accent-light']) {
@@ -127,6 +128,8 @@
         $('theme-preview').removeAttribute('style');
         for (const [key, value] of Object.entries(api.toVariables(state))) $('theme-preview').style.setProperty(key, value);
         $('build-command').value = api.command(state);
+        $('theme-version').value = state.variant;
+        $('avatar-shape').value = state.avatarShape;
         for (const button of document.querySelectorAll('[data-palette]')) button.setAttribute('aria-pressed', String(button.dataset.palette === state.palette));
         const preset = api.normalize({ palette: state.palette });
         const edited = api.colors.some(({ key }) => state.colors[key] !== preset.colors[key]);
@@ -232,6 +235,17 @@
         } catch {
             restorationNotice = 'Saved settings could not be loaded. The original palette is ready to use.';
         }
+        for (const [key, variant] of Object.entries(api.variants)) $('theme-version').append(element('option', { value: key }, variant.label));
+        for (const [key, shape] of Object.entries(api.avatarShapes)) $('avatar-shape').append(element('option', { value: key }, shape.label));
+        $('theme-version').addEventListener('change', () => update((next) => {
+            const key = $('theme-version').value;
+            const variant = api.variants[key];
+            next.variant = key;
+            next.palette = variant.palette;
+            next.colors = { ...api.palettes[variant.palette].colors };
+            next.avatarShape = variant.avatarShape;
+        }));
+        $('avatar-shape').addEventListener('change', () => update((next) => { next.avatarShape = $('avatar-shape').value; }));
         makePalettes();
         makeColors();
         makeFonts();

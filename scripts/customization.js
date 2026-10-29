@@ -35,6 +35,11 @@
     }
     const palettes = {
         pine: { label: 'Pine · original', colors: original },
+        discord: palette('Discord dark',
+            ['#0e0e10', '#121214', '#1a1a1e', '#232327', '#2c2c30'],
+            ['#f2f3f5', '#dbdee1', '#b5bac1', '#949ba4', '#6d6f78'],
+            ['#4e5058', '#383a40', '#171719', '#09090b', '#0b0b0d', '#35363c'],
+            ['#24263d', '#454b80', '#5865f2', '#6875f5', '#4752c4', '#949cf7', '#303452', '#a4b0ff']),
         blue: palette('Blue hour',
             ['#171c25', '#1e2633', '#252e3e', '#303b4e', '#3a475d'],
             ['#edf3fc', '#d5e0ef', '#afc0d8', '#92a6c2', '#71839e'],
@@ -50,6 +55,14 @@
             ['#faf0dc', '#e8d9bc', '#cbb994', '#ad9a75', '#8b7a58'],
             ['#7d6d4e', '#5e5039', '#292219', '#18130e', '#201a12', '#51452f'],
             ['#5a4122', '#97733d', '#88642f', '#9c763b', '#6c4e26', '#d9ad60', '#614c2b', '#f0c779']),
+    };
+
+    // Keep old palette IDs readable in saved settings, but offer two current choices.
+    const paletteOptions = ['pine', 'discord'];
+    const avatarShapes = { square: { label: 'Square', radius: '0px' }, round: { label: 'Round', radius: '50%' } };
+    const variants = {
+        original: { label: 'Relay98 Original', filename: 'relay98-original', palette: 'pine', avatarShape: 'square' },
+        discord: { label: 'Relay98 Discord Dark', filename: 'relay98-discord-dark', palette: 'discord', avatarShape: 'round' },
     };
 
     const sizes = [
@@ -86,10 +99,15 @@
     }
 
     function normalize(input = {}) {
-        object(input, 'configuration', ['palette', 'colors', 'sizes', 'fonts', 'effects', 'googleFonts']);
-        const selected = input.palette === undefined ? 'pine' : input.palette;
+        object(input, 'configuration', ['variant', 'avatarShape', 'palette', 'colors', 'sizes', 'fonts', 'effects', 'googleFonts']);
+        const variant = input.variant === undefined ? 'original' : input.variant;
+        if (typeof variant !== 'string' || !Object.hasOwn(variants, variant)) throw new Error(`Unknown theme version: ${variant}`);
+        const avatarShape = input.avatarShape === undefined ? variants[variant].avatarShape : input.avatarShape;
+        if (typeof avatarShape !== 'string' || !Object.hasOwn(avatarShapes, avatarShape)) throw new Error(`Unknown avatar shape: ${avatarShape}`);
+        const selected = input.palette === undefined ? variants[variant].palette : input.palette;
         if (typeof selected !== 'string' || !Object.hasOwn(palettes, selected)) throw new Error(`Unknown palette: ${selected}`);
         const result = {
+            variant, avatarShape,
             palette: selected,
             colors: { ...palettes[selected].colors },
             sizes: Object.fromEntries(sizes.map(({ key, default: value }) => [key, value])),
@@ -135,6 +153,7 @@
         const config = normalize(input);
         const vars = Object.fromEntries(Object.entries(config.colors).map(([key, value]) => [`--r98-${key}`, value]));
         vars['--r98-titlebar'] = `linear-gradient(to right, ${config.colors['titlebar-start']}, 75%, ${config.colors['titlebar-end']})`;
+        vars['--r98-avatar-radius'] = avatarShapes[config.avatarShape].radius;
         vars['--r98-font'] = config.fonts.ui;
         vars['--r98-font-code'] = config.fonts.code;
         for (const { key, variable } of sizes) vars[variable] = `${config.sizes[key]}px`;
@@ -269,5 +288,5 @@
         return `npm run build -- --custom ${encode(input)}`;
     }
 
-    return { colors, sizes, palettes, fontPresets, defaults: normalize(), normalize, toVariables, toCSS, toPalette, toSpotifast, encode, decode, command };
+    return { colors, sizes, palettes, paletteOptions, variants, avatarShapes, fontPresets, defaults: normalize(), normalize, toVariables, toCSS, toPalette, toSpotifast, encode, decode, command };
 }));

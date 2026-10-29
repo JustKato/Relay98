@@ -66,7 +66,14 @@ async function main() {
         assert.deepEqual(await readConfig(), customization.defaults);
         assert.match(await page.locator('.preview-title').evaluate((node) => getComputedStyle(node).backgroundImage), /linear-gradient/);
         await image('customize-desktop.png');
-        await page.locator('[data-palette="blue"]').click();
+        assert.equal(await page.locator('[data-palette]').count(), 2);
+        await page.locator('#theme-version').selectOption('discord');
+        assert.equal((await readConfig()).palette, 'discord');
+        assert.equal((await readConfig()).avatarShape, 'round');
+        assert.equal(await page.locator('.avatar').first().evaluate((node) => getComputedStyle(node).borderRadius), '50%');
+        await page.locator('#avatar-shape').selectOption('square');
+        assert.equal(await page.locator('.avatar').first().evaluate((node) => getComputedStyle(node).borderRadius), '0px');
+        await page.locator('#avatar-shape').selectOption('round');
         await change('#hex-bg-2', '#18293a');
         await change('#size-fontSize', 20);
         await change('#size-codeSize', 18);
@@ -145,7 +152,7 @@ async function main() {
         const result = spawnSync(process.execPath, [process.env.npm_execpath, ...args, '--output', output], { cwd: root, encoding: 'utf8' });
         assert.equal(result.status, 0, result.stderr || result.error?.message);
         const css = await fs.readFile(output, 'utf8');
-        assert.match(css, /@name Relay98 Custom/);
+        assert.match(css, /@name Relay98 Discord Dark/);
         assert.doesNotMatch(css, /@import/);
         await page.setViewportSize({ width: 1920, height: 1080 });
         const themeURL = pathToFileURL(output).href;
@@ -166,6 +173,7 @@ async function main() {
                         bevel: style('.demo-composer').boxShadow,
                     };
                 });
+                assert.equal(await page.locator('.demo-avatar img').first().evaluate((node) => getComputedStyle(node).borderRadius), '50%');
                 assert.deepEqual(computed, { fontSize: '20px', codeSize: '18px', sidebar: '288px', members: '264px', radius: '6px', gap: '12px', background: 'rgb(24, 41, 58)', texture: 'none', bevel: 'none' });
                 await image('custom-theme-chat.png');
             }

@@ -86,12 +86,15 @@ function canonicalPath(file) {
 }
 
 function outputPath(options = {}) {
-    const custom = options.custom !== undefined || options.configPath !== undefined;
+    const custom = options.custom !== undefined || options.configPath !== undefined || options.variant !== undefined;
     const { suffix } = getFormat(options.format);
     const extension = path.extname(suffix);
+    const stem = options.variant !== undefined
+        ? customization.variants[options.variant].filename
+        : `relay98${custom ? '-custom' : ''}`;
     const output = options.output
         ? path.resolve(options.output)
-        : path.join(root, 'build', `relay98${custom ? '-custom' : ''}${suffix}`);
+        : path.join(root, 'build', `${stem}${suffix}`);
     if (path.extname(output).toLowerCase() !== extension) throw new Error(`--output must end in ${extension}.`);
     // A build should never overwrite its source or configuration.
     const actualOutput = canonicalPath(output);
@@ -104,12 +107,13 @@ function outputPath(options = {}) {
 }
 
 function build(options = {}) {
-    if (options.custom !== undefined && options.configPath !== undefined) throw new Error('Use either --custom or --config, not both.');
+    if ([options.custom, options.configPath, options.variant].filter((value) => value !== undefined).length > 1) throw new Error('Use only one of --custom, --config, or --variant.');
     let config;
     if (options.configPath !== undefined) {
         try { config = customization.normalize(JSON.parse(fs.readFileSync(options.configPath, 'utf8'))); }
         catch (error) { throw new Error(`Could not load configuration ${options.configPath}: ${error.message}`); }
     } else if (options.custom !== undefined) config = customization.normalize(options.custom);
+    else if (options.variant !== undefined) config = customization.normalize({ variant: options.variant });
     const output = outputPath(options);
     const format = getFormat(options.format);
     if (format.convert) {
@@ -132,7 +136,8 @@ function build(options = {}) {
     // The theme's only external imports are its Google font fallbacks.
     const importBlock = [...imports].filter((rule) => config?.googleFonts !== false || !/https?:\/\/fonts\.googleapis\.com\//i.test(rule)).join('\n');
     const overrides = config ? `\n/* Custom settings from customize.html or --config. */\n${customization.toCSS(config)}` : '';
-    const metadata = config ? header.replace('@name Relay98', '@name Relay98 Custom') : header;
+    const name = config?.variant !== undefined && config.variant !== 'original' ? customization.variants[config.variant].label : 'Relay98 Custom';
+    const metadata = config ? header.replace('@name Relay98', `@name ${name}`) : header;
     const css = metadata + (importBlock ? `${importBlock}\n\n` : '') + body + overrides;
     const changed = writeOutput(output, css);
     if (!options.quiet) console.log(`${changed ? 'Built' : 'Unchanged'} ${path.relative(root, output)} from ${files.length} source file(s).`);
@@ -164,7 +169,7 @@ function parseArgs(args) {
         const flag = args[i];
         if (flag === '--help' || flag === '-h') options.help = true;
         else if (flag === '--watch') options.watch = true;
-        else if (['--custom', '--config', '--output', '--format'].includes(flag)) {
+        else if (['--custom', '--config', '--output', '--format', '--variant'].includes(flag)) {
             if (!args[i + 1] || args[i + 1].startsWith('--')) throw new Error(`${flag} needs a value.`);
             const value = args[++i];
             const key = flag === '--config' ? 'configPath' : flag.slice(2);
@@ -172,8 +177,9 @@ function parseArgs(args) {
             options[key] = flag === '--custom' ? customization.decode(value) : flag === '--config' ? path.resolve(value) : value;
         } else throw new Error(`Unknown option: ${flag}. Run npm run build -- --help.`);
     }
-    if (options.custom !== undefined && options.configPath !== undefined) throw new Error('Use either --custom or --config, not both.');
+    if ([options.custom, options.configPath, options.variant].filter((value) => value !== undefined).length > 1) throw new Error('Use only one of --custom, --config, or --variant.');
     getFormat(options.format);
+    if (options.variant !== undefined) customization.normalize({ variant: options.variant });
     return options;
 }
 
@@ -206,6 +212,7 @@ function main(args = process.argv.slice(2)) {
         console.log(`Usage: npm run build -- [options]
   --custom TOKEN    Settings copied from customize.html (URL-safe base64 JSON)
   --config FILE     Read settings from a JSON file
+  --variant NAME    Build original or discord with its preset colours and avatars
   --format FORMAT   Export css (default), palette, or spotifast
   --output FILE     Write the exported .css or .json file at this path
   --watch           Rebuild when source or configuration changes

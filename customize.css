@@ -345,9 +345,13 @@ input[type=range] {
     margin:0 0 16px;
 }
 
+.settings-section > .font-field {
+    margin:12px 0;
+}
+
 .palette-presets {
     display:grid;
-    grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-template-columns:repeat(auto-fit,minmax(110px,1fr));
     gap:7px;
     margin-bottom:22px;
 }
@@ -843,6 +847,7 @@ input[type=range] {
 }
 
 .mini-avatar {
+    border-radius:var(--r98-avatar-radius,0px);
     width:28px;
     height:28px;
     display:grid;
@@ -944,7 +949,7 @@ input[type=range] {
     height:32px;
     object-fit:cover;
     image-rendering:pixelated;
-    border-radius:var(--r98-radius);
+    border-radius:var(--r98-avatar-radius,0px);
     box-shadow:var(--r98-raised);
     flex-shrink:0;
 }

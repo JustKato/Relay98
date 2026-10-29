@@ -29,7 +29,7 @@ npm run dev     # rebuilds automatically when files in src/ change
 
 Open [customize.html](customize.html) in your browser from a downloaded or cloned copy of this repo. Keep it beside `customize.css`, `customize.js`, and the `scripts/` and `demos/` folders. You don't need to run a server.
 
-1. Start with Pine, Blue hour, Plum dusk, or Amber terminal. Adjust individual colours if you want a different mix.
+1. Choose Original or Discord Dark. Original uses Pine colours and square profile pictures. Discord Dark uses darker neutral panels and round profile pictures. You can choose either colour palette and profile picture shape independently.
 2. Set text sizes, message spacing, panel widths, corner radius, and scrollbar width. Choose fonts and turn textures, bevels, or shadows on or off.
 3. Copy the build command shown on the page. Open a terminal in the Relay98 folder and paste it there.
 4. Install `build/relay98-custom.theme.css` using the steps above. It appears as **Relay98 Custom** in the theme list. Disable the original theme while using it.
@@ -64,6 +64,19 @@ For hand-written settings, omitted fields use their defaults. This example uses 
 ```
 
 Colours use six-digit hex values. Sizes use whole pixels within the ranges shown on the page. The build rejects unknown options and invalid values with an error message. Run `npm run build -- --help` for the available command-line options.
+
+## Theme versions
+
+The original theme is still `build/relay98.theme.css`. For darker panels and round profile pictures, install [build/relay98-discord-dark.theme.css](build/relay98-discord-dark.theme.css) instead. It appears as **Relay98 Discord Dark**. Enable only one Relay98 theme at a time.
+
+```sh
+npm run build -- --variant discord
+npm run build -- --variant discord --format spotifast
+```
+
+In the workshop, **Theme version** applies a palette and avatar shape together. **Profile pictures** changes just the avatars, independently of panel corners. Version, palette, and shape choices are saved with your settings and included in the build command. Old settings without these options keep the original defaults.
+
+To add a version, edit `variants` in `scripts/customization.js`. Each entry defines its label, output filename, palette ID, and avatar shape. Add palettes to `palettes` and list their IDs in `paletteOptions` to show them in the workshop. The older Blue hour, Plum dusk, and Amber terminal palettes remain available in saved settings, but only Pine and Discord dark are offered in the picker for now.
 
 ## Spotifast theme
 
@@ -124,7 +137,7 @@ npm run test:browser  # customizer interactions and compiled CSS in Chromium
 
 Browser checks use the same Playwright and Chromium setup as screenshots. They exercise the local page, the generated build command, and the demo pages without replacing the README pictures.
 
-The unit suite includes a Bash command test, so Bash must be available. GitHub Actions runs these checks on Node.js 20 and 24 and checks the committed CSS and JSON exports. Releases run the tests before building all three files.
+The unit suite includes a Bash command test, so Bash must be available. GitHub Actions runs these checks on Node.js 20 and 24 and checks the committed CSS and JSON exports. Releases run the tests before building the CSS variants and JSON exports.
 
 ## Structure
 
