@@ -12,11 +12,20 @@ body {
     -webkit-font-smoothing: none;
 }
 
-/* Configurable corners; SVG avatar masks keep their shape. */
+/* Panel corners and profile picture shape are independent. */
 *,
 *::before,
 *::after {
     border-radius: var(--r98-radius) !important;
+}
+
+/* Clip the image itself so Discord's status cutouts and avatar decorations stay intact.
+   Server icons keep their own styling. */
+img[class^="avatar_"],
+img[class*=" avatar_"],
+.demo-avatar,
+.demo-avatar img {
+    border-radius: var(--r98-avatar-radius, 0px) !important;
 }
 
 ::selection {

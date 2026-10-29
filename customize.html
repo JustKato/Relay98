@@ -28,7 +28,9 @@
                 <div class="window-bar"><h2 id="settings-title"><span aria-hidden="true">▦</span> Appearance settings</h2><span class="window-mark" aria-hidden="true">− □</span></div>
                 <form id="theme-settings">
                     <fieldset class="settings-section">
-                        <legend><span class="step">01</span> Colour palette</legend>
+                        <legend><span class="step">01</span> Theme &amp; colours</legend>
+                        <div class="font-field"><label for="theme-version">Theme version</label><select id="theme-version"></select></div>
+                        <div class="font-field"><label for="avatar-shape">Profile pictures</label><select id="avatar-shape"></select></div>
                         <p class="section-note">Start with a mood. Make every shade your own.</p>
                         <div class="palette-presets" id="palette-presets"></div>
                         <div class="section-subhead"><span>ESSENTIAL COLOURS</span><span id="palette-state">Pine</span></div>
@@ -94,11 +96,14 @@
                 <section class="build-window window" aria-labelledby="build-title">
                     <div class="window-bar"><h2 id="build-title"><span aria-hidden="true">›_</span> Build your theme</h2><span class="window-mark" aria-hidden="true">.CSS</span></div>
                     <div class="build-content"><div class="build-heading"><div><p class="eyebrow">READY TO MAKE IT YOURS?</p><h3>One command. Your theme.</h3></div><span class="file-icon" aria-hidden="true">CSS</span></div>
-                        <p class="build-help" id="command-help">Run this in the Relay98 project folder with Node.js and npm installed, or send it to your coding assistant.</p>
+                        <p class="build-help" id="command-help">Run this in the Relay98 project folder with Node.js 20 or newer and npm installed.</p>
                         <label class="visually-hidden" for="build-command">Theme build command</label><textarea id="build-command" rows="4" spellcheck="false" readonly aria-describedby="command-help"></textarea>
                         <div class="command-actions"><button type="button" class="primary-button" id="copy-command">Copy build command <span aria-hidden="true">↗</span></button><span class="output-path">OUTPUT <code>build/relay98-custom.theme.css</code></span></div>
                         <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
-                        <div class="file-actions"><span>Keep this setup for later</span><div><button type="button" id="export-settings">↓ Save JSON</button><button type="button" id="import-settings">↑ Load JSON</button><input type="file" id="import-file" accept="application/json,.json" hidden></div></div>
+                        <div class="file-actions"><span>Keep editing later</span><div><button type="button" id="export-settings">↓ Save settings</button><button type="button" id="import-settings">↑ Load settings</button><input type="file" id="import-file" accept="application/json,.json" hidden></div></div>
+                        <div class="file-actions"><span>Export colours</span><div><button type="button" id="export-spotifast" aria-describedby="spotifast-help">↓ Spotifast theme</button><button type="button" id="export-palette" aria-describedby="palette-help">↓ Palette JSON</button></div></div>
+                        <p class="build-help" id="spotifast-help">For Spotifast, copy the file into its themes folder and select it in Settings &gt; Appearance &gt; Theme. Turn off Colour from album art to keep these colours on every page.</p>
+                        <p class="build-help" id="palette-help">Palette JSON contains the colours with names like background, text and accent, ready to use in other projects.</p>
                     </div>
                 </section>
                 <p class="workshop-tip"><span aria-hidden="true">i</span> Colours and sizes stay in your browser. Nothing is uploaded. Your original theme is kept as it is.</p>

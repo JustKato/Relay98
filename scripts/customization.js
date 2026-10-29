@@ -8,20 +8,20 @@
 
     const colors = [
         ['bg-0', 'Wells and inputs', '#1b1d1c'], ['bg-1', 'Side panels', '#222524'],
-        ['bg-2', 'Chat background', '#292c2b'], ['bg-3', 'Raised surfaces', '#323634'],
+        ['bg-2', 'Main background', '#292c2b'], ['bg-3', 'Raised surfaces', '#323634'],
         ['bg-4', 'Hovered surfaces', '#3c403e'],
         ['bevel-light', 'Bevel highlight', '#5a5f5c'], ['bevel-mid', 'Bevel midtone', '#454a47'],
         ['bevel-dim', 'Bevel shade', '#1f2221'], ['bevel-dark', 'Bevel shadow', '#121413'],
         ['line', 'Panel separators', '#161817'], ['border', 'Borders', '#3a3f3c'],
-        ['text-1', 'Headings', '#eef0ec'], ['text-2', 'Message text', '#d9dcd6'],
-        ['text-3', 'Secondary text', '#b3b8b1'], ['text-4', 'Channels and icons', '#959b94'],
-        ['text-5', 'Muted text', '#6e746d'],
+        ['text-1', 'Primary text', '#eef0ec'], ['text-2', 'Body text', '#d9dcd6'],
+        ['text-3', 'Secondary text', '#b3b8b1'], ['text-4', 'Muted text and icons', '#959b94'],
+        ['text-5', 'Faint text', '#6e746d'],
         ['titlebar-start', 'Title bar start', '#2e4a3b'], ['titlebar-end', 'Title bar end', '#5b8360'],
         ['accent', 'Accent', '#4a7a54'], ['accent-hover', 'Accent hover', '#568a61'],
         ['accent-active', 'Accent pressed', '#3e6647'], ['accent-light', 'Focus and progress', '#7fae86'],
         ['select', 'Selection', '#3b5c45'], ['link', 'Links', '#8cc7a6'],
-        ['amber', 'Mentions and idle', '#e8b04a'], ['green', 'Online and success', '#6fbf73'],
-        ['red', 'Errors and busy', '#e0635a'], ['red-dark', 'Destructive buttons', '#b23f37'],
+        ['amber', 'Warning', '#e8b04a'], ['green', 'Success', '#6fbf73'],
+        ['red', 'Error', '#e0635a'], ['red-dark', 'Destructive buttons', '#b23f37'],
     ].map(([key, label, value]) => ({ key, label, default: value }));
 
     const original = Object.fromEntries(colors.map(({ key, default: value }) => [key, value]));
@@ -35,6 +35,11 @@
     }
     const palettes = {
         pine: { label: 'Pine · original', colors: original },
+        discord: palette('Discord dark',
+            ['#0e0e10', '#121214', '#1a1a1e', '#232327', '#2c2c30'],
+            ['#f2f3f5', '#dbdee1', '#b5bac1', '#949ba4', '#6d6f78'],
+            ['#4e5058', '#383a40', '#171719', '#09090b', '#0b0b0d', '#35363c'],
+            ['#24263d', '#454b80', '#5865f2', '#6875f5', '#4752c4', '#949cf7', '#303452', '#a4b0ff']),
         blue: palette('Blue hour',
             ['#171c25', '#1e2633', '#252e3e', '#303b4e', '#3a475d'],
             ['#edf3fc', '#d5e0ef', '#afc0d8', '#92a6c2', '#71839e'],
@@ -50,6 +55,14 @@
             ['#faf0dc', '#e8d9bc', '#cbb994', '#ad9a75', '#8b7a58'],
             ['#7d6d4e', '#5e5039', '#292219', '#18130e', '#201a12', '#51452f'],
             ['#5a4122', '#97733d', '#88642f', '#9c763b', '#6c4e26', '#d9ad60', '#614c2b', '#f0c779']),
+    };
+
+    // Keep old palette IDs readable in saved settings, but offer two current choices.
+    const paletteOptions = ['pine', 'discord'];
+    const avatarShapes = { square: { label: 'Square', radius: '0px' }, round: { label: 'Round', radius: '50%' } };
+    const variants = {
+        original: { label: 'Relay98 Original', filename: 'relay98-original', palette: 'pine', avatarShape: 'square' },
+        discord: { label: 'Relay98 Discord Dark', filename: 'relay98-discord-dark', palette: 'discord', avatarShape: 'round' },
     };
 
     const sizes = [
@@ -86,10 +99,15 @@
     }
 
     function normalize(input = {}) {
-        object(input, 'configuration', ['palette', 'colors', 'sizes', 'fonts', 'effects', 'googleFonts']);
-        const selected = input.palette === undefined ? 'pine' : input.palette;
+        object(input, 'configuration', ['variant', 'avatarShape', 'palette', 'colors', 'sizes', 'fonts', 'effects', 'googleFonts']);
+        const variant = input.variant === undefined ? 'original' : input.variant;
+        if (typeof variant !== 'string' || !Object.hasOwn(variants, variant)) throw new Error(`Unknown theme version: ${variant}`);
+        const avatarShape = input.avatarShape === undefined ? variants[variant].avatarShape : input.avatarShape;
+        if (typeof avatarShape !== 'string' || !Object.hasOwn(avatarShapes, avatarShape)) throw new Error(`Unknown avatar shape: ${avatarShape}`);
+        const selected = input.palette === undefined ? variants[variant].palette : input.palette;
         if (typeof selected !== 'string' || !Object.hasOwn(palettes, selected)) throw new Error(`Unknown palette: ${selected}`);
         const result = {
+            variant, avatarShape,
             palette: selected,
             colors: { ...palettes[selected].colors },
             sizes: Object.fromEntries(sizes.map(({ key, default: value }) => [key, value])),
@@ -135,6 +153,7 @@
         const config = normalize(input);
         const vars = Object.fromEntries(Object.entries(config.colors).map(([key, value]) => [`--r98-${key}`, value]));
         vars['--r98-titlebar'] = `linear-gradient(to right, ${config.colors['titlebar-start']}, 75%, ${config.colors['titlebar-end']})`;
+        vars['--r98-avatar-radius'] = avatarShapes[config.avatarShape].radius;
         vars['--r98-font'] = config.fonts.ui;
         vars['--r98-font-code'] = config.fonts.code;
         for (const { key, variable } of sizes) vars[variable] = `${config.sizes[key]}px`;
@@ -152,6 +171,97 @@
 
     function toCSS(input) {
         return `:root {\n${Object.entries(toVariables(input)).map(([key, value]) => `    ${key}: ${value};`).join('\n')}\n}\n`;
+    }
+
+    function luminance(hex) {
+        const channels = hex.slice(1).match(/../g).map((value) => {
+            const channel = parseInt(value, 16) / 255;
+            return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4;
+        });
+        return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+    }
+
+    function contrast(first, second) {
+        const a = luminance(first), b = luminance(second);
+        return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+    }
+
+    function accentText(c) {
+        const score = (text) => Math.min(contrast(text, c.accent), contrast(text, c['accent-hover']));
+        const best = (choices) => choices.reduce((a, b) => score(a) >= score(b) ? a : b);
+        const text = best([c['text-1'], c['bg-0']]);
+        // Keep the palette's own text where possible. Fall back for custom colours
+        // that make both candidates hard to read, including on hovered buttons.
+        return score(text) >= 3 ? text : best([text, '#ffffff', '#000000']);
+    }
+
+    function toPalette(input) {
+        const { colors: c } = normalize(input);
+        return {
+            // The crossover between black and white text contrast is about 0.179.
+            base: luminance(c['bg-2']) > 0.179 ? 'light' : 'dark',
+            colors: {
+                background: c['bg-2'],
+                input: c['bg-0'],
+                panel: c['bg-1'],
+                surface: c['bg-3'],
+                surfaceHover: c['bg-4'],
+                selection: c.select,
+                border: c.border,
+                separator: c.line,
+                bevelLight: c['bevel-light'],
+                bevelMid: c['bevel-mid'],
+                bevelDim: c['bevel-dim'],
+                bevelDark: c['bevel-dark'],
+                text: c['text-1'],
+                textBody: c['text-2'],
+                textSecondary: c['text-3'],
+                textMuted: c['text-4'],
+                textFaint: c['text-5'],
+                accent: c.accent,
+                accentHover: c['accent-hover'],
+                accentActive: c['accent-active'],
+                accentFocus: c['accent-light'],
+                onAccent: accentText(c),
+                titlebarStart: c['titlebar-start'],
+                titlebarEnd: c['titlebar-end'],
+                link: c.link,
+                danger: c.red,
+                dangerStrong: c['red-dark'],
+                warning: c.amber,
+                success: c.green,
+                overlay: `${c['bg-0']}80`,
+                shadow: `${c['bevel-dark']}66`,
+                tint: `${c['titlebar-start']}28`,
+            },
+        };
+    }
+
+    // https://spotifast.rocks/settings-and-files/#custom-themes
+    function toSpotifast(input) {
+        const { base, colors: c } = toPalette(input);
+        return {
+            base,
+            colors: {
+                window: c.background,
+                panel: c.panel,
+                surface: c.surface,
+                surface_hover: c.surfaceHover,
+                surface_active: c.selection,
+                outline: c.border,
+                text: c.text,
+                secondary: c.textSecondary,
+                dim: c.textMuted,
+                accent: c.accent,
+                accent_hover: c.accentHover,
+                on_accent: c.onAccent,
+                danger: c.danger,
+                warning: c.warning,
+                overlay: c.overlay,
+                shadow: c.shadow,
+                tint: c.tint,
+            },
+        };
     }
 
     function encode(input) {
@@ -178,5 +288,5 @@
         return `npm run build -- --custom ${encode(input)}`;
     }
 
-    return { colors, sizes, palettes, fontPresets, defaults: normalize(), normalize, toVariables, toCSS, encode, decode, command };
+    return { colors, sizes, palettes, paletteOptions, variants, avatarShapes, fontPresets, defaults: normalize(), normalize, toVariables, toCSS, toPalette, toSpotifast, encode, decode, command };
 }));

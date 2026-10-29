@@ -37,7 +37,8 @@
     }
 
     function makePalettes() {
-        for (const [key, palette] of Object.entries(api.palettes)) {
+        for (const key of api.paletteOptions) {
+            const palette = api.palettes[key];
             const button = element('button', { type: 'button', class: 'palette-preset', 'data-palette': key, 'aria-pressed': 'false', 'aria-label': `${palette.label} palette` });
             const swatches = element('span', { class: 'preset-swatches', 'aria-hidden': 'true' });
             for (const color of ['bg-0', 'bg-2', 'accent', 'accent-light']) {
@@ -127,6 +128,8 @@
         $('theme-preview').removeAttribute('style');
         for (const [key, value] of Object.entries(api.toVariables(state))) $('theme-preview').style.setProperty(key, value);
         $('build-command').value = api.command(state);
+        $('theme-version').value = state.variant;
+        $('avatar-shape').value = state.avatarShape;
         for (const button of document.querySelectorAll('[data-palette]')) button.setAttribute('aria-pressed', String(button.dataset.palette === state.palette));
         const preset = api.normalize({ palette: state.palette });
         const edited = api.colors.some(({ key }) => state.colors[key] !== preset.colors[key]);
@@ -164,7 +167,7 @@
             return true;
         } catch (error) {
             if (input) input.setAttribute('aria-invalid', 'true');
-            feedback(`${error.message} The command still uses your last valid settings.`, true);
+            feedback(`${error.message} Your exports still use the last valid settings.`, true);
             return false;
         }
     }
@@ -191,15 +194,14 @@
         }
     }
 
-    function downloadSettings() {
-        const blob = new Blob([`${JSON.stringify(state, null, 2)}\n`], { type: 'application/json' });
+    function downloadJSON(value, filename) {
+        const blob = new Blob([`${JSON.stringify(value, null, 2)}\n`], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
-        const link = element('a', { href: url, download: 'relay98-settings.json' });
+        const link = element('a', { href: url, download: filename });
         document.body.append(link);
         link.click();
         link.remove();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
-        feedback('Settings saved as relay98-settings.json.');
     }
 
     async function importSettings() {
@@ -208,7 +210,11 @@
         if (!file) return;
         try {
             if (file.size > 65536) throw new Error('Choose a settings JSON file smaller than 64 KB.');
-            const next = api.normalize(JSON.parse(await file.text()));
+            const settings = JSON.parse(await file.text());
+            if (settings && typeof settings === 'object' && Object.hasOwn(settings, 'base') && Object.hasOwn(settings, 'colors')) {
+                throw new Error('This is a colour palette. Load relay98-settings.json to continue editing.');
+            }
+            const next = api.normalize(settings);
             state = next;
             render();
             feedback(`Loaded ${file.name}. Your build command is ready.`);
@@ -229,6 +235,17 @@
         } catch {
             restorationNotice = 'Saved settings could not be loaded. The original palette is ready to use.';
         }
+        for (const [key, variant] of Object.entries(api.variants)) $('theme-version').append(element('option', { value: key }, variant.label));
+        for (const [key, shape] of Object.entries(api.avatarShapes)) $('avatar-shape').append(element('option', { value: key }, shape.label));
+        $('theme-version').addEventListener('change', () => update((next) => {
+            const key = $('theme-version').value;
+            const variant = api.variants[key];
+            next.variant = key;
+            next.palette = variant.palette;
+            next.colors = { ...api.palettes[variant.palette].colors };
+            next.avatarShape = variant.avatarShape;
+        }));
+        $('avatar-shape').addEventListener('change', () => update((next) => { next.avatarShape = $('avatar-shape').value; }));
         makePalettes();
         makeColors();
         makeFonts();
@@ -242,7 +259,18 @@
             feedback('Original Pine settings restored.');
         });
         $('copy-command').addEventListener('click', copyCommand);
-        $('export-settings').addEventListener('click', downloadSettings);
+        $('export-settings').addEventListener('click', () => {
+            downloadJSON(state, 'relay98-settings.json');
+            feedback('Settings saved as relay98-settings.json.');
+        });
+        $('export-spotifast').addEventListener('click', () => {
+            downloadJSON(api.toSpotifast(state), 'relay98-custom.spotifast.json');
+            feedback('Saved relay98-custom.spotifast.json. Copy it into Spotifast\'s themes folder.');
+        });
+        $('export-palette').addEventListener('click', () => {
+            downloadJSON(api.toPalette(state), 'relay98-custom.palette.json');
+            feedback('Saved relay98-custom.palette.json.');
+        });
         $('import-settings').addEventListener('click', () => $('import-file').click());
         $('import-file').addEventListener('change', importSettings);
         render();

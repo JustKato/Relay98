@@ -41,6 +41,15 @@ async function main() {
             await page.locator(selector).fill(String(value));
             await page.locator(selector).blur();
         };
+        const downloadJSON = async (selector) => {
+            const event = page.waitForEvent('download');
+            await page.locator(selector).click();
+            const download = await event;
+            const filename = download.suggestedFilename();
+            const file = path.join(temporary, filename);
+            await download.saveAs(file);
+            return { filename, file, value: JSON.parse(await fs.readFile(file, 'utf8')) };
+        };
         const checkLayout = async (width, height) => {
             await page.setViewportSize({ width, height });
             assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `Page overflow at ${width}px`);
@@ -57,7 +66,14 @@ async function main() {
         assert.deepEqual(await readConfig(), customization.defaults);
         assert.match(await page.locator('.preview-title').evaluate((node) => getComputedStyle(node).backgroundImage), /linear-gradient/);
         await image('customize-desktop.png');
-        await page.locator('[data-palette="blue"]').click();
+        assert.equal(await page.locator('[data-palette]').count(), 2);
+        await page.locator('#theme-version').selectOption('discord');
+        assert.equal((await readConfig()).palette, 'discord');
+        assert.equal((await readConfig()).avatarShape, 'round');
+        assert.equal(await page.locator('.avatar').first().evaluate((node) => getComputedStyle(node).borderRadius), '50%');
+        await page.locator('#avatar-shape').selectOption('square');
+        assert.equal(await page.locator('.avatar').first().evaluate((node) => getComputedStyle(node).borderRadius), '0px');
+        await page.locator('#avatar-shape').selectOption('round');
         await change('#hex-bg-2', '#18293a');
         await change('#size-fontSize', 20);
         await change('#size-codeSize', 18);
@@ -102,18 +118,27 @@ async function main() {
         await page.locator('#import-file').setInputFiles({ name: 'bad.json', mimeType: 'application/json', buffer: Buffer.from('{"sizes":{"fontSize":999}}') });
         await page.waitForFunction(() => document.getElementById('feedback').textContent.includes('Could not load settings'));
         assert.equal(await command(), generated);
-        const downloadEvent = page.waitForEvent('download');
-        await page.locator('#export-settings').click();
-        const download = await downloadEvent;
-        const saved = path.join(temporary, download.suggestedFilename());
-        await download.saveAs(saved);
-        assert.deepEqual(customization.normalize(JSON.parse(await fs.readFile(saved, 'utf8'))), config);
+        const settings = await downloadJSON('#export-settings');
+        assert.equal(settings.filename, 'relay98-settings.json');
+        assert.deepEqual(customization.normalize(settings.value), config);
+        const spotifast = await downloadJSON('#export-spotifast');
+        assert.equal(spotifast.filename, 'relay98-custom.spotifast.json');
+        assert.deepEqual(spotifast.value, customization.toSpotifast(config));
+        assert.equal(spotifast.value.colors.window, '#18293a');
+        const palette = await downloadJSON('#export-palette');
+        assert.equal(palette.filename, 'relay98-custom.palette.json');
+        assert.deepEqual(palette.value, customization.toPalette(config));
+        for (const file of [spotifast.file, palette.file]) {
+            await page.locator('#import-file').setInputFiles(file);
+            await page.waitForFunction(() => document.getElementById('feedback').textContent.includes('Load relay98-settings.json'));
+            assert.equal(await command(), generated, 'importing a palette keeps the workshop settings');
+        }
         await page.reload();
         await page.waitForFunction(() => document.documentElement.dataset.customizerStatus === 'ready');
         assert.equal(await command(), generated, 'saved settings survive a reload');
         await page.locator('#reset-settings').click();
         assert.deepEqual(await readConfig(), customization.defaults);
-        await page.locator('#import-file').setInputFiles(saved);
+        await page.locator('#import-file').setInputFiles(settings.file);
         await page.waitForFunction(() => document.getElementById('feedback').textContent.startsWith('Loaded '));
         assert.equal(await command(), generated);
         for (const width of [1440, 1024, 768, 390, 320]) await checkLayout(width, 950);
@@ -127,7 +152,7 @@ async function main() {
         const result = spawnSync(process.execPath, [process.env.npm_execpath, ...args, '--output', output], { cwd: root, encoding: 'utf8' });
         assert.equal(result.status, 0, result.stderr || result.error?.message);
         const css = await fs.readFile(output, 'utf8');
-        assert.match(css, /@name Relay98 Custom/);
+        assert.match(css, /@name Relay98 Discord Dark/);
         assert.doesNotMatch(css, /@import/);
         await page.setViewportSize({ width: 1920, height: 1080 });
         const themeURL = pathToFileURL(output).href;
@@ -148,6 +173,7 @@ async function main() {
                         bevel: style('.demo-composer').boxShadow,
                     };
                 });
+                assert.equal(await page.locator('.demo-avatar img').first().evaluate((node) => getComputedStyle(node).borderRadius), '50%');
                 assert.deepEqual(computed, { fontSize: '20px', codeSize: '18px', sidebar: '288px', members: '264px', radius: '6px', gap: '12px', background: 'rgb(24, 41, 58)', texture: 'none', bevel: 'none' });
                 await image('custom-theme-chat.png');
             }
