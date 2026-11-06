@@ -60,7 +60,10 @@
                 swatches.append(swatch);
             }
             const label = element('span', { class: 'preset-name' }, paletteName(key));
-            if (key === 'pine') label.append(element('span', { class: 'preset-default', 'aria-hidden': 'true' }, 'Default'));
+            if (key === 'pine') {
+                label.append(element('span', { class: 'preset-default', id: 'default-accent' }, 'Default'));
+                button.setAttribute('aria-describedby', 'default-accent');
+            }
             button.append(swatches, label, element('span', { class: 'preset-check', 'aria-hidden': 'true' }, '✓'));
             button.addEventListener('click', () => update((next) => {
                 next.variant = 'original';

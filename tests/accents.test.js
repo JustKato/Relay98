@@ -5,12 +5,13 @@ const api = require('../scripts/customization');
 const offered = ['pine', 'carbon', 'copper', 'diskette', 'tidepool', 'oxblood', 'sandstone', 'afterglow', 'slate', 'amberglass', '2004'];
 const legacy = ['discord', 'blue', 'plum', 'amber'];
 
+function luminance(hex) {
+    const channels = hex.slice(1).match(/../g).map((value) => parseInt(value, 16) / 255)
+        .map((value) => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+    return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+}
+
 function contrast(first, second) {
-    const luminance = (hex) => {
-        const channels = hex.slice(1).match(/../g).map((value) => parseInt(value, 16) / 255)
-            .map((value) => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
-        return channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
-    };
     const a = luminance(first), b = luminance(second);
     return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
 }
@@ -30,10 +31,18 @@ test('the accent collection starts with default Pine and ten distinct additions'
     for (const id of legacy) assert.ok(!api.paletteOptions.includes(id), id);
 });
 
-test('Pine faint text remains readable on every surface', () => {
-    const c = api.defaults.colors;
-    for (const surface of ['bg-0', 'bg-1', 'bg-2', 'bg-3', 'bg-4']) {
-        assert.ok(contrast(c['text-5'], c[surface]) >= 4.5, surface);
+test('timestamps, placeholders, and channel labels remain readable in every offered accent', () => {
+    for (const palette of offered) {
+        const c = api.palettes[palette].colors;
+        for (const surface of ['bg-0', 'bg-1', 'bg-2']) {
+            assert.ok(contrast(c['text-5'], c[surface]) >= 4.5, `${palette}: faint text on ${surface}`);
+        }
+        for (const surface of ['bg-0', 'bg-1', 'bg-2', 'bg-3']) {
+            assert.ok(contrast(c['text-4'], c[surface]) >= 4.5, `${palette}: muted text on ${surface}`);
+        }
+        for (let level = 1; level < 5; level++) {
+            assert.ok(luminance(c[`text-${level}`]) > luminance(c[`text-${level + 1}`]), `${palette}: text hierarchy at level ${level}`);
+        }
     }
 });
 

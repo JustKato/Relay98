@@ -29,7 +29,7 @@ npm run dev     # rebuilds automatically when files in src/ change
 
 Open [customize.html](customize.html) in your browser from a downloaded or cloned copy of this repo. No server is needed.
 
-1. Pick a version and palette, then adjust colours, fonts, sizes and effects. Each pattern (scanlines, dot grid, dither, title bar stripes, scrollbar) has its own switch.
+1. Pick an accent, then adjust colours, type, layout and effects in the settings tabs. Pine is the default; ten more accents include **2004**, with classic Steam olive and mustard colours. Each pattern has its own switch under **Effects**.
 2. Use the tabs above the preview to switch between Discord (chat, friends) and Spotifast (home, liked songs).
 3. Copy the build command, paste it into a terminal in the Relay98 folder, and install `build/relay98-custom.theme.css` using the steps above. It shows up as **Relay98 Custom**; disable the original while using it.
 
@@ -49,11 +49,11 @@ npm run dev -- --config relay98-settings.json
 
 The last command watches both the CSS source and your settings file. A failed rebuild leaves the last successful CSS file in place.
 
-For hand-written settings, omitted fields use their defaults. This example uses the blue palette, larger text, system fonts, no scanlines or dot grid, and no Google font requests:
+For hand-written settings, omitted fields use their defaults. This example uses Diskette, larger text, system fonts, no scanlines or dot grid, and no Google font requests:
 
 ```json
 {
-  "palette": "blue",
+  "palette": "diskette",
   "sizes": { "fontSize": 18, "codeSize": 16 },
   "fonts": {
     "ui": "system-ui, Arial, sans-serif",
@@ -75,9 +75,9 @@ npm run build -- --variant discord
 npm run build -- --variant discord --format spotifast
 ```
 
-In the editor, **Version** applies a palette and avatar shape together. **Avatars** changes just the profile pictures, independently of panel corners. Version, palette, and shape choices are saved with your settings and included in the build command. Old settings without these options keep the original defaults.
+In the editor, **Accent** changes colours while preserving fonts, spacing, avatars and effects. **Layout → Avatars** changes profile pictures independently of panel corners. Old settings, including Discord Dark, still load. Choosing an accent then builds **Relay98 Custom**.
 
-To add a version, edit `variants` in `scripts/customization.js`. Each entry defines its label, output filename, palette ID, and avatar shape. Add palettes to `palettes` and list their IDs in `paletteOptions` to show them in the editor. The older Blue hour, Plum dusk, and Amber terminal palettes remain available in saved settings, but only Pine and Discord dark are offered in the picker for now.
+To add an accent, edit `palettes` in `scripts/customization.js` and include its ID in `paletteOptions`. The JSON field remains `palette` for compatibility. Legacy palette IDs and the command-line `--variant` option remain supported.
 
 ## Spotifast theme
 

@@ -40,6 +40,18 @@ async function main() {
         const accentNames = ['Pine', 'Carbon paper', 'Copperwire', 'Diskette', 'Tidepool', 'Oxblood', 'Sandstone', 'Afterglow', 'Slate', 'Amberglass', '2004'];
         const accent = (name) => page.getByRole('radio', { name, exact: true });
         const rgb = (hex) => `rgb(${hex.slice(1).match(/../g).map((part) => parseInt(part, 16)).join(', ')})`;
+        const contrast = (foreground, background) => {
+            const luminance = (colour) => colour.match(/[\d.]+/g).slice(0, 3)
+                .map((channel) => Number(channel) / 255)
+                .map((channel) => channel <= .04045 ? channel / 12.92 : ((channel + .055) / 1.055) ** 2.4)
+                .reduce((sum, channel, index) => sum + channel * [.2126, .7152, .0722][index], 0);
+            const levels = [luminance(foreground), luminance(background)].sort((a, b) => a - b);
+            return (levels[1] + .05) / (levels[0] + .05);
+        };
+        const buttonColours = (selector) => page.locator(selector).evaluate((node) => {
+            const style = getComputedStyle(node);
+            return { foreground: style.color, background: style.backgroundColor };
+        });
         const showSetting = async (selector) => {
             const panel = await page.locator(selector).evaluate((node) => node.closest('.settings-page')?.id);
             if (panel) await page.locator(`.settings-tabs [aria-controls="${panel}"]`).click();
@@ -67,6 +79,31 @@ async function main() {
         const checkLayout = async (width, height) => {
             await page.setViewportSize({ width, height });
             assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `Page overflow at ${width}px`);
+            const accentOverflows = await page.locator('#palette-presets [data-palette]').evaluateAll((tiles) => {
+                const failures = [];
+                for (const tile of tiles) {
+                    const bounds = tile.getBoundingClientRect();
+                    const inside = (rect) => rect.left >= bounds.left - .5 && rect.right <= bounds.right + .5 && rect.top >= bounds.top - .5 && rect.bottom <= bounds.bottom + .5;
+                    for (const part of tile.querySelectorAll('.preset-swatches, .preset-swatches > span, .preset-name, .preset-check')) {
+                        if (!inside(part.getBoundingClientRect())) failures.push(`${tile.dataset.palette}: ${part.className || 'swatch'} leaves its tile`);
+                    }
+                    // Text can paint outside a correctly sized flex/grid box.
+                    const walker = document.createTreeWalker(tile.querySelector('.preset-name'), NodeFilter.SHOW_TEXT);
+                    while (walker.nextNode()) {
+                        const range = document.createRange();
+                        range.selectNodeContents(walker.currentNode);
+                        if ([...range.getClientRects()].some((rect) => rect.width && rect.height && !inside(rect))) {
+                            failures.push(`${tile.dataset.palette}: label text leaves its tile`);
+                        }
+                    }
+                    const swatches = tile.querySelector('.preset-swatches').getBoundingClientRect();
+                    const check = tile.querySelector('.preset-check').getBoundingClientRect();
+                    const separated = swatches.right <= check.left + .5 || check.right <= swatches.left + .5 || swatches.bottom <= check.top + .5 || check.bottom <= swatches.top + .5;
+                    if (!separated) failures.push(`${tile.dataset.palette}: check marker covers its swatches`);
+                }
+                return failures;
+            });
+            assert.deepEqual(accentOverflows, [], `Accent tile overflow at ${width}px`);
         };
         const image = async (name) => {
             if (!process.env.RELAY98_TEST_SCREENSHOTS) return;
@@ -84,6 +121,8 @@ async function main() {
         assert.equal(await page.locator('#palette-presets [data-palette]').count(), 11);
         for (const name of accentNames) assert.equal(await accent(name).count(), 1);
         assert.equal(await accent('Pine').getAttribute('aria-checked'), 'true');
+        assert.equal(await accent('Pine').getAttribute('aria-describedby'), 'default-accent');
+        assert.equal(await page.locator('#default-accent').textContent(), 'Default');
 
         // Exercise the visible controls, including keyboard-only editing.
         await page.locator('#settings-tab-colours').press('End');
@@ -234,6 +273,11 @@ async function main() {
         await page.locator('#page-tabs [data-page="chat"]').click();
         const generated = await command();
         assert.match(generated, /^npm run build -- --custom [A-Za-z0-9_-]+$/);
+        await page.locator('#copy-command').hover();
+        const copyColours = await buttonColours('#copy-command');
+        const copyContrast = contrast(copyColours.foreground, copyColours.background);
+        assert.ok(copyContrast >= 4.5, `Copy hover contrast is ${copyContrast.toFixed(2)}:1`);
+        console.log(`PASS Copy hover contrast: ${copyContrast.toFixed(2)}:1 (${copyColours.foreground} on ${copyColours.background})`);
         await page.locator('#copy-command').click();
         assert.equal(await page.evaluate(() => window.testCopied), generated);
         await page.evaluate(() => {
@@ -339,6 +383,15 @@ async function main() {
                 assert.equal(await page.locator('.demo-avatar img').first().evaluate((node) => getComputedStyle(node).borderRadius), '50%');
                 assert.deepEqual(computed, { fontSize: '20px', codeSize: '18px', sidebar: '288px', members: '264px', radius: '6px', gap: '12px', background: 'rgb(24, 41, 58)', texture: 'none', bevel: 'none' });
                 await image('custom-theme-chat.png');
+            } else if (scene === 'settings') {
+                const normal = await buttonColours('.demo-button--primary');
+                const normalContrast = contrast(normal.foreground, normal.background);
+                await page.locator('.demo-button--primary').hover();
+                const hover = await buttonColours('.demo-button--primary');
+                const hoverContrast = contrast(hover.foreground, hover.background);
+                assert.ok(normalContrast >= 4.5, `2004 compiled button contrast is ${normalContrast.toFixed(2)}:1`);
+                assert.ok(hoverContrast >= 4.5, `2004 compiled hover contrast is ${hoverContrast.toFixed(2)}:1`);
+                console.log(`PASS 2004 compiled button contrast: ${normalContrast.toFixed(2)}:1 normal, ${hoverContrast.toFixed(2)}:1 hover`);
             }
         }
         const base = build({ output: path.join(temporary, 'original.theme.css'), quiet: true });

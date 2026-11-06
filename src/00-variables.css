@@ -40,7 +40,7 @@
     --r98-text-1: #eef0ec; /* headings, names, strong */
     --r98-text-2: #d9dcd6; /* message text */
     --r98-text-3: #b3b8b1; /* secondary text */
-    --r98-text-4: #959b94; /* channels, icons */
+    --r98-text-4: #aeb4ac; /* channels, icons */
     --r98-text-5: #a7aca4; /* muted, timestamps, placeholders */
 
     /* Muted pine/sage window bar, inspired by hunter (#3e5641), Torrey pine
@@ -51,6 +51,9 @@
     --r98-accent: #4a7a54; /* primary buttons (torrey pine) */
     --r98-accent-hover: #568a61;
     --r98-accent-active: #3e6647;
+    --r98-on-accent: #ffffff;
+    --r98-on-accent-hover: #000000;
+    --r98-on-accent-active: #eef0ec;
     --r98-accent-light: #7fae86; /* focus rings, progress bars */
     --r98-select: #3b5c45; /* selected channel / dm / menu item */
     --r98-link: #8cc7a6; /* soft seafoam */

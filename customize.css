@@ -423,7 +423,9 @@ h2 {
 .palette-preset {
     position: relative;
     display: grid;
-    gap: 5px;
+    grid-template-columns: minmax(0, 1fr) 12px;
+    grid-template-rows: 12px auto;
+    gap: 5px 4px;
     min-width: 0;
     min-height: 50px;
     padding: 6px;
@@ -443,32 +445,37 @@ h2 {
 }
 .preset-name {
     display: flex;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    min-width: 0;
     align-items: center;
     justify-content: space-between;
     gap: 5px;
-    white-space: nowrap;
+    white-space: normal;
 }
 .preset-default {
     color: #c3c8d2;
     font-size: 14px;
 }
 .preset-check {
-    position: absolute;
-    top: 2px;
-    right: 3px;
-    display: none;
-    width: 18px;
-    height: 18px;
+    grid-column: 2;
+    grid-row: 1;
+    visibility: hidden;
+    width: 12px;
+    height: 12px;
     background: var(--accent);
     color: #172133;
     text-align: center;
-    font: 700 13px/18px var(--sans);
+    font: 700 10px/12px var(--sans);
 }
 .palette-preset[aria-checked=true] .preset-check {
-    display: block;
+    visibility: visible;
 }
 .preset-swatches {
     display: flex;
+    grid-column: 1;
+    align-self: center;
+    min-width: 0;
     height: 10px;
     border: 1px solid #63636b;
     overflow: hidden;
@@ -776,7 +783,7 @@ h2 {
     --r98-text-1: #eef0ec;
     --r98-text-2: #d9dcd6;
     --r98-text-3: #b3b8b1;
-    --r98-text-4: #959b94;
+    --r98-text-4: #aeb4ac;
     --r98-text-5: #a7aca4;
     --r98-accent: #4a7a54;
     --r98-accent-light: #7fae86;
@@ -821,7 +828,7 @@ h2 {
     background-image: var(--r98-pat-bar), var(--r98-titlebar);
     box-shadow: var(--r98-raised);
     color: #fff;
-    font-size: .875em;
+    font-size: max(11px, .875em);
 }
 
 .preview-title > span:last-child {
@@ -861,7 +868,7 @@ h2 {
     border-radius: var(--r98-avatar-radius, 0px);
     box-shadow: var(--r98-raised);
     color: var(--r98-text-3);
-    font-size: .7em;
+    font-size: max(11px, .7em);
 }
 
 .rail-icon.home {
@@ -895,7 +902,7 @@ h2 {
     overflow: hidden;
     border-bottom: 1px solid var(--r98-line);
     color: var(--r98-text-1);
-    font-size: .85em;
+    font-size: max(11px, .85em);
     font-weight: 700;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -911,14 +918,14 @@ h2 {
     background: var(--r98-bg-0);
     box-shadow: var(--r98-sunken);
     color: var(--r98-text-5);
-    font-size: .7em;
+    font-size: max(11px, .7em);
     font-weight: 400;
 }
 
 .channel-group {
     margin: 16px 10px 6px;
     color: var(--r98-text-4);
-    font-size: .62em;
+    font-size: max(11px, .62em);
     letter-spacing: .4px;
 }
 
@@ -928,7 +935,7 @@ h2 {
     overflow: hidden;
     border-radius: var(--r98-radius);
     color: var(--r98-text-4);
-    font-size: .8em;
+    font-size: max(11px, .8em);
     text-overflow: ellipsis;
     white-space: nowrap;
 }
@@ -961,7 +968,7 @@ h2 {
     gap: 6px;
     padding: 3px 0 3px 26px;
     color: var(--r98-text-3);
-    font-size: .75em;
+    font-size: max(11px, .75em);
 }
 
 .presence {
@@ -989,7 +996,7 @@ h2 {
     background-size: var(--r98-pat-dither-size);
     box-shadow: var(--r98-raised);
     color: var(--r98-text-1);
-    font-size: .75em;
+    font-size: max(11px, .75em);
 }
 
 .preview-user > div {
@@ -1002,7 +1009,7 @@ h2 {
 .preview-user small {
     display: block;
     color: var(--r98-text-4);
-    font-size: .8em;
+    font-size: max(11px, .8em);
 }
 
 .mini-avatar {
@@ -1034,7 +1041,7 @@ h2 {
     border-bottom: 1px solid var(--r98-line);
     box-shadow: var(--r98-toolbar-shadow);
     color: var(--r98-text-1);
-    font-size: .85em;
+    font-size: max(11px, .85em);
     white-space: nowrap;
 }
 
@@ -1047,7 +1054,7 @@ h2 {
     overflow: hidden;
     border-left: 1px solid var(--r98-border);
     color: var(--r98-text-4);
-    font-size: .8em;
+    font-size: max(11px, .8em);
     text-overflow: ellipsis;
 }
 
@@ -1084,7 +1091,7 @@ h2 {
 .message-content {
     flex: 1;
     min-width: 0;
-    font-size: .8em;
+    font-size: max(11px, .8em);
 }
 
 .message-content p {
@@ -1104,7 +1111,7 @@ h2 {
 
 .message-meta > span {
     color: var(--r98-text-5);
-    font-size: .7em;
+    font-size: max(11px, .7em);
 }
 
 .sample-embed {
@@ -1122,7 +1129,7 @@ h2 {
     display: block;
     margin-bottom: 4px;
     color: var(--r98-text-4);
-    font-size: .65em;
+    font-size: max(11px, .65em);
     letter-spacing: .7px;
 }
 
@@ -1133,12 +1140,12 @@ h2 {
 
 .sample-embed p {
     color: var(--r98-text-3);
-    font-size: .9em;
+    font-size: max(11px, .9em);
 }
 
 .preview-link {
     color: var(--r98-link);
-    font-size: .8em;
+    font-size: max(11px, .8em);
 }
 
 .sample-reaction {
@@ -1148,7 +1155,7 @@ h2 {
     border: 1px solid var(--r98-accent);
     border-radius: var(--r98-radius);
     color: var(--r98-amber);
-    font-size: .85em;
+    font-size: max(11px, .85em);
 }
 
 .sample-reaction span {
@@ -1179,7 +1186,7 @@ h2 {
     border: 1px solid var(--r98-border);
     border-radius: var(--r98-radius);
     color: var(--r98-text-3);
-    font-size: .7em;
+    font-size: max(11px, .7em);
 }
 
 .preview-notice > span:nth-child(2) {
@@ -1205,7 +1212,7 @@ h2 {
     border-radius: var(--r98-radius);
     box-shadow: var(--r98-sunken);
     color: var(--r98-text-5);
-    font-size: .75em;
+    font-size: max(11px, .75em);
 }
 
 .sample-composer > span:nth-child(2) {
@@ -1215,7 +1222,7 @@ h2 {
 .sample-typing {
     padding: 4px 13px 7px;
     color: var(--r98-text-4);
-    font-size: .6em;
+    font-size: max(11px, .6em);
 }
 
 .sample-typing strong {
@@ -1252,7 +1259,7 @@ h2 {
     padding: 1px 8px;
     border-radius: var(--r98-radius);
     color: var(--r98-text-4);
-    font-size: .85em;
+    font-size: max(11px, .85em);
 }
 
 .friend-tab.active {
@@ -1261,7 +1268,7 @@ h2 {
 }
 
 .add-friend {
-    font-size: .8em;
+    font-size: max(11px, .8em);
 }
 
 .friend-search {
@@ -1270,7 +1277,7 @@ h2 {
     border-radius: var(--r98-radius);
     box-shadow: var(--r98-sunken);
     color: var(--r98-text-5);
-    font-size: .75em;
+    font-size: max(11px, .75em);
 }
 
 .friends-main .channel-group {
@@ -1283,7 +1290,7 @@ h2 {
     gap: 10px;
     padding: 9px 4px;
     border-top: 1px solid var(--r98-border);
-    font-size: .8em;
+    font-size: max(11px, .8em);
 }
 
 .friend-row > div {
@@ -1298,7 +1305,7 @@ h2 {
 .friend-row small {
     display: block;
     color: var(--r98-text-4);
-    font-size: .85em;
+    font-size: max(11px, .85em);
 }
 
 .round-action {
@@ -1323,7 +1330,7 @@ h2 {
 .active-title {
     margin: 0 0 10px;
     color: var(--r98-text-1);
-    font-size: .85em;
+    font-size: max(11px, .85em);
     font-weight: 700;
 }
 
@@ -1333,7 +1340,7 @@ h2 {
     border: 1px solid var(--r98-border);
     border-radius: var(--r98-radius);
     box-shadow: var(--r98-drop);
-    font-size: .72em;
+    font-size: max(11px, .72em);
 }
 
 .active-card p {
