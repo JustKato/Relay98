@@ -11,6 +11,15 @@
         ],
         "createdAt": "2026-11-06T17:49:17.004Z",
         "reason": "Agent: Chromium measures Copy hover text #1c2230 on #ced4df at 10.68:1. The static detector combines unrelated hover rules; scripts/test-browser.js checks the computed contrast and tests/accents.test.js checks preset text contrast."
+      },
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "customize.css"
+        ],
+        "createdAt": "2026-11-06T17:51:25.904Z",
+        "reason": "Agent: .sample-embed is an intentional Discord message-embed preview with a colour marker. Git blame attributes this border to 71f2fdc, before this redesign; preserving the sample appearance is within the requested scope."
       }
     ]
   }
