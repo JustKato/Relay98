@@ -52,7 +52,7 @@
     --r98-text-2: #d9dcd6; /* message text */
     --r98-text-3: #b3b8b1; /* secondary text */
     --r98-text-4: #959b94; /* channels, icons */
-    --r98-text-5: #6e746d; /* muted, timestamps, placeholders */
+    --r98-text-5: #a7aca4; /* muted, timestamps, placeholders */
 
     /* Muted pine/sage window bar, inspired by hunter (#3e5641), Torrey pine
        (#527a54) and sage (#7a9167). Darker shades keep white text readable. */
@@ -221,12 +221,12 @@ body,
     --control-primary-border-default: transparent;
     --control-primary-border-hover: transparent;
     --control-primary-border-active: transparent;
-    --control-primary-text-default: #ffffff;
-    --control-primary-text-hover: #ffffff;
-    --control-primary-text-active: #ffffff;
-    --control-primary-icon-default: #ffffff;
-    --control-primary-icon-hover: #ffffff;
-    --control-primary-icon-active: #ffffff;
+    --control-primary-text-default: var(--r98-on-accent, #ffffff);
+    --control-primary-text-hover: var(--r98-on-accent-hover, #ffffff);
+    --control-primary-text-active: var(--r98-on-accent-active, #ffffff);
+    --control-primary-icon-default: var(--r98-on-accent, #ffffff);
+    --control-primary-icon-hover: var(--r98-on-accent-hover, #ffffff);
+    --control-primary-icon-active: var(--r98-on-accent-active, #ffffff);
 
     --control-secondary-background-default: var(--r98-bg-3);
     --control-secondary-background-hover: var(--r98-bg-4);
@@ -302,7 +302,7 @@ body,
     --checkbox-border-hover: var(--r98-text-4);
     --checkbox-border-selected-default: var(--r98-accent);
     --checkbox-border-selected-hover: var(--r98-accent-hover);
-    --checkbox-icon-active: #ffffff;
+    --checkbox-icon-active: var(--r98-on-accent, #ffffff);
     --radio-background-default: var(--r98-bg-0);
     --radio-background-hover: var(--r98-bg-1);
     --radio-background-selected-default: var(--r98-accent);
@@ -311,7 +311,7 @@ body,
     --radio-border-hover: var(--r98-text-4);
     --radio-border-selected-default: var(--r98-accent);
     --radio-border-selected-hover: var(--r98-accent-hover);
-    --radio-thumb-background-active: #ffffff;
+    --radio-thumb-background-active: var(--r98-on-accent, #ffffff);
     --switch-background-default: var(--r98-bg-4);
     --switch-background-hover: var(--r98-bevel-light);
     --switch-background-selected-default: var(--r98-accent);
@@ -321,7 +321,7 @@ body,
     --switch-border-selected-default: transparent;
     --switch-border-selected-hover: transparent;
     --switch-thumb-background-default: var(--r98-text-3);
-    --switch-thumb-background-selected-default: #ffffff;
+    --switch-thumb-background-selected-default: var(--r98-on-accent, #ffffff);
     --slider-track-background: var(--r98-bg-4);
     --progressbar-track-background: var(--r98-bg-0);
     --progressbar-indicator-background: var(--r98-accent-light);
@@ -355,15 +355,15 @@ body,
 
     /* Badges / notices. */
     --badge-background-default: var(--r98-accent);
-    --badge-text-default: #ffffff;
+    --badge-text-default: var(--r98-on-accent, #ffffff);
     --badge-notification-background: var(--r98-red);
     --badge-expressive-background-default: var(--r98-accent);
-    --badge-expressive-text-default: #ffffff;
+    --badge-expressive-text-default: var(--r98-on-accent, #ffffff);
     --notice-background-info: var(--r98-accent);
     --notice-background-positive: var(--control-connect-background-default);
     --notice-background-warning: var(--r98-amber);
     --notice-background-critical: var(--r98-red-dark);
-    --notice-text-info: #ffffff;
+    --notice-text-info: var(--r98-on-accent, #ffffff);
     --notice-text-positive: #ffffff;
     --notice-text-warning: var(--r98-bg-0);
     --notice-text-critical: #ffffff;

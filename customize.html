@@ -32,24 +32,13 @@
         <symbol id="i-clock" viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 1 0 18 9 9 0 0 1 0-18zm0 2a7 7 0 1 0 0 14 7 7 0 0 0 0-14zm-1 2h2v4.6l3.2 3.2-1.4 1.4L11 12.4z"/></symbol>
     </svg>
 
-    <header class="topbar">
-        <nav class="site-links" aria-label="Site">
-            <a class="site-home" href="https://danlegt.com">← danlegt.com</a>
-            <span class="path-separator" aria-hidden="true">/</span>
-            <a class="brand" href="README.md">Relay98</a>
-        </nav>
-        <div class="topbar-actions">
-            <a class="guide-link" href="README.md">[ Guide ↗ ]</a>
-        </div>
-    </header>
-
-    <div class="intro">
+    <header class="intro">
         <div class="intro-heading">
             <span class="editor-icon" aria-hidden="true"><svg><use href="#i-monitor"/></svg></span>
             <div><h1>Relay<span>98</span></h1><p>Theme editor</p></div>
         </div>
-        <span id="save-state" class="save-state" role="status">Saved in this browser</span>
-    </div>
+        <div class="intro-actions"><a class="guide-link" href="README.md">Guide ↗</a><span id="save-state" class="save-state" role="status">Saved in this browser</span></div>
+    </header>
 
     <noscript><p class="alert">The editor needs JavaScript.</p></noscript>
     <p id="fatal-error" class="alert" hidden></p>
@@ -57,14 +46,10 @@
     <main class="layout">
         <nav class="mobile-jumps" aria-label="Editor areas"><a href="#theme-settings">Settings</a><a href="#preview-panel">Preview</a><a href="#build-panel">Export</a></nav>
         <form id="theme-settings" class="panel settings" aria-label="Theme settings">
-            <div class="editor-titlebar"><span><svg aria-hidden="true"><use href="#i-monitor"/></svg>Theme settings</span><span class="window-grip" aria-hidden="true"></span></div>
-            <section class="group" aria-labelledby="theme-heading">
-                <div class="group-heading"><h2 id="theme-heading">Theme</h2><span id="palette-state" class="tag">Pine</span></div>
-                <div class="field-row">
-                    <div class="field"><label for="theme-version">Version</label><select id="theme-version"></select></div>
-                    <div class="field"><label for="avatar-shape">Avatars</label><select id="avatar-shape"></select></div>
-                </div>
-                <div class="palette-presets" id="palette-presets" role="group" aria-label="Palette"></div>
+            <div class="editor-titlebar"><span><svg aria-hidden="true"><use href="#i-monitor"/></svg>Settings</span><span class="window-grip" aria-hidden="true"></span></div>
+            <section class="group accent-group" aria-labelledby="accent-heading">
+                <div class="group-heading"><h2 id="accent-heading">Accent</h2><span id="palette-state" class="tag">Pine</span></div>
+                <div class="palette-presets" id="palette-presets" role="radiogroup" aria-labelledby="accent-heading"></div>
             </section>
 
             <div class="settings-tabs" role="tablist" aria-label="Settings">
@@ -93,6 +78,7 @@
 
             <section class="group settings-page" id="settings-layout" role="tabpanel" aria-labelledby="settings-tab-layout" hidden>
                 <h2 id="sizes-heading">Spacing &amp; layout</h2>
+                <div class="field avatar-field"><label for="avatar-shape">Avatars</label><select id="avatar-shape"></select></div>
                 <div id="size-controls" class="size-controls"></div>
             </section>
 
@@ -143,7 +129,7 @@
                             <div class="sample-channel"><span aria-hidden="true">♫</span> lounge</div>
                             <div class="voice-member"><span class="presence"></span> noa</div>
                             <div class="voice-member"><span class="presence amber"></span> kit</div>
-                            <div class="preview-user"><img class="mini-avatar" src="demos/images/cat-danlegt.jpg" alt=""><div>danlegt<small>Online</small></div><span aria-hidden="true">⚙</span></div>
+                            <div class="preview-user"><img class="mini-avatar" src="demos/images/cat-danlegt.jpg" alt=""><div>you<small>Online</small></div><span aria-hidden="true">⚙</span></div>
                         </aside>
                         <div class="preview-chat">
                             <div class="channel-heading"><span aria-hidden="true">#</span> general <span class="channel-topic">say hi</span></div>
@@ -174,7 +160,7 @@
                             <div class="dm-row"><img class="avatar small" src="demos/images/cat-kit.jpg" alt="">kit</div>
                             <div class="dm-row"><img class="avatar small" src="demos/images/cat-mara.jpg" alt="">mara</div>
                             <div class="dm-row"><img class="avatar small" src="demos/images/cat-ren.jpg" alt="">ren</div>
-                            <div class="preview-user"><img class="mini-avatar" src="demos/images/cat-danlegt.jpg" alt=""><div>danlegt<small>Online</small></div><span aria-hidden="true">⚙</span></div>
+                            <div class="preview-user"><img class="mini-avatar" src="demos/images/cat-danlegt.jpg" alt=""><div>you<small>Online</small></div><span aria-hidden="true">⚙</span></div>
                         </aside>
                         <div class="preview-chat friends-main">
                             <div class="channel-heading"><span aria-hidden="true">☺</span> Friends <span class="friend-tab active">Online</span><span class="friend-tab">All</span><span class="friend-tab">Pending</span><span class="preview-button add-friend">Add Friend</span></div>
@@ -247,7 +233,7 @@
                             <div class="sf-page" data-page="liked" hidden>
                                 <div class="sf-hero">
                                     <span class="sf-cover liked big"><svg><use href="#i-heart"/></svg></span>
-                                    <div><small>Playlist</small><h3>Liked Songs</h3><small>danlegt · 9 songs</small></div>
+                                    <div><small>Playlist</small><h3>Liked Songs</h3><small>you · 9 songs</small></div>
                                 </div>
                                 <div class="sf-actions"><span class="sf-play"><svg><use href="#i-play"/></svg></span><svg class="sf-dim-icon"><use href="#i-shuffle"/></svg></div>
                                 <table class="sf-tracks">
@@ -302,6 +288,6 @@
             </section>
         </div>
     </main>
-    <footer class="page-footer"><span>Relay98 · A theme by <a href="https://danlegt.com">danlegt</a></span><a href="#theme-settings">Back to settings ↑</a></footer>
+    <footer class="page-footer"><span>Relay98</span><a href="#theme-settings">Back to settings ↑</a></footer>
 </body>
 </html>

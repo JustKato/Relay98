@@ -37,6 +37,9 @@ async function main() {
         page.on('pageerror', (error) => errors.push(error.message));
         const command = () => page.locator('#build-command').inputValue();
         const readConfig = async () => customization.decode((await command()).split(' ').at(-1));
+        const accentNames = ['Pine', 'Carbon paper', 'Copperwire', 'Diskette', 'Tidepool', 'Oxblood', 'Sandstone', 'Afterglow', 'Slate', 'Amberglass', '2004'];
+        const accent = (name) => page.getByRole('radio', { name, exact: true });
+        const rgb = (hex) => `rgb(${hex.slice(1).match(/../g).map((part) => parseInt(part, 16)).join(', ')})`;
         const showSetting = async (selector) => {
             const panel = await page.locator(selector).evaluate((node) => node.closest('.settings-page')?.id);
             if (panel) await page.locator(`.settings-tabs [aria-controls="${panel}"]`).click();
@@ -76,20 +79,35 @@ async function main() {
         await page.evaluate(() => document.fonts.ready);
         assert.deepEqual(await readConfig(), customization.defaults);
         assert.match(await page.locator('.preview-title').evaluate((node) => getComputedStyle(node).backgroundImage), /linear-gradient/);
+        assert.equal(await page.locator('#theme-version').count(), 0);
+        assert.equal(await page.locator('#palette-presets').getAttribute('role'), 'radiogroup');
+        assert.equal(await page.locator('#palette-presets [data-palette]').count(), 11);
+        for (const name of accentNames) assert.equal(await accent(name).count(), 1);
+        assert.equal(await accent('Pine').getAttribute('aria-checked'), 'true');
 
         // Exercise the visible controls, including keyboard-only editing.
         await page.locator('#settings-tab-colours').press('End');
         assert.equal(await page.locator('#settings-effects').isVisible(), true);
         await page.locator('#settings-tab-effects').press('Home');
         assert.equal(await page.locator('#settings-colours').isVisible(), true);
-        await page.locator('#theme-version-trigger').press('End');
-        await page.locator('#theme-version-trigger').press('Enter');
-        assert.equal((await readConfig()).variant, 'discord');
-        await page.locator('#theme-version-trigger').press('Home');
-        await page.locator('#theme-version-trigger').press('Escape');
-        assert.equal((await readConfig()).variant, 'discord', 'Escape cancels a pending dropdown selection');
+        for (const [key, name] of [['ArrowRight', 'Carbon paper'], ['ArrowDown', 'Copperwire'], ['ArrowLeft', 'Carbon paper'], ['ArrowUp', 'Pine'], ['End', '2004'], ['ArrowRight', 'Pine'], ['End', '2004'], ['Home', 'Pine']]) {
+            await page.locator('#palette-presets [aria-checked=true]').press(key);
+            const selected = accent(name);
+            assert.equal(await selected.getAttribute('aria-checked'), 'true', `${key} selects ${name}`);
+            assert.equal(await selected.evaluate((node) => node === document.activeElement), true);
+            assert.equal((await readConfig()).palette, await selected.getAttribute('data-palette'));
+            assert.equal(await page.locator('#palette-presets [aria-checked=true]').count(), 1);
+            assert.equal(await page.locator('#palette-presets [tabindex="0"]').count(), 1);
+        }
+        await showSetting('#avatar-shape');
+        await page.locator('#avatar-shape-trigger').press('End');
+        await page.locator('#avatar-shape-trigger').press('Enter');
+        assert.equal((await readConfig()).avatarShape, 'round');
+        await page.locator('#avatar-shape-trigger').press('Home');
+        await page.locator('#avatar-shape-trigger').press('Escape');
+        assert.equal((await readConfig()).avatarShape, 'round', 'Escape cancels a pending dropdown selection');
         await page.locator('#reset-settings').click();
-        assert.equal(await page.locator('#theme-version-trigger').textContent(), 'Original');
+        assert.equal(await page.locator('#avatar-shape-trigger').textContent(), 'Square');
         await showSetting('#font-ui');
         await page.locator('#font-ui-trigger').press('End');
         await page.locator('#font-ui-trigger').press('Tab');
@@ -135,8 +153,12 @@ async function main() {
         assert.deepEqual(await readConfig(), customization.defaults);
         assert.equal(await page.locator('#color-accent-trigger').evaluate((node) => getComputedStyle(node).backgroundColor), 'rgb(74, 122, 84)');
         await image('customize-desktop.png');
-        assert.equal(await page.locator('[data-palette]').count(), 2);
-        await choose('#theme-version', 'discord');
+        // Previously saved Discord settings still load after removing Version.
+        const legacySettings = { variant: 'discord', palette: 'discord', avatarShape: 'round' };
+        await page.locator('#import-file').setInputFiles({ name: 'legacy-discord-settings.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(legacySettings)) });
+        await page.waitForFunction(() => document.getElementById('feedback').textContent.startsWith('Loaded legacy-discord-settings.json'));
+        assert.deepEqual(await readConfig(), customization.normalize(legacySettings));
+        assert.equal((await readConfig()).variant, 'discord');
         assert.equal((await readConfig()).palette, 'discord');
         assert.equal((await readConfig()).avatarShape, 'round');
         assert.equal(await page.locator('.avatar').first().evaluate((node) => getComputedStyle(node).borderRadius), '50%');
@@ -166,6 +188,23 @@ async function main() {
             await showSetting(`#${toggle}`);
             await page.locator(`#${toggle}`).uncheck();
         }
+        const nonColourSettings = ({ variant, palette, colors, ...settings }) => settings;
+        const beforeAccents = await readConfig();
+        await showSetting('#hex-bg-2');
+        for (const name of accentNames) {
+            await accent(name).click();
+            const selected = await readConfig();
+            const key = await accent(name).getAttribute('data-palette');
+            assert.equal(selected.variant, 'original');
+            assert.equal(selected.palette, key);
+            assert.deepEqual(nonColourSettings(selected), nonColourSettings(beforeAccents), `${name} preserves fonts, layout, avatars and effects`);
+            assert.deepEqual(selected.colors, customization.palettes[key].colors);
+            assert.equal(await page.locator('#theme-preview').evaluate((node) => getComputedStyle(node).backgroundColor), rgb(selected.colors['bg-2']));
+            assert.equal(await page.locator('#theme-preview').evaluate((node) => node.style.getPropertyValue('--r98-accent')), selected.colors.accent);
+            assert.equal(await page.locator('.sf-player').evaluate((node) => getComputedStyle(node).backgroundColor), rgb(customization.toSpotifast(selected).colors.panel));
+            assert.equal(await accent(name).getAttribute('aria-checked'), 'true');
+        }
+        await change('#hex-bg-2', '#18293a');
         const config = await readConfig();
         assert.equal(config.colors['bg-2'], '#18293a');
         assert.equal(config.sizes.fontSize, 20);
@@ -234,6 +273,7 @@ async function main() {
         await page.reload();
         await page.waitForFunction(() => document.documentElement.dataset.customizerStatus === 'ready');
         assert.equal(await command(), generated, 'saved settings survive a reload');
+        assert.equal(await page.locator('#palette-presets [aria-checked=true]').getAttribute('data-palette'), config.palette);
         assert.equal(await page.locator('#page-tabs [aria-selected="true"]').textContent(), 'Chat');
         await page.locator('#reset-settings').click();
         assert.deepEqual(await readConfig(), customization.defaults);
@@ -275,7 +315,7 @@ async function main() {
         const result = spawnSync(process.execPath, [process.env.npm_execpath, ...args, '--output', output], { cwd: root, encoding: 'utf8' });
         assert.equal(result.status, 0, result.stderr || result.error?.message);
         const css = await fs.readFile(output, 'utf8');
-        assert.match(css, /@name Relay98 Discord Dark/);
+        assert.equal(css.match(/@name\s+([^\r\n]+)/)?.[1].trim(), 'Relay98 Custom');
         assert.doesNotMatch(css, /@import/);
         await page.setViewportSize({ width: 1920, height: 1080 });
         const themeURL = pathToFileURL(output).href;

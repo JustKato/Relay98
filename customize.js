@@ -52,20 +52,37 @@
     function makePalettes() {
         for (const key of api.paletteOptions) {
             const palette = api.palettes[key];
-            const button = element('button', { type: 'button', class: 'palette-preset', 'data-palette': key, 'aria-pressed': 'false' });
+            const button = element('button', { type: 'button', class: 'palette-preset', 'data-palette': key, role: 'radio', 'aria-checked': 'false', 'aria-label': paletteName(key), tabindex: '-1' });
             const swatches = element('span', { class: 'preset-swatches', 'aria-hidden': 'true' });
             for (const color of ['bg-0', 'bg-2', 'accent', 'accent-light']) {
                 const swatch = element('span');
                 swatch.style.backgroundColor = palette.colors[color] || api.defaults.colors[color];
                 swatches.append(swatch);
             }
-            button.append(swatches, element('span', {}, paletteName(key)));
+            const label = element('span', { class: 'preset-name' }, paletteName(key));
+            if (key === 'pine') label.append(element('span', { class: 'preset-default', 'aria-hidden': 'true' }, 'Default'));
+            button.append(swatches, label, element('span', { class: 'preset-check', 'aria-hidden': 'true' }, '✓'));
             button.addEventListener('click', () => update((next) => {
+                next.variant = 'original';
                 next.palette = key;
                 next.colors = { ...palette.colors };
             }));
             $('palette-presets').append(button);
         }
+        $('palette-presets').addEventListener('keydown', (event) => {
+            const buttons = [...event.currentTarget.querySelectorAll('[role=radio]')];
+            const index = buttons.indexOf(event.target);
+            if (index === -1) return;
+            let next;
+            if (['ArrowRight', 'ArrowDown'].includes(event.key)) next = (index + 1) % buttons.length;
+            else if (['ArrowLeft', 'ArrowUp'].includes(event.key)) next = (index - 1 + buttons.length) % buttons.length;
+            else if (event.key === 'Home') next = 0;
+            else if (event.key === 'End') next = buttons.length - 1;
+            else return;
+            event.preventDefault();
+            buttons[next].focus();
+            buttons[next].click();
+        });
     }
 
     function makeColors() {
@@ -169,9 +186,13 @@
         for (const [key, value] of Object.entries(api.toSpotifast(state).colors)) spotifast.style.setProperty(`--sf-${key.replace(/_/g, '-')}`, value);
 
         $('build-command').value = api.command(state);
-        $('theme-version').value = state.variant;
         $('avatar-shape').value = state.avatarShape;
-        for (const button of document.querySelectorAll('[data-palette]')) button.setAttribute('aria-pressed', String(button.dataset.palette === state.palette));
+        const offered = api.paletteOptions.includes(state.palette);
+        for (const button of document.querySelectorAll('[data-palette]')) {
+            const selected = button.dataset.palette === state.palette;
+            button.setAttribute('aria-checked', String(selected));
+            button.tabIndex = selected || (!offered && button.dataset.palette === 'pine') ? 0 : -1;
+        }
         const preset = api.normalize({ palette: state.palette });
         const edited = api.colors.some(({ key }) => state.colors[key] !== preset.colors[key]);
         $('palette-state').textContent = `${paletteName(state.palette)}${edited ? ' · edited' : ''}`;
@@ -361,16 +382,7 @@
         } catch {
             restorationNotice = 'Your saved settings could not be loaded, so the defaults are shown.';
         }
-        for (const [key, variant] of Object.entries(api.variants)) $('theme-version').append(element('option', { value: key }, variant.label.replace(/^Relay98 /, '')));
         for (const [key, shape] of Object.entries(api.avatarShapes)) $('avatar-shape').append(element('option', { value: key }, shape.label));
-        $('theme-version').addEventListener('change', () => update((next) => {
-            const key = $('theme-version').value;
-            const variant = api.variants[key];
-            next.variant = key;
-            next.palette = variant.palette;
-            next.colors = { ...api.palettes[variant.palette].colors };
-            next.avatarShape = variant.avatarShape;
-        }));
         $('avatar-shape').addEventListener('change', () => update((next) => { next.avatarShape = $('avatar-shape').value; }));
         makePalettes();
         makeColors();

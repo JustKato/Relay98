@@ -36,9 +36,7 @@
     font-display: swap;
 }
 
-/* Editor chrome follows danlegt.com's classic desktop styling: neutral
-   charcoal, silver, slate blue and small warm accents. Preview tokens
-   remain independent below. */
+/* Neutral desktop chrome stays separate from the editable preview colours. */
 :root {
     color-scheme: dark;
     --page: #151518;
@@ -74,7 +72,7 @@ html {
 body {
     margin: 0;
     min-width: 280px;
-    background: var(--page) url('assets/customizer/stars.svg') repeat;
+    background: var(--page);
     color: var(--text);
     font: 18px/1.3 var(--editor-font);
 }
@@ -132,7 +130,6 @@ button {
 }
 button:hover {
     background: var(--select);
-    color: var(--text-strong);
 }
 button:active {
     box-shadow: var(--sunken);
@@ -176,34 +173,10 @@ input[type=range] {
     color: #ffd6cd;
 }
 
-/* A small site header leaves the editor itself in focus. */
-.topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    max-width: 1312px;
-    margin: 0 auto;
-    padding: 10px 0;
-    border-bottom: 1px dashed var(--border-soft);
-    font: 11px/1.5 var(--pixel);
-}
-.site-links, .topbar-actions {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-.site-home {
-    color: var(--text-strong);
-}
-.path-separator {
-    color: var(--muted);
-}
-.brand {
-    color: #c4b4d7;
-}
 .guide-link {
     color: #dfc98e;
+    padding: 8px 0;
+    font: 11px/1.5 var(--pixel);
 }
 .intro {
     display: flex;
@@ -212,7 +185,12 @@ input[type=range] {
     gap: 24px;
     max-width: 1360px;
     margin: 0 auto;
-    padding: 18px 24px;
+    padding: 26px 24px;
+}
+.intro-actions {
+    display: grid;
+    justify-items: end;
+    gap: 6px;
 }
 .intro-heading {
     display: flex;
@@ -342,10 +320,10 @@ h2 {
     background: #35343e;
     border: 1px solid #696674;
     color: #d0bfdc;
-    font-size: 14px;
+    font-size: 16px;
 }
 
-/* Settings retain their order and controls. */
+/* Accents stay visible while adjusting the individual settings tabs. */
 .group {
     padding: 18px 16px;
     border-bottom: 1px solid #44444b;
@@ -434,34 +412,65 @@ h2 {
 .custom-font {
     margin-top: 8px;
 }
+.avatar-field {
+    margin-bottom: 18px;
+}
 .palette-presets {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 10px;
-    margin-top: 14px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
 }
 .palette-preset {
     position: relative;
     display: grid;
-    gap: 8px;
-    padding: 8px;
+    gap: 5px;
+    min-width: 0;
+    min-height: 50px;
+    padding: 6px;
     text-align: left;
     font-size: 16px;
     background: var(--input);
+    box-shadow: none;
 }
-.palette-preset[aria-pressed=true] {
+.palette-preset[data-palette=pine] {
+    grid-column: span 2;
+}
+.palette-preset[aria-checked=true] {
     border-color: var(--accent);
-    background: #303d52;
+    background: #293345;
     box-shadow: inset 0 0 0 1px var(--accent);
-    color: var(--accent);
+    color: var(--text-strong);
 }
-.palette-preset[aria-pressed=true] > span:last-child::after {
-    content: ' ✓';
+.preset-name {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+    white-space: nowrap;
+}
+.preset-default {
+    color: #c3c8d2;
+    font-size: 14px;
+}
+.preset-check {
+    position: absolute;
+    top: 2px;
+    right: 3px;
+    display: none;
+    width: 18px;
+    height: 18px;
+    background: var(--accent);
+    color: #172133;
+    text-align: center;
+    font: 700 13px/18px var(--sans);
+}
+.palette-preset[aria-checked=true] .preset-check {
+    display: block;
 }
 .preset-swatches {
     display: flex;
-    height: 24px;
-    border: 1px solid #888892;
+    height: 10px;
+    border: 1px solid #63636b;
     overflow: hidden;
 }
 .preset-swatches span {
@@ -768,7 +777,7 @@ h2 {
     --r98-text-2: #d9dcd6;
     --r98-text-3: #b3b8b1;
     --r98-text-4: #959b94;
-    --r98-text-5: #6e746d;
+    --r98-text-5: #a7aca4;
     --r98-accent: #4a7a54;
     --r98-accent-light: #7fae86;
     --r98-titlebar: linear-gradient(to right, #2e4a3b, 75%, #5b8360);
@@ -1182,7 +1191,7 @@ h2 {
     background: var(--r98-accent);
     border-radius: var(--r98-radius);
     box-shadow: var(--r98-raised);
-    color: #fff;
+    color: var(--r98-on-accent, #fff);
     white-space: nowrap;
 }
 
@@ -1974,7 +1983,7 @@ h2 {
 }
 
 @media (max-width: 1360px) {
-    .topbar, .page-footer {
+    .page-footer {
         margin-left: 24px;
         margin-right: 24px;
     }
@@ -2046,8 +2055,12 @@ h2 {
         gap: 14px;
         flex-wrap: wrap;
     }
-    .save-state {
+    .intro-actions {
+        display: flex;
         flex-basis: 100%;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
     }
     .editor-icon {
         width: 48px;
@@ -2073,16 +2086,9 @@ h2 {
 }
 
 @media (max-width: 480px) {
-    .topbar {
-        padding: 12px 0;
-        font-size: 10px;
-    }
-    .topbar, .page-footer {
+    .page-footer {
         margin-left: 14px;
         margin-right: 14px;
-    }
-    .site-links, .topbar-actions {
-        gap: 10px;
     }
     .intro {
         padding-left: 14px;
