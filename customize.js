@@ -132,7 +132,7 @@
                 }
                 update((next) => { next.sizes[size.key] = Number(number.value); }, number);
             });
-            $('size-controls').append(group);
+            $(['fontSize', 'codeSize'].includes(size.key) ? 'type-sizes' : 'size-controls').append(group);
         }
     }
 
@@ -196,6 +196,7 @@
         for (const [key, value] of Object.entries(state.effects)) $(`effect-${key}`).checked = value;
         renderPatterns();
         $('google-fonts').checked = state.googleFonts;
+        window.Relay98Controls?.sync();
         persist();
     }
 
@@ -271,6 +272,20 @@
             if (saved && typeof saved.app === 'string' && typeof saved.page === 'string') view = saved;
         } catch { /* Fall back to the chat page. */ }
         showView(view);
+    }
+
+    function makeSettingsTabs() {
+        const list = document.querySelector('.settings-tabs');
+        const activate = (tab, focus) => {
+            selectTab(tab, focus);
+            for (const panel of document.querySelectorAll('.settings-page')) {
+                panel.hidden = panel.id !== tab.getAttribute('aria-controls');
+            }
+        };
+        for (const tab of list.querySelectorAll('[role=tab]')) {
+            tab.addEventListener('click', () => activate(tab));
+        }
+        tabKeys(list, activate);
     }
 
     // Album art is optional. Covers without a matching file keep the gradient.
@@ -363,6 +378,8 @@
         makeSizes();
         makePatterns();
         makeTabs();
+        makeSettingsTabs();
+        window.Relay98Controls?.enhance($('theme-settings'));
         loadCovers();
         $('theme-settings').addEventListener('submit', (event) => event.preventDefault());
         for (const input of document.querySelectorAll('[data-effect]')) input.addEventListener('change', () => update((next) => { next.effects[input.dataset.effect] = input.checked; }));

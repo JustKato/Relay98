@@ -6,12 +6,15 @@
     <meta name="color-scheme" content="dark">
     <title>Relay98 theme editor</title>
     <link rel="stylesheet" href="customize.css">
+    <link rel="stylesheet" href="customize-controls.css">
     <script src="scripts/customization.js" defer></script>
+    <script src="customize-controls.js" defer></script>
     <script src="customize.js" defer></script>
 </head>
 <body>
     <a class="skip-link" href="#theme-settings">Skip to settings</a>
     <svg class="icon-sprite" aria-hidden="true">
+        <symbol id="i-monitor" viewBox="0 0 24 24"><path d="M2 2h20v15h-8v3h5v2H5v-2h5v-3H2z" fill="currentColor"/><path d="M4 4h16v11H4z" fill="#1b2235"/><path d="M6 7h5v2H6zm0 3h9v2H6z" fill="#a6c3e9"/></symbol>
         <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v10h-6v-6H9v6H3z"/></symbol>
         <symbol id="i-search" viewBox="0 0 24 24"><path d="M10 3a7 7 0 0 1 5.6 11.2l5.1 5.1-1.4 1.4-5.1-5.1A7 7 0 1 1 10 3zm0 2a5 5 0 1 0 0 10 5 5 0 0 0 0-10z"/></symbol>
         <symbol id="i-library" viewBox="0 0 24 24"><path d="M4 3h2v18H4zm5 0h2v18H9zm4.5.6 1.9-.6 5.6 17.4-1.9.6z"/></symbol>
@@ -30,20 +33,33 @@
     </svg>
 
     <header class="topbar">
-        <a class="brand" href="README.md"><span class="brand-mark" aria-hidden="true">R</span>Relay98 <span>Theme editor</span></a>
+        <nav class="site-links" aria-label="Site">
+            <a class="site-home" href="https://danlegt.com">← danlegt.com</a>
+            <span class="path-separator" aria-hidden="true">/</span>
+            <a class="brand" href="README.md">Relay98</a>
+        </nav>
         <div class="topbar-actions">
-            <span id="save-state" class="save-state">Saved in this browser</span>
-            <a href="README.md">Guide</a>
+            <a class="guide-link" href="README.md">[ Guide ↗ ]</a>
         </div>
     </header>
+
+    <div class="intro">
+        <div class="intro-heading">
+            <span class="editor-icon" aria-hidden="true"><svg><use href="#i-monitor"/></svg></span>
+            <div><h1>Relay<span>98</span></h1><p>Theme editor</p></div>
+        </div>
+        <span id="save-state" class="save-state" role="status">Saved in this browser</span>
+    </div>
 
     <noscript><p class="alert">The editor needs JavaScript.</p></noscript>
     <p id="fatal-error" class="alert" hidden></p>
 
     <main class="layout">
+        <nav class="mobile-jumps" aria-label="Editor areas"><a href="#theme-settings">Settings</a><a href="#preview-panel">Preview</a><a href="#build-panel">Export</a></nav>
         <form id="theme-settings" class="panel settings" aria-label="Theme settings">
+            <div class="editor-titlebar"><span><svg aria-hidden="true"><use href="#i-monitor"/></svg>Theme settings</span><span class="window-grip" aria-hidden="true"></span></div>
             <section class="group" aria-labelledby="theme-heading">
-                <h2 id="theme-heading">Theme</h2>
+                <div class="group-heading"><h2 id="theme-heading">Theme</h2><span id="palette-state" class="tag">Pine</span></div>
                 <div class="field-row">
                     <div class="field"><label for="theme-version">Version</label><select id="theme-version"></select></div>
                     <div class="field"><label for="avatar-shape">Avatars</label><select id="avatar-shape"></select></div>
@@ -51,8 +67,15 @@
                 <div class="palette-presets" id="palette-presets" role="group" aria-label="Palette"></div>
             </section>
 
-            <section class="group" aria-labelledby="colors-heading">
-                <div class="group-heading"><h2 id="colors-heading">Colours</h2><span id="palette-state" class="tag">Pine</span></div>
+            <div class="settings-tabs" role="tablist" aria-label="Settings">
+                <button type="button" id="settings-tab-colours" role="tab" aria-controls="settings-colours" aria-selected="true">Colours</button>
+                <button type="button" id="settings-tab-type" role="tab" aria-controls="settings-type" aria-selected="false" tabindex="-1">Type</button>
+                <button type="button" id="settings-tab-layout" role="tab" aria-controls="settings-layout" aria-selected="false" tabindex="-1">Layout</button>
+                <button type="button" id="settings-tab-effects" role="tab" aria-controls="settings-effects" aria-selected="false" tabindex="-1">Effects</button>
+            </div>
+
+            <section class="group settings-page" id="settings-colours" role="tabpanel" aria-labelledby="settings-tab-colours">
+                <h2 id="colors-heading" class="visually-hidden">Colours</h2>
                 <div class="color-grid" id="main-colors"></div>
                 <details class="more">
                     <summary>All colours <span id="advanced-count"></span></summary>
@@ -60,33 +83,38 @@
                 </details>
             </section>
 
-            <section class="group" aria-labelledby="fonts-heading">
+            <section class="group settings-page" id="settings-type" role="tabpanel" aria-labelledby="settings-tab-type" hidden>
                 <h2 id="fonts-heading">Fonts</h2>
                 <div class="field-stack" id="font-fields"></div>
                 <p class="hint">Custom fonts must be installed on your computer.</p>
+                <label class="switch-row font-loading"><span><strong>Google Fonts</strong><small>Load pixel fonts in the built theme</small></span><input type="checkbox" id="google-fonts" role="switch"><span class="switch" aria-hidden="true"></span></label>
+                <div class="subsection"><h3>Text size</h3><div id="type-sizes" class="size-controls"></div></div>
             </section>
 
-            <section class="group" aria-labelledby="sizes-heading">
-                <h2 id="sizes-heading">Sizes</h2>
+            <section class="group settings-page" id="settings-layout" role="tabpanel" aria-labelledby="settings-tab-layout" hidden>
+                <h2 id="sizes-heading">Spacing &amp; layout</h2>
                 <div id="size-controls" class="size-controls"></div>
             </section>
 
-            <section class="group" aria-labelledby="effects-heading">
-                <h2 id="effects-heading">Effects</h2>
+            <section class="group settings-page" id="settings-effects" role="tabpanel" aria-labelledby="settings-tab-effects" hidden>
+                <h2 id="effects-heading" class="visually-hidden">Effects</h2>
                 <div class="switch-list">
                     <label class="switch-row switch-master"><span><strong>Patterns</strong><small id="pattern-summary">All on</small></span><input type="checkbox" id="patterns-all" role="switch"><span class="switch" aria-hidden="true"></span></label>
                     <div class="switch-group" id="pattern-toggles" role="group" aria-label="Patterns"></div>
                     <label class="switch-row"><span><strong>Bevels</strong><small>Raised buttons, inset fields</small></span><input type="checkbox" id="effect-bevels" data-effect="bevels" role="switch"><span class="switch" aria-hidden="true"></span></label>
                     <label class="switch-row"><span><strong>Shadows</strong><small>Under embeds and popouts</small></span><input type="checkbox" id="effect-shadows" data-effect="shadows" role="switch"><span class="switch" aria-hidden="true"></span></label>
-                    <label class="switch-row"><span><strong>Google Fonts</strong><small>Built theme loads the pixel fonts</small></span><input type="checkbox" id="google-fonts" role="switch"><span class="switch" aria-hidden="true"></span></label>
                 </div>
             </section>
 
-            <div class="settings-footer"><button type="button" id="reset-settings" class="text-button">Reset to defaults</button></div>
+            <div class="settings-footer">
+                <div class="settings-files"><button type="button" id="export-settings">Save</button><button type="button" id="import-settings">Load</button><input type="file" id="import-file" accept="application/json,.json" hidden></div>
+                <button type="button" id="reset-settings" class="text-button">Reset</button>
+            </div>
         </form>
 
         <div class="output">
-            <section class="panel preview-panel" aria-label="Preview">
+            <section class="panel preview-panel" id="preview-panel" aria-label="Preview">
+                <div class="editor-titlebar preview-heading"><h2>Preview</h2><span class="window-grip" aria-hidden="true"></span></div>
                 <div class="preview-toolbar">
                     <div class="segmented" role="tablist" aria-label="App" id="app-tabs">
                         <button type="button" role="tab" id="tab-discord" data-app="discord" aria-controls="theme-preview">Discord</button>
@@ -253,30 +281,27 @@
                 <p class="preview-note" id="preview-note"></p>
             </section>
 
-            <section class="panel build" aria-labelledby="build-heading">
-                <h2 id="build-heading">Build</h2>
-                <p class="hint" id="command-help">Run this in the Relay98 folder (Node.js 20+). It writes <code>build/relay98-custom.theme.css</code>.</p>
-                <label class="visually-hidden" for="build-command">Build command</label>
-                <div class="command">
-                    <textarea id="build-command" rows="3" spellcheck="false" readonly aria-describedby="command-help"></textarea>
-                    <button type="button" class="primary-button" id="copy-command">Copy</button>
-                </div>
-                <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
-                <div class="downloads">
-                    <div class="download-group">
-                        <span class="download-label">Settings</span>
-                        <button type="button" id="export-settings">Save</button>
-                        <button type="button" id="import-settings">Load</button>
-                        <input type="file" id="import-file" accept="application/json,.json" hidden>
+            <section class="panel build" id="build-panel" aria-labelledby="build-heading">
+                <div class="editor-titlebar"><h2 id="build-heading">Build &amp; export</h2><span class="window-grip" aria-hidden="true"></span></div>
+                <div class="build-body">
+                    <p class="hint" id="command-help">Run this in the Relay98 folder (Node.js 20+). It writes <code>build/relay98-custom.theme.css</code>.</p>
+                    <label class="visually-hidden" for="build-command">Build command</label>
+                    <div class="command">
+                        <textarea id="build-command" rows="2" spellcheck="false" readonly aria-describedby="command-help"></textarea>
+                        <button type="button" class="primary-button" id="copy-command">Copy</button>
                     </div>
-                    <div class="download-group">
-                        <span class="download-label">Export</span>
-                        <button type="button" id="export-spotifast" title="Copy into Spotifast's themes folder">Spotifast theme</button>
-                        <button type="button" id="export-palette" title="Colours with plain names, for other apps">Palette JSON</button>
+                    <p class="feedback" id="feedback" role="status" aria-live="polite"></p>
+                    <div class="downloads">
+                        <div class="download-group">
+                            <span class="download-label">Export</span>
+                            <button type="button" id="export-spotifast" title="Copy into Spotifast's themes folder">Spotifast theme</button>
+                            <button type="button" id="export-palette" title="Colours with plain names, for other apps">Palette JSON</button>
+                        </div>
                     </div>
                 </div>
             </section>
         </div>
     </main>
+    <footer class="page-footer"><span>Relay98 · A theme by <a href="https://danlegt.com">danlegt</a></span><a href="#theme-settings">Back to settings ↑</a></footer>
 </body>
 </html>

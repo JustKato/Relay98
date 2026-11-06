@@ -37,7 +37,18 @@ async function main() {
         page.on('pageerror', (error) => errors.push(error.message));
         const command = () => page.locator('#build-command').inputValue();
         const readConfig = async () => customization.decode((await command()).split(' ').at(-1));
+        const showSetting = async (selector) => {
+            const panel = await page.locator(selector).evaluate((node) => node.closest('.settings-page')?.id);
+            if (panel) await page.locator(`.settings-tabs [aria-controls="${panel}"]`).click();
+        };
+        const choose = async (selector, value) => {
+            await showSetting(selector);
+            const label = await page.locator(selector).evaluate((node, selected) => [...node.options].find((option) => option.value === selected).textContent, value);
+            await page.locator(`${selector}-trigger`).click();
+            await page.getByRole('option', { name: label, exact: true }).click();
+        };
         const change = async (selector, value) => {
+            await showSetting(selector);
             await page.locator(selector).fill(String(value));
             await page.locator(selector).blur();
         };
@@ -65,15 +76,73 @@ async function main() {
         await page.evaluate(() => document.fonts.ready);
         assert.deepEqual(await readConfig(), customization.defaults);
         assert.match(await page.locator('.preview-title').evaluate((node) => getComputedStyle(node).backgroundImage), /linear-gradient/);
+
+        // Exercise the visible controls, including keyboard-only editing.
+        await page.locator('#settings-tab-colours').press('End');
+        assert.equal(await page.locator('#settings-effects').isVisible(), true);
+        await page.locator('#settings-tab-effects').press('Home');
+        assert.equal(await page.locator('#settings-colours').isVisible(), true);
+        await page.locator('#theme-version-trigger').press('End');
+        await page.locator('#theme-version-trigger').press('Enter');
+        assert.equal((await readConfig()).variant, 'discord');
+        await page.locator('#theme-version-trigger').press('Home');
+        await page.locator('#theme-version-trigger').press('Escape');
+        assert.equal((await readConfig()).variant, 'discord', 'Escape cancels a pending dropdown selection');
+        await page.locator('#reset-settings').click();
+        assert.equal(await page.locator('#theme-version-trigger').textContent(), 'Original');
+        await showSetting('#font-ui');
+        await page.locator('#font-ui-trigger').press('End');
+        await page.locator('#font-ui-trigger').press('Tab');
+        assert.equal(await page.locator('#font-custom-ui').evaluate((node) => node === document.activeElement), true, 'Custom keeps focus in the new font field');
+        await page.locator('#reset-settings').click();
+        await showSetting('#hex-accent');
+
+        await page.locator('#color-accent-trigger').click();
+        await page.locator('#picker-hex').fill('#123456');
+        await page.locator('#picker-hex').press('Enter');
+        assert.equal((await readConfig()).colors.accent, '#123456');
+        await change('#picker-h', 210);
+        await change('#picker-s', 50);
+        await change('#picker-v', 80);
+        assert.equal((await readConfig()).colors.accent, '#6699cc');
+        const lastValidColour = (await readConfig()).colors.accent;
+        await change('#picker-hex', 'oops');
+        assert.equal(await page.locator('#picker-hex').getAttribute('aria-invalid'), 'true');
+        assert.equal((await readConfig()).colors.accent, lastValidColour);
+        await change('#picker-hex', '#000000');
+        await change('#picker-h', 210);
+        await change('#picker-s', 100);
+        await change('#picker-v', 50);
+        assert.equal((await readConfig()).colors.accent, '#004080', 'the hue survives editing a black colour');
+        await page.locator('#picker-hue').focus();
+        await page.locator('#picker-hue').press('Home');
+        assert.equal((await readConfig()).colors.accent, '#800000', 'the hue slider works from the keyboard');
+        const plane = await page.locator('.colour-plane').boundingBox();
+        await page.mouse.move(plane.x + plane.width * .25, plane.y + plane.height * .25);
+        await page.mouse.down();
+        await page.mouse.move(plane.x + plane.width * .7, plane.y + plane.height * .3);
+        await page.mouse.up();
+        assert.ok(Math.abs(Number(await page.locator('#picker-s').inputValue()) - 70) <= 1);
+        assert.ok(Math.abs(Number(await page.locator('#picker-v').inputValue()) - 70) <= 1);
+        await page.locator('#picker-hex').fill('#246abc');
+        await page.locator('h1').click();
+        assert.equal((await readConfig()).colors.accent, '#246abc', 'clicking outside commits a typed colour');
+        assert.equal(await page.locator('#editor-colour-picker').isHidden(), true);
+        await page.locator('#color-accent-trigger').click();
+        await page.keyboard.press('Escape');
+        assert.equal(await page.locator('#color-accent-trigger').evaluate((node) => node === document.activeElement), true);
+        await page.locator('#reset-settings').click();
+        assert.deepEqual(await readConfig(), customization.defaults);
+        assert.equal(await page.locator('#color-accent-trigger').evaluate((node) => getComputedStyle(node).backgroundColor), 'rgb(74, 122, 84)');
         await image('customize-desktop.png');
         assert.equal(await page.locator('[data-palette]').count(), 2);
-        await page.locator('#theme-version').selectOption('discord');
+        await choose('#theme-version', 'discord');
         assert.equal((await readConfig()).palette, 'discord');
         assert.equal((await readConfig()).avatarShape, 'round');
         assert.equal(await page.locator('.avatar').first().evaluate((node) => getComputedStyle(node).borderRadius), '50%');
-        await page.locator('#avatar-shape').selectOption('square');
+        await choose('#avatar-shape', 'square');
         assert.equal(await page.locator('.avatar').first().evaluate((node) => getComputedStyle(node).borderRadius), '0px');
-        await page.locator('#avatar-shape').selectOption('round');
+        await choose('#avatar-shape', 'round');
         await change('#hex-bg-2', '#18293a');
         await change('#size-fontSize', 20);
         await change('#size-codeSize', 18);
@@ -82,17 +151,21 @@ async function main() {
         await change('#size-messageSpacing', 12);
         await change('#size-radius', 6);
         await change('#size-scrollbarWidth', 18);
-        await page.locator('#font-ui').selectOption('system');
-        await page.locator('#font-code').selectOption('custom');
+        await choose('#font-ui', 'system');
+        await choose('#font-code', 'custom');
         await change('#font-custom-code', '"Courier New", monospace');
         const backgroundImage = (selector) => page.locator(selector).first().evaluate((node) => getComputedStyle(node).backgroundImage);
+        await showSetting('#effect-dots');
         await page.locator('#effect-dots').uncheck();
         assert.equal(await backgroundImage('.preview-sidebar'), 'none');
         assert.match(await backgroundImage('.preview-chat'), /gradient/, 'other patterns stay on');
         assert.equal(await page.locator('#patterns-all').evaluate((node) => node.indeterminate), true);
         assert.match(await page.locator('#pattern-summary').textContent(), /4 of 5 on/);
         await page.locator('#patterns-all').uncheck();
-        for (const toggle of ['effect-bevels', 'effect-shadows', 'google-fonts']) await page.locator(`#${toggle}`).uncheck();
+        for (const toggle of ['effect-bevels', 'effect-shadows', 'google-fonts']) {
+            await showSetting(`#${toggle}`);
+            await page.locator(`#${toggle}`).uncheck();
+        }
         const config = await readConfig();
         assert.equal(config.colors['bg-2'], '#18293a');
         assert.equal(config.sizes.fontSize, 20);
@@ -100,6 +173,7 @@ async function main() {
         for (const { key } of customization.patterns) assert.equal(config.effects[key], false, key);
         for (const selector of ['.preview-chat', '.preview-rail', '.fake-scrollbar']) assert.equal(await backgroundImage(selector), 'none', selector);
         assert.equal(await page.locator('.preview-button').first().evaluate((node) => getComputedStyle(node).boxShadow), 'none');
+        await showSetting('#effect-scanlines');
         await page.locator('#effect-scanlines').check();
         assert.match(await backgroundImage('.preview-chat'), /gradient/);
         await page.locator('#effect-scanlines').uncheck();
@@ -167,8 +241,32 @@ async function main() {
         await page.waitForFunction(() => document.getElementById('feedback').textContent.startsWith('Loaded '));
         assert.equal(await command(), generated);
         for (const width of [1440, 1024, 768, 390, 320]) await checkLayout(width, 950);
+        for (const width of [390, 320]) {
+            await page.setViewportSize({ width, height: 844 });
+            await showSetting('#hex-bg-2');
+            await page.locator('#color-bg-2-trigger').click();
+            const picker = await page.locator('#editor-colour-picker').boundingBox();
+            assert.ok(picker.x >= 0 && picker.x + picker.width <= width);
+            assert.ok(picker.y >= 0 && picker.y + picker.height <= 844);
+            await page.keyboard.press('Escape');
+        }
         await image('customize-mobile.png');
         assert.deepEqual(externalRequests, [], 'the customizer must not request remote assets');
+
+        const touchContext = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+        const touchPage = await touchContext.newPage();
+        touchPage.on('pageerror', (error) => errors.push(error.message));
+        await touchPage.goto(fileURL('customize.html'));
+        await touchPage.waitForFunction(() => document.documentElement.dataset.customizerStatus === 'ready');
+        await touchPage.locator('#color-accent-trigger').tap();
+        assert.equal(await touchPage.evaluate(() => document.activeElement.id), 'editor-colour-picker', 'touch opening must not summon the keyboard');
+        const hue = await touchPage.locator('#picker-hue').boundingBox();
+        assert.ok(hue.height >= 28, 'the hue slider needs a usable touch target');
+        const touchPlane = await touchPage.locator('.colour-plane').boundingBox();
+        await touchPage.touchscreen.tap(touchPlane.x + touchPlane.width * .75, touchPlane.y + touchPlane.height * .25);
+        assert.ok(Math.abs(Number(await touchPage.locator('#picker-s').inputValue()) - 75) <= 1);
+        assert.ok(Math.abs(Number(await touchPage.locator('#picker-v').inputValue()) - 75) <= 1);
+        await touchContext.close();
         console.log('PASS customizer: file://, settings, preview, copy/fallback, JSON, persistence, responsive layout, no external requests');
 
         // Execute the arguments from the generated command through npm itself.
