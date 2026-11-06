@@ -1,4 +1,4 @@
-// Capture the README images separately from the CSS build and release workflow.
+// Capture README images outside the CSS build and release workflow.
 const { spawn } = require('node:child_process');
 const { existsSync } = require('node:fs');
 const fs = require('node:fs/promises');

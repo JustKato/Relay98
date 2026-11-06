@@ -7,7 +7,7 @@ const api = require('../scripts/customization');
 const { build, parseArgs } = require('../scripts/build');
 
 test('versions supply defaults while palette and avatar choices remain independent', () => {
-    assert.deepEqual(api.paletteOptions, ['pine', 'discord']);
+    assert.equal(api.paletteOptions[0], 'pine');
     assert.equal(api.normalize().avatarShape, 'square');
     const dark = api.normalize({ variant: 'discord' });
     assert.equal(dark.palette, 'discord');

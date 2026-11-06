@@ -53,7 +53,7 @@ test('each pattern switches off on its own, and the old textures switch still wo
 
     const legacy = customization.normalize({ effects: { textures: false, dither: true } });
     assert.equal(Object.hasOwn(legacy.effects, 'textures'), false);
-    assert.deepEqual(legacy.effects, { scanlines: false, dots: false, dither: true, stripes: false, scrollbar: false, bevels: true, shadows: true });
+    assert.deepEqual(legacy.effects, { ...customization.defaults.effects, scanlines: false, dots: false, dither: true, stripes: false, scrollbar: false });
     assert.deepEqual(customization.decode(customization.encode(legacy)), legacy);
 });
 

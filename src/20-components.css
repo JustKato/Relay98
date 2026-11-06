@@ -1,9 +1,7 @@
-/* Button and input bevels, plus dithered scrollbars.
-   Inset shadows add edges without changing element sizes or layout.
-   The control-* tokens in 00-variables.css supply the colors. */
+/* Bevels use inset shadows to preserve element sizes. Colours come from
+   the control-* tokens in 00-variables.css. */
 
-/* Push buttons. */
-/* Limit bevels to Discord text buttons, excluding icons and generic role=button elements. */
+/* Bevel Discord text buttons, excluding icons and generic role=button elements. */
 button:is([class*="lookFilled"], [class*="colorBrand"], [class*="colorPrimary"], [class*="colorGreen"], [class*="colorRed"]),
 button[class*="button_"]:is([class*="primary_"], [class*="secondary_"], [class*="critical"], [class*="active_"]) {
     box-shadow: var(--r98-raised) !important;
@@ -32,7 +30,7 @@ textarea,
     font-family: var(--r98-font);
 }
 
-/* Apply the bevel to the wrapper once, without repeating it on nested inputs. */
+/* The wrapper supplies the bevel; nested inputs need none. */
 .channelTextArea_f75fb0 :is(input, textarea),
 :is([class^="searchBar_"], [class*=" searchBar_"]) input {
     box-shadow: none !important;
@@ -51,9 +49,8 @@ code {
     border: 1px solid var(--r98-border) !important;
 }
 
-/* Chromium prefers scrollbar-color/scrollbar-width over ::-webkit-scrollbar.
-   Discord sets them on most scrollers, so reset them to allow the square
-   scrollbars below. Hidden scrollers still stay hidden. */
+/* Reset Discord's scrollbar-color/scrollbar-width so Chromium uses the
+   ::-webkit-scrollbar rules below. Preserve hidden scrollers. */
 * {
     scrollbar-width: auto !important;
     scrollbar-color: auto !important;
@@ -80,7 +77,7 @@ code {
 
 /* Inset track with a 50% dither pattern. */
 ::-webkit-scrollbar-track {
-    background: var(--r98-bg-0) var(--r98-pat-scrollbar-track) 0 0 / 2px 2px !important;
+    background: var(--r98-bg-0) var(--r98-pat-scrollbar-track) 0 0 / var(--r98-pat-scrollbar-track-size, 2px 2px) !important;
     border: none !important;
     border-radius: var(--r98-radius) !important;
     margin: 0 !important;
@@ -90,7 +87,7 @@ code {
 ::-webkit-scrollbar-thumb {
     background-color: var(--r98-bg-3) !important;
     background-image: var(--r98-pat-scrollbar-thumb) !important;
-    background-size: 6px 10px !important;
+    background-size: var(--r98-pat-scrollbar-thumb-size, 6px 10px) !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
     background-clip: border-box !important;

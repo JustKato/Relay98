@@ -1,6 +1,4 @@
-/* Colors and fonts for Discord's current and older tokens.
-   Charcoal panels with a slight green tint, pixel fonts, a pine/sage window
-   bar, soft bevels and faint CSS textures. */
+/* Pine palette, pixel fonts and textures, mapped to current and older Discord tokens. */
 
 /* Vesktop allows fonts from Google Fonts, GitHub, GitLab and Codeberg.
    It silently blocks other hosts, including unpkg and personal sites. */
@@ -11,7 +9,7 @@
     --r98-font: 'Monocraft', 'PixeloidSans', 'Pixelify Sans', 'Tahoma', sans-serif;
     --r98-font-code: 'Monocraft', 'PixelOperatorMono', 'VT323', 'Courier New', monospace;
 
-    /* Sizes used by Discord panels, messages and controls. */
+    /* Panel, text and control sizes. */
     --r98-font-size: 16px;
     --r98-code-size: 15px;
     --r98-message-spacing: 4px;
@@ -21,8 +19,7 @@
     --r98-avatar-radius: 0px;
     --r98-scrollbar-width: 14px;
 
-    /* Charcoal surfaces, darkest to lightest.
-       A slight green cast matches the pine/sage window bar. */
+    /* Green-tinted charcoal surfaces, darkest to lightest. */
     --r98-bg-0: #1b1d1c; /* wells: inputs, chat bar, code, server rail */
     --r98-bg-1: #222524; /* side panels: channel list, members */
     --r98-bg-2: #292c2b; /* chat */
@@ -40,17 +37,20 @@
     --r98-text-1: #eef0ec; /* headings, names, strong */
     --r98-text-2: #d9dcd6; /* message text */
     --r98-text-3: #b3b8b1; /* secondary text */
-    --r98-text-4: #959b94; /* channels, icons */
-    --r98-text-5: #6e746d; /* muted, timestamps, placeholders */
+    --r98-text-4: #aeb4ac; /* channels, icons */
+    --r98-text-5: #a7aca4; /* muted, timestamps, placeholders */
 
-    /* Muted pine/sage window bar, inspired by hunter (#3e5641), Torrey pine
-       (#527a54) and sage (#7a9167). Darker shades keep white text readable. */
+    /* Hunter (#3e5641), Torrey pine (#527a54) and sage (#7a9167), darkened
+       for readable white title-bar text. */
     --r98-titlebar: linear-gradient(to right, #2e4a3b, 75%, #5b8360);
 
     /* Accents. */
     --r98-accent: #4a7a54; /* primary buttons (torrey pine) */
     --r98-accent-hover: #568a61;
     --r98-accent-active: #3e6647;
+    --r98-on-accent: #ffffff;
+    --r98-on-accent-hover: #000000;
+    --r98-on-accent-active: #eef0ec;
     --r98-accent-light: #7fae86; /* focus rings, progress bars */
     --r98-select: #3b5c45; /* selected channel / dm / menu item */
     --r98-link: #8cc7a6; /* soft seafoam */
@@ -64,7 +64,7 @@
     --r98-active: rgba(255, 255, 255, 0.08);
     --r98-border: #3a3f3c;
 
-    /* Faint panel textures use CSS and need no image files. */
+    /* CSS panel textures; no image files needed. */
     /* chat + friends: soft CRT scanlines */
     --r98-pat-scan: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.016) 0 1px, transparent 1px 3px);
     /* server rail + user panel: 2px pixel dither */
@@ -210,12 +210,12 @@ body,
     --control-primary-border-default: transparent;
     --control-primary-border-hover: transparent;
     --control-primary-border-active: transparent;
-    --control-primary-text-default: #ffffff;
-    --control-primary-text-hover: #ffffff;
-    --control-primary-text-active: #ffffff;
-    --control-primary-icon-default: #ffffff;
-    --control-primary-icon-hover: #ffffff;
-    --control-primary-icon-active: #ffffff;
+    --control-primary-text-default: var(--r98-on-accent, #ffffff);
+    --control-primary-text-hover: var(--r98-on-accent-hover, #ffffff);
+    --control-primary-text-active: var(--r98-on-accent-active, #ffffff);
+    --control-primary-icon-default: var(--r98-on-accent, #ffffff);
+    --control-primary-icon-hover: var(--r98-on-accent-hover, #ffffff);
+    --control-primary-icon-active: var(--r98-on-accent-active, #ffffff);
 
     --control-secondary-background-default: var(--r98-bg-3);
     --control-secondary-background-hover: var(--r98-bg-4);
@@ -291,7 +291,7 @@ body,
     --checkbox-border-hover: var(--r98-text-4);
     --checkbox-border-selected-default: var(--r98-accent);
     --checkbox-border-selected-hover: var(--r98-accent-hover);
-    --checkbox-icon-active: #ffffff;
+    --checkbox-icon-active: var(--r98-on-accent, #ffffff);
     --radio-background-default: var(--r98-bg-0);
     --radio-background-hover: var(--r98-bg-1);
     --radio-background-selected-default: var(--r98-accent);
@@ -300,7 +300,7 @@ body,
     --radio-border-hover: var(--r98-text-4);
     --radio-border-selected-default: var(--r98-accent);
     --radio-border-selected-hover: var(--r98-accent-hover);
-    --radio-thumb-background-active: #ffffff;
+    --radio-thumb-background-active: var(--r98-on-accent, #ffffff);
     --switch-background-default: var(--r98-bg-4);
     --switch-background-hover: var(--r98-bevel-light);
     --switch-background-selected-default: var(--r98-accent);
@@ -310,7 +310,7 @@ body,
     --switch-border-selected-default: transparent;
     --switch-border-selected-hover: transparent;
     --switch-thumb-background-default: var(--r98-text-3);
-    --switch-thumb-background-selected-default: #ffffff;
+    --switch-thumb-background-selected-default: var(--r98-on-accent, #ffffff);
     --slider-track-background: var(--r98-bg-4);
     --progressbar-track-background: var(--r98-bg-0);
     --progressbar-indicator-background: var(--r98-accent-light);
@@ -344,15 +344,15 @@ body,
 
     /* Badges / notices. */
     --badge-background-default: var(--r98-accent);
-    --badge-text-default: #ffffff;
+    --badge-text-default: var(--r98-on-accent, #ffffff);
     --badge-notification-background: var(--r98-red);
     --badge-expressive-background-default: var(--r98-accent);
-    --badge-expressive-text-default: #ffffff;
+    --badge-expressive-text-default: var(--r98-on-accent, #ffffff);
     --notice-background-info: var(--r98-accent);
     --notice-background-positive: var(--control-connect-background-default);
     --notice-background-warning: var(--r98-amber);
     --notice-background-critical: var(--r98-red-dark);
-    --notice-text-info: #ffffff;
+    --notice-text-info: var(--r98-on-accent, #ffffff);
     --notice-text-positive: #ffffff;
     --notice-text-warning: var(--r98-bg-0);
     --notice-text-critical: #ffffff;

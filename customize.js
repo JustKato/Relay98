@@ -7,6 +7,7 @@
     const storageKey = 'relay98-customizer-v1';
     const viewKey = 'relay98-customizer-view';
     const essentials = ['bg-2', 'bg-1', 'accent', 'text-1', 'titlebar-start', 'titlebar-end'];
+    const sharedColours = new Set(['bg-0', 'bg-1', 'bg-2', 'bg-3', 'bg-4', 'border', 'text-1', 'text-3', 'text-4', 'accent', 'accent-hover', 'accent-light', 'select', 'red', 'amber', 'bevel-dark', 'titlebar-start']);
     const fontKinds = { ui: 'Interface', code: 'Code' };
     const pages = {
         discord: { chat: 'Chat', friends: 'Friends' },
@@ -14,7 +15,7 @@
     };
     const notes = {
         discord: 'Sample layout. Panel widths are scaled down to fit.',
-        spotifast: 'Spotifast uses the colours only. Fonts, sizes and effects apply to Discord.',
+        spotifast: 'Colour preview. Spotifast keeps its own fonts and layout.',
     };
     let state;
     let view = { app: 'discord', page: 'chat' };
@@ -52,20 +53,40 @@
     function makePalettes() {
         for (const key of api.paletteOptions) {
             const palette = api.palettes[key];
-            const button = element('button', { type: 'button', class: 'palette-preset', 'data-palette': key, 'aria-pressed': 'false' });
+            const button = element('button', { type: 'button', class: 'palette-preset', 'data-palette': key, role: 'radio', 'aria-checked': 'false', 'aria-label': paletteName(key), tabindex: '-1' });
             const swatches = element('span', { class: 'preset-swatches', 'aria-hidden': 'true' });
             for (const color of ['bg-0', 'bg-2', 'accent', 'accent-light']) {
                 const swatch = element('span');
                 swatch.style.backgroundColor = palette.colors[color] || api.defaults.colors[color];
                 swatches.append(swatch);
             }
-            button.append(swatches, element('span', {}, paletteName(key)));
+            const label = element('span', { class: 'preset-name' }, paletteName(key));
+            if (key === 'pine') {
+                label.append(element('span', { class: 'preset-default', id: 'default-accent' }, 'Default'));
+                button.setAttribute('aria-describedby', 'default-accent');
+            }
+            button.append(swatches, label, element('span', { class: 'preset-check', 'aria-hidden': 'true' }, '✓'));
             button.addEventListener('click', () => update((next) => {
+                next.variant = 'original';
                 next.palette = key;
                 next.colors = { ...palette.colors };
             }));
             $('palette-presets').append(button);
         }
+        $('palette-presets').addEventListener('keydown', (event) => {
+            const buttons = [...event.currentTarget.querySelectorAll('[role=radio]')];
+            const index = buttons.indexOf(event.target);
+            if (index === -1) return;
+            let next;
+            if (['ArrowRight', 'ArrowDown'].includes(event.key)) next = (index + 1) % buttons.length;
+            else if (['ArrowLeft', 'ArrowUp'].includes(event.key)) next = (index - 1 + buttons.length) % buttons.length;
+            else if (event.key === 'Home') next = 0;
+            else if (event.key === 'End') next = buttons.length - 1;
+            else return;
+            event.preventDefault();
+            buttons[next].focus();
+            buttons[next].click();
+        });
     }
 
     function makeColors() {
@@ -73,7 +94,10 @@
         for (const color of ordered) {
             const group = element('div', { class: 'color-control' });
             const hexId = `hex-${color.key}`;
-            group.append(element('label', { for: hexId, title: color.label }, color.label));
+            const label = element('label', { for: hexId, title: color.label }, color.label);
+            const shared = sharedColours.has(color.key);
+            label.append(element('span', { class: `export-badge ${shared ? 'scope-shared' : 'scope-discord'}` }, shared ? 'Both apps' : 'Discord'));
+            group.append(label);
             const inputs = element('div', { class: 'color-inputs' });
             const picker = element('input', { type: 'color', id: `color-${color.key}`, 'aria-label': `Pick ${color.label.toLowerCase()}` });
             const hex = element('input', { type: 'text', id: hexId, maxlength: '7', spellcheck: 'false', autocomplete: 'off' });
@@ -132,7 +156,7 @@
                 }
                 update((next) => { next.sizes[size.key] = Number(number.value); }, number);
             });
-            $('size-controls').append(group);
+            $(['fontSize', 'codeSize'].includes(size.key) ? 'type-sizes' : 'size-controls').append(group);
         }
     }
 
@@ -160,18 +184,141 @@
         $('pattern-summary').textContent = on === api.patterns.length ? 'All on' : on === 0 ? 'All off' : `${on} of ${api.patterns.length} on`;
     }
 
+    function effectRange(option, section) {
+        const discord = section === 'effectValues';
+        const id = discord ? `effect-value-${option.key}` : `spotifast-${option.key}`;
+        const rangeId = discord ? `effect-range-${option.key}` : `spotifast-range-${option.key}`;
+        const row = element('div', { class: 'effect-range', id: `${id}-row` });
+        const range = element('input', { type: 'range', id: rangeId, min: option.min, max: option.max, step: option.step });
+        const number = element('input', { type: 'number', id, min: option.min, max: option.max, step: option.step, 'aria-label': `${option.label} in ${option.unit === '%' ? 'percent' : 'pixels'}` });
+        const value = element('div', { class: 'size-value' });
+        value.append(number, element('span', { class: 'size-unit', 'aria-hidden': 'true' }, option.unit));
+        row.append(element('label', { for: rangeId }, option.label), value, range);
+        range.addEventListener('input', () => update((next) => { next[section][option.key] = Number(range.value); }, number));
+        number.addEventListener('change', () => {
+            if (number.value === '') {
+                number.setAttribute('aria-invalid', 'true');
+                feedback(`${option.label} needs a number from ${option.min} to ${option.max}.`, true);
+            } else update((next) => { next[section][option.key] = Number(number.value); }, number);
+        });
+        return row;
+    }
+
+    function effectSwitch(option, section) {
+        const discord = section === 'effects';
+        const row = element('label', { class: 'switch-row' });
+        const label = element('span');
+        label.append(element('strong', {}, option.label));
+        if (option.hint) label.append(element('small', {}, option.hint));
+        const input = element('input', { type: 'checkbox', id: `${discord ? 'effect' : 'spotifast'}-${option.key}`, role: 'switch' });
+        if (discord) input.dataset.effect = option.key;
+        else input.addEventListener('change', () => update((next) => { next.spotifast[option.key] = input.checked; }));
+        row.append(label, input, element('span', { class: 'switch', 'aria-hidden': 'true' }));
+        return row;
+    }
+
+    function makeEffects() {
+        for (const option of api.effectControls) {
+            const container = $(`${option.group}-controls`);
+            container.append(effectSwitch(option, 'effects'));
+            for (const range of api.effectRanges.filter((range) => range.dependsOn?.key === option.key)) container.append(effectRange(range, 'effectValues'));
+        }
+        for (const range of api.effectRanges.filter((range) => !range.dependsOn)) $(`${range.group}-controls`).append(effectRange(range, 'effectValues'));
+        for (const option of api.spotifastOptions) {
+            let control;
+            if (option.type === 'boolean') control = effectSwitch(option, 'spotifast');
+            else if (option.type === 'number') control = effectRange(option, 'spotifast');
+            else {
+                control = element('div', { class: 'field effect-select' });
+                const select = element('select', { id: `spotifast-${option.key}` });
+                for (const [value, label] of Object.entries(option.choices)) select.append(element('option', { value }, label));
+                select.addEventListener('change', () => update((next) => { next.spotifast[option.key] = select.value; }));
+                control.append(element('label', { for: select.id }, option.label), select);
+            }
+            $('spotifast-controls').append(control);
+            if (option.key === 'tint') {
+                const note = element('p', { class: 'hint effect-note', id: 'spotifast-tint-note' }, 'Turn off Colour from album art in Spotifast to use this tint.');
+                $('spotifast-controls').append(note);
+                $('spotifast-tint').setAttribute('aria-describedby', note.id);
+            }
+        }
+        for (const group of document.querySelectorAll('[data-preview-app]')) {
+            const preview = () => {
+                const app = group.dataset.previewApp;
+                if (view.app !== app) showView({ app, page: app === 'discord' ? 'chat' : 'liked' });
+            };
+            group.addEventListener('focusin', preview);
+        }
+        $('reset-discord-effects').addEventListener('click', () => {
+            update((next) => {
+                next.effects = { ...api.defaults.effects };
+                next.effectValues = { ...api.defaults.effectValues };
+            });
+            $('effects-status').textContent = 'Discord effects reset.';
+            if (view.app !== 'discord') showView({ app: 'discord', page: 'chat' });
+        });
+        $('reset-spotifast-effects').addEventListener('click', () => {
+            update((next) => { next.spotifast = { ...api.defaults.spotifast }; });
+            $('effects-status').textContent = 'Spotifast effects reset.';
+            if (view.app !== 'spotifast') showView({ app: 'spotifast', page: 'liked' });
+        });
+        $('preview-spotifast-popup').addEventListener('click', () => {
+            const open = $('spotifast-popup').hidden;
+            $('spotifast-popup').hidden = !open;
+            $('preview-spotifast-popup').setAttribute('aria-expanded', String(open));
+        });
+    }
+
+    function renderEffects() {
+        const textureCount = api.patterns.filter(({ key }) => state.effects[key]).length;
+        $('textures-state').textContent = textureCount ? `${textureCount} on` : 'Off';
+        for (const group of ['surfaces', 'extras']) {
+            const count = api.effectControls.filter((option) => option.group === group && state.effects[option.key]).length;
+            $(`${group}-state`).textContent = count ? `${count} on` : 'Off';
+        }
+        $('spotifast-state').textContent = api.spotifastOptions.some(({ key, default: value }) => state.spotifast[key] !== value) ? 'Edited' : 'Original';
+        for (const range of api.effectRanges) {
+            const enabled = range.dependsOn ? state.effects[range.dependsOn.key] === range.dependsOn.value : api.patterns.some(({ key }) => state.effects[key]);
+            syncRange(range, 'effectValues', enabled);
+        }
+        for (const option of api.spotifastOptions) {
+            const input = $(`spotifast-${option.key}`);
+            if (option.type === 'boolean') input.checked = state.spotifast[option.key];
+            else if (option.type === 'number') syncRange(option, 'spotifast', !option.dependsOn || state.spotifast[option.dependsOn.key] === option.dependsOn.value);
+            else input.value = state.spotifast[option.key];
+        }
+    }
+
+    function syncRange(option, section, enabled) {
+        const id = section === 'effectValues' ? `effect-value-${option.key}` : `spotifast-${option.key}`;
+        const rangeId = section === 'effectValues' ? `effect-range-${option.key}` : `spotifast-range-${option.key}`;
+        for (const input of [$(id), $(rangeId)]) {
+            input.value = state[section][option.key];
+            input.disabled = !enabled;
+            input.removeAttribute('aria-invalid');
+        }
+        $(rangeId).setAttribute('aria-valuetext', `${state[section][option.key]} ${option.unit === '%' ? 'percent' : 'pixels'}`);
+        $(`${id}-row`).classList.toggle('is-disabled', !enabled);
+    }
+
     function render() {
+        $('effects-status').textContent = '';
         const preview = $('theme-preview');
         preview.removeAttribute('style');
         for (const [key, value] of Object.entries(api.toVariables(state))) preview.style.setProperty(key, value);
+        for (const key of ['messageDividers', 'alternatingMessages', 'textGlow']) preview.dataset[key] = String(state.effects[key]);
         const spotifast = $('spotifast-preview');
         spotifast.removeAttribute('style');
         for (const [key, value] of Object.entries(api.toSpotifast(state).colors)) spotifast.style.setProperty(`--sf-${key.replace(/_/g, '-')}`, value);
 
         $('build-command').value = api.command(state);
-        $('theme-version').value = state.variant;
         $('avatar-shape').value = state.avatarShape;
-        for (const button of document.querySelectorAll('[data-palette]')) button.setAttribute('aria-pressed', String(button.dataset.palette === state.palette));
+        const offered = api.paletteOptions.includes(state.palette);
+        for (const button of document.querySelectorAll('[data-palette]')) {
+            const selected = button.dataset.palette === state.palette;
+            button.setAttribute('aria-checked', String(selected));
+            button.tabIndex = selected || (!offered && button.dataset.palette === 'pine') ? 0 : -1;
+        }
         const preset = api.normalize({ palette: state.palette });
         const edited = api.colors.some(({ key }) => state.colors[key] !== preset.colors[key]);
         $('palette-state').textContent = `${paletteName(state.palette)}${edited ? ' · edited' : ''}`;
@@ -195,7 +342,9 @@
         }
         for (const [key, value] of Object.entries(state.effects)) $(`effect-${key}`).checked = value;
         renderPatterns();
+        renderEffects();
         $('google-fonts').checked = state.googleFonts;
+        window.Relay98Controls?.sync();
         persist();
     }
 
@@ -223,7 +372,7 @@
         if (focus) tab.focus();
     }
 
-    // Arrow keys move between tabs, as in the WAI-ARIA tabs pattern.
+    // WAI-ARIA tab keyboard navigation.
     function tabKeys(list, activate) {
         list.addEventListener('keydown', (event) => {
             const tabs = [...list.querySelectorAll('[role=tab]')];
@@ -243,6 +392,7 @@
         selectTab($(`tab-${view.app}`));
         $('theme-preview').hidden = view.app !== 'discord';
         $('spotifast-preview').hidden = view.app !== 'spotifast';
+        $('preview-spotifast-popup').hidden = view.app !== 'spotifast';
         const pageTabs = $('page-tabs');
         pageTabs.replaceChildren();
         for (const [key, label] of Object.entries(pages[view.app])) {
@@ -273,7 +423,21 @@
         showView(view);
     }
 
-    // Album art is optional. Covers without a matching file keep the gradient.
+    function makeSettingsTabs() {
+        const list = document.querySelector('.settings-tabs');
+        const activate = (tab, focus) => {
+            selectTab(tab, focus);
+            for (const panel of document.querySelectorAll('.settings-page')) {
+                panel.hidden = panel.id !== tab.getAttribute('aria-controls');
+            }
+        };
+        for (const tab of list.querySelectorAll('[role=tab]')) {
+            tab.addEventListener('click', () => activate(tab));
+        }
+        tabKeys(list, activate);
+    }
+
+    // Missing album art leaves the gradient visible.
     function loadCovers() {
         for (const cover of document.querySelectorAll('[data-cover]')) {
             const image = element('img', { alt: '', src: `demos/images/spotifast/${cover.dataset.cover}` });
@@ -346,23 +510,17 @@
         } catch {
             restorationNotice = 'Your saved settings could not be loaded, so the defaults are shown.';
         }
-        for (const [key, variant] of Object.entries(api.variants)) $('theme-version').append(element('option', { value: key }, variant.label.replace(/^Relay98 /, '')));
         for (const [key, shape] of Object.entries(api.avatarShapes)) $('avatar-shape').append(element('option', { value: key }, shape.label));
-        $('theme-version').addEventListener('change', () => update((next) => {
-            const key = $('theme-version').value;
-            const variant = api.variants[key];
-            next.variant = key;
-            next.palette = variant.palette;
-            next.colors = { ...api.palettes[variant.palette].colors };
-            next.avatarShape = variant.avatarShape;
-        }));
         $('avatar-shape').addEventListener('change', () => update((next) => { next.avatarShape = $('avatar-shape').value; }));
         makePalettes();
         makeColors();
         makeFonts();
         makeSizes();
         makePatterns();
+        makeEffects();
         makeTabs();
+        makeSettingsTabs();
+        window.Relay98Controls?.enhance($('theme-settings'));
         loadCovers();
         $('theme-settings').addEventListener('submit', (event) => event.preventDefault());
         for (const input of document.querySelectorAll('[data-effect]')) input.addEventListener('change', () => update((next) => { next.effects[input.dataset.effect] = input.checked; }));

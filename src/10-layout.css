@@ -1,6 +1,5 @@
-/* Panels, window bar, toolbars and selection styles.
-   These selectors use Discord's hashed class names, as midnight/system24 do.
-   If a class changes, that rule stops matching; the color variables still work. */
+/* Discord's hashed classes can change and break these rules. Colour variables
+   still work. midnight/system24 use the same selector approach. */
 
 /* Global. */
 html {
@@ -19,8 +18,7 @@ body {
     border-radius: var(--r98-radius) !important;
 }
 
-/* Clip the image itself so Discord's status cutouts and avatar decorations stay intact.
-   Server icons keep their own styling. */
+/* Clip avatar images, preserving status cutouts and decorations. Leave server icons alone. */
 img[class^="avatar_"],
 img[class*=" avatar_"],
 .demo-avatar,
@@ -33,8 +31,7 @@ img[class*=" avatar_"],
     color: #ffffff;
 }
 
-/* Panel textures. Inner wrappers stay transparent so the texture shows
-   through. Menus, popouts and modals stay flat to stand out from the panels. */
+/* Transparent wrappers expose panel textures. Menus, popouts and modals have flat fills. */
 
 /* chat + friends page: soft CRT scanlines */
 .chatContent_f75fb0,
@@ -78,8 +75,7 @@ img[class*=" avatar_"],
     background: transparent !important;
 }
 
-/* Window bar and toolbars. */
-/* top window bar ("Friends", "Direct Messages", back/forward, inbox) */
+/* Window bar: "Friends", "Direct Messages", back/forward and inbox. */
 .bar_c38106 {
     background: var(--r98-pat-bar), var(--r98-titlebar) !important;
 }
@@ -92,8 +88,8 @@ img[class*=" avatar_"],
     color: #ffffff;
 }
 
-/* Chat / friends / message-requests / vc toolbars use raised charcoal.
-   Keep the pine/sage gradient on the window bar above these panels. */
+/* Charcoal toolbars for chat, friends, message requests and voice channels.
+   Only the window bar above them uses the pine/sage gradient. */
 .subtitleContainer_f75fb0 > section,
 .container__133bf > .container__9293f,
 .container_f391e3 > .container__9293f,
@@ -113,12 +109,12 @@ img[class*=" avatar_"],
 
 /* Separate panels with 1px borders. */
 .guilds__5e434 {
-    border-right: 1px solid var(--r98-line) !important;
+    border-right: var(--r98-panel-border-width, 1px) solid var(--r98-line) !important;
 }
 .sidebarList__5e434 {
     width: var(--r98-sidebar-width) !important;
     min-width: var(--r98-sidebar-width) !important;
-    border-right: 1px solid var(--r98-line) !important;
+    border-right: var(--r98-panel-border-width, 1px) solid var(--r98-line) !important;
 }
 .container_c8ffbb {
     width: var(--r98-member-width) !important;
@@ -129,7 +125,7 @@ img[class*=" avatar_"],
 }
 .container_c8ffbb /* member list */,
 .nowPlayingColumn__133bf /* active now */ {
-    border-left: 1px solid var(--r98-line) !important;
+    border-left: var(--r98-panel-border-width, 1px) solid var(--r98-line) !important;
 }
 .panels__5e434 /* user panel */ {
     background: var(--r98-bg-0) var(--r98-pat-dither) !important;
@@ -165,8 +161,7 @@ img[class*=" avatar_"],
     background: var(--r98-titlebar) !important;
 }
 
-/* Floating panels: menus, popouts, tooltips. */
-/* Flat panels with a 1px border and a hard-edged shadow. */
+/* Menus, popouts and tooltips: flat fills, 1px borders and hard shadows. */
 [class^="menu_"],
 [class*=" menu_"],
 .container__8a031 /* popout modals */ {
