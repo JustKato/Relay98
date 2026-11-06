@@ -27,8 +27,8 @@ const header = `/**
 
 `;
 
-// Read top-level imports without mistaking comments, quoted text, or URL
-// semicolons for rules. This also handles multiline font imports.
+// Read top-level imports, including multiline rules. Ignore comments, quoted
+// text and semicolons inside URLs.
 function extractImports(css) {
     const imports = [];
     let body = '', last = 0, depth = 0, quote = '', comment = false;
@@ -96,7 +96,7 @@ function outputPath(options = {}) {
         ? path.resolve(options.output)
         : path.join(root, 'build', `${stem}${suffix}`);
     if (path.extname(output).toLowerCase() !== extension) throw new Error(`--output must end in ${extension}.`);
-    // A build should never overwrite its source or configuration.
+    // Protect source files and configuration from output-path collisions.
     const actualOutput = canonicalPath(output);
     const actualSource = canonicalPath(srcDir);
     if (actualOutput === actualSource || actualOutput.startsWith(`${actualSource}${path.sep}`)

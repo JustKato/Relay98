@@ -192,7 +192,7 @@ async function main() {
         assert.deepEqual(await readConfig(), customization.defaults);
         assert.equal(await page.locator('#color-accent-trigger').evaluate((node) => getComputedStyle(node).backgroundColor), 'rgb(74, 122, 84)');
         await image('customize-desktop.png');
-        // Previously saved Discord settings still load after removing Version.
+        // Load legacy Discord settings.
         const legacySettings = { variant: 'discord', palette: 'discord', avatarShape: 'round' };
         await page.locator('#import-file').setInputFiles({ name: 'legacy-discord-settings.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(legacySettings)) });
         await page.waitForFunction(() => document.getElementById('feedback').textContent.startsWith('Loaded legacy-discord-settings.json'));
@@ -288,7 +288,7 @@ async function main() {
         assert.match(await page.locator('#feedback').textContent(), /Command selected/);
         assert.equal(await page.locator('#build-command').evaluate((node) => node.selectionEnd - node.selectionStart), generated.length);
 
-        // Invalid edits must never replace the last buildable configuration.
+        // Invalid edits must preserve the last valid configuration.
         await change('#hex-bg-2', 'oops');
         assert.equal(await page.locator('#hex-bg-2').getAttribute('aria-invalid'), 'true');
         assert.equal(await command(), generated);
@@ -353,7 +353,7 @@ async function main() {
         await touchContext.close();
         console.log('PASS customizer: file://, settings, preview, copy/fallback, JSON, persistence, responsive layout, no external requests');
 
-        // Execute the arguments from the generated command through npm itself.
+        // Run the generated command through npm.
         const output = path.join(temporary, 'custom.theme.css');
         const args = generated.split(' ').slice(1);
         const result = spawnSync(process.execPath, [process.env.npm_execpath, ...args, '--output', output], { cwd: root, encoding: 'utf8' });

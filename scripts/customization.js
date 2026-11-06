@@ -1,5 +1,5 @@
-// Shared by the command-line build and customize.html. Keep this dependency-free
-// and loadable as a classic script so the customizer works from file://.
+// Shared by the CLI and customize.html. Keep it dependency-free and use a
+// classic script so the editor works from file://.
 (function (root, factory) {
     if (typeof module === 'object' && module.exports) module.exports = factory();
     else root.Relay98Customization = factory();
@@ -152,7 +152,7 @@
     }
 
     function font(value, label) {
-        // Only CSS font-family lists, never arbitrary declarations or URLs.
+        // Accept CSS font-family lists; reject declarations and URLs.
         const family = /^(?:"[^"\\;{}<>]+"|'[^'\\;{}<>]+'|-?[\p{L}_][\p{L}\p{N} _-]*)$/u;
         if (typeof value !== 'string' || value.length > 500 || /[\u0000-\u001f\u007f]/.test(value) || !value.split(',').every((item) => family.test(item.trim()))) {
             throw new Error(`${label} must be a comma-separated list of font family names.`);
@@ -220,8 +220,8 @@
     function toVariables(input) {
         const config = normalize(input);
         const vars = Object.fromEntries(Object.entries(config.colors).map(([key, value]) => [`--r98-${key}`, value]));
-        // Each button state needs its own foreground when custom fills cross
-        // from dark to light. Prefer the palette's text before black or white.
+        // Custom fills may switch between dark and light. Choose readable text for
+        // each button state, trying palette colours before black or white.
         for (const role of ['accent', 'accent-hover', 'accent-active']) {
             vars[`--r98-on-${role}`] = [config.colors['text-1'], config.colors['bg-0'], '#ffffff', '#000000']
                 .find((foreground) => contrast(foreground, config.colors[role]) >= 4.5);
@@ -264,8 +264,7 @@
         const score = (text) => Math.min(contrast(text, c.accent), contrast(text, c['accent-hover']));
         const best = (choices) => choices.reduce((a, b) => score(a) >= score(b) ? a : b);
         const text = best([c['text-1'], c['bg-0']]);
-        // Keep the palette's own text where possible. Fall back for custom colours
-        // that make both candidates hard to read, including on hovered buttons.
+        // Try black or white if palette text lacks contrast in either button state.
         return score(text) >= 3 ? text : best([text, '#ffffff', '#000000']);
     }
 

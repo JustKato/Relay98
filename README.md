@@ -18,7 +18,7 @@ The layout takes cues from [system24](https://github.com/refact0r/system24).
 
 ## Build
 
-You'll need Node.js 20 or newer and npm. The CSS build has no dependencies to install.
+Use Node.js 20 or newer and npm. The CSS build needs no extra packages.
 
 ```sh
 npm run build   # builds build/relay98.theme.css once
@@ -27,19 +27,19 @@ npm run dev     # rebuilds automatically when files in src/ change
 
 ## Customize your theme
 
-Open [customize.html](customize.html) in your browser from a downloaded or cloned copy of this repo. No server is needed.
+Download or clone the repo, then open [customize.html](customize.html) in your browser. You don't need a server.
 
-1. Pick an accent, then adjust colours, type, layout and effects in the settings tabs. Pine is the default; ten more accents include **2004**, with classic Steam olive and mustard colours. Each pattern has its own switch under **Effects**.
+1. Pick an accent and adjust the settings. Pine is the default. The ten alternatives include 2004, with classic Steam olive and mustard colours. Under Effects, you can toggle each pattern.
 2. Use the tabs above the preview to switch between Discord (chat, friends) and Spotifast (home, liked songs).
-3. Copy the build command, paste it into a terminal in the Relay98 folder, and install `build/relay98-custom.theme.css` using the steps above. It shows up as **Relay98 Custom**; disable the original while using it.
+3. Run the copied build command in the Relay98 folder, then install `build/relay98-custom.theme.css`. Enable Relay98 Custom and disable the original.
 
-The command works in Bash, PowerShell and Command Prompt. Your settings are encoded in the argument, so nothing needs escaping. Your source files and `build/relay98.theme.css` stay unchanged.
+The command works in Bash, PowerShell and Command Prompt without extra escaping. It includes your settings and leaves the source files and `build/relay98.theme.css` unchanged.
 
-The preview is a sample layout, so check panel sizes in Discord itself. The page makes no external requests. Custom fonts must be installed on your computer. The Google Fonts switch only decides whether the built theme loads Pixelify Sans and VT323 from Google.
+Check panel sizes in Discord; the preview uses a sample layout. The editor makes no external requests. Install custom fonts on your computer. The Google Fonts switch controls whether the built theme loads Pixelify Sans and VT323 from Google.
 
-The Spotifast preview uses the same colours as the Spotifast export. Album covers are optional: see [demos/images/spotifast/](demos/images/spotifast/README.md) for the filenames it looks for.
+The Spotifast preview matches the export colours. For optional album covers, see [demos/images/spotifast/](demos/images/spotifast/README.md).
 
-Your browser remembers the last valid settings. Use **Save** to keep a copy and **Load** to continue editing later. You can also build straight from the saved file:
+Your browser saves the last valid settings. Save downloads the full setup, including fonts and spacing; Load restores it. You can also build from that file:
 
 ```sh
 npm run build -- --config relay98-settings.json
@@ -47,9 +47,9 @@ npm run build -- --config relay98-settings.json --output build/my-theme.theme.cs
 npm run dev -- --config relay98-settings.json
 ```
 
-The last command watches both the CSS source and your settings file. A failed rebuild leaves the last successful CSS file in place.
+The last command watches the CSS source and settings file. If a rebuild fails, you keep the last working CSS file.
 
-For hand-written settings, omitted fields use their defaults. This example uses Diskette, larger text, system fonts, no scanlines or dot grid, and no Google font requests:
+Omitted fields use the defaults. For Diskette with larger text and system fonts:
 
 ```json
 {
@@ -64,24 +64,24 @@ For hand-written settings, omitted fields use their defaults. This example uses 
 }
 ```
 
-Effect switches are `scanlines`, `dots`, `dither`, `stripes`, `scrollbar`, `bevels` and `shadows`. Older settings with `"textures": false` still turn every pattern off. Colours use six-digit hex values. Sizes use whole pixels within the ranges shown on the page. The build rejects unknown options and invalid values with an error message. Run `npm run build -- --help` for the available command-line options.
+Effect switches are `scanlines`, `dots`, `dither`, `stripes`, `scrollbar`, `bevels` and `shadows`. Older settings with `"textures": false` turn all patterns off. Use six-digit hex colours and whole-pixel sizes within the editor's ranges. The build rejects invalid values and unknown options. Run `npm run build -- --help` for command-line options.
 
 ## Theme versions
 
-The original theme is still `build/relay98.theme.css`. For darker panels and round profile pictures, install [build/relay98-discord-dark.theme.css](build/relay98-discord-dark.theme.css) instead. It appears as **Relay98 Discord Dark**. Enable only one Relay98 theme at a time.
+Install `build/relay98.theme.css` for the original theme, or [build/relay98-discord-dark.theme.css](build/relay98-discord-dark.theme.css) for darker panels and round avatars. The latter appears as Relay98 Discord Dark. Enable one Relay98 theme at a time.
 
 ```sh
 npm run build -- --variant discord
 npm run build -- --variant discord --format spotifast
 ```
 
-In the editor, **Accent** changes colours while preserving fonts, spacing, avatars and effects. **Layout → Avatars** changes profile pictures independently of panel corners. Old settings, including Discord Dark, still load. Choosing an accent then builds **Relay98 Custom**.
+Accent changes colours and keeps your other settings. Change avatar shapes under Layout > Avatars; panel corners stay separate. You can load older settings, including Discord Dark. After you choose an accent, the build uses the name Relay98 Custom.
 
-To add an accent, edit `palettes` in `scripts/customization.js` and include its ID in `paletteOptions`. The JSON field remains `palette` for compatibility. Legacy palette IDs and the command-line `--variant` option remain supported.
+To add an accent, edit `palettes` in `scripts/customization.js` and list its ID in `paletteOptions`. The JSON field is still `palette`; legacy IDs and `--variant` still work.
 
 ## Spotifast theme
 
-Use [build/relay98.spotifast.json](build/relay98.spotifast.json) for the original Pine colours, or open `customize.html` and click **Spotifast theme** to download your current colours.
+Use [build/relay98.spotifast.json](build/relay98.spotifast.json) for Pine, or click Spotifast theme in `customize.html` to export your colours.
 
 From the command line:
 
@@ -91,29 +91,29 @@ npm run build -- --format spotifast --config relay98-settings.json
 npm run dev -- --format spotifast --config relay98-settings.json
 ```
 
-The output is `build/relay98.spotifast.json`, or `build/relay98-custom.spotifast.json` when you supply settings. You can also append `--format spotifast` to the command copied from the editor. Use `--output build/my-spotifast.json` to choose another filename.
+The output is `build/relay98.spotifast.json`, or `build/relay98-custom.spotifast.json` with settings. You can append `--format spotifast` to the editor's command. To choose a filename, add `--output build/my-spotifast.json`.
 
-1. In Spotifast, open **Settings > Appearance > Theme** and use **Open themes folder**.
+1. In Spotifast, go to Settings > Appearance > Theme and click Open themes folder.
 2. Copy the `.json` file into that folder.
-3. Run `spotifast reload-themes` if Spotifast is open, then select the filename in the Theme picker. Linux also detects changes automatically.
-4. Turn off **Colour from album art** if you want every page to keep the fixed palette.
+3. If Spotifast is open, run `spotifast reload-themes`, then select the filename in the Theme picker. On Linux, Spotifast detects file changes.
+4. Turn off Colour from album art to use your chosen palette on all pages.
 
-The file follows [Spotifast's theme format](https://spotifast.rocks/settings-and-files/#custom-themes). It colours the main window and keeps Spotifast's own fonts and layout. Winamp skins are separate.
+The export uses [Spotifast's theme format](https://spotifast.rocks/settings-and-files/#custom-themes) to colour the main window. It keeps Spotifast's fonts and layout. Winamp skins use a separate format.
 
 ## Reuse the palette
 
-Click **Palette JSON** in the editor, or run:
+Click Palette JSON in the editor, or run:
 
 ```sh
 npm run build -- --format palette
 npm run build -- --format palette --config relay98-settings.json
 ```
 
-This writes `build/relay98.palette.json`, or `build/relay98-custom.palette.json` with settings. It contains a `base` (`dark` or `light`) and a `colors` object with names such as `background`, `panel`, `text`, `accent`, and `success`. All palette shades are included, without Discord settings or Spotifast-specific names. Colours use `#RRGGBB`, with an extra alpha byte for overlay, shadow, and tint colours.
+The output is `build/relay98.palette.json`, or `build/relay98-custom.palette.json` with settings. It includes all shades under plain names such as `background`, `panel`, `text`, `accent`, and `success`, without app settings. The `colors` object uses `#RRGGBB`, with an alpha byte for overlays, shadows and tints. The background determines the `base` (`dark` or `light`).
 
-Both JSON exports use the same palette. The background determines the light/dark base, and accent text is chosen against both the normal and hovered button colours. Overlay and shadow colours follow your input and bevel shades.
+Both JSON exports use the same palette and light/dark base. Button labels account for contrast in normal and hover states. Overlay and shadow colours follow your input and bevel shades.
 
-**Save** keeps the full editor setup, including fonts and spacing, so **Load** can bring it back. Use that file to continue editing. The palette downloads are for use in other apps.
+Use palette exports in other apps. To continue editing in Relay98, use Save and Load.
 
 ## Screenshots
 
@@ -121,13 +121,13 @@ Both JSON exports use the same palette. The background determines the light/dark
 npm run screenshot
 ```
 
-The command rebuilds the theme and uses [Playwright and Chromium](https://playwright.dev/docs/library) to take `1920`×`1080` screenshots of the three demo pages. It replaces `assets/chat.png`, `assets/friends.png`, and `assets/settings.png`, the pictures shown above.
+The command rebuilds the standard theme and captures the three demos with [Playwright and Chromium](https://playwright.dev/docs/library). It replaces `assets/chat.png`, `assets/friends.png`, and `assets/settings.png` with `1920`×`1080` screenshots.
 
-Screenshots need Node.js 20 or newer. On the first run, the script downloads Playwright into `demos/node_modules/` and Chromium into `.tools/chromium/`, so you'll need internet access. Git ignores both folders. After setup, screenshots use the cat photos and pixel fonts in this repo without fetching external resources. You can use an existing browser by setting `CHROMIUM_BIN=/path/to/chromium`.
+Use Node.js 20 or newer. The first run needs internet access to download Playwright into `demos/node_modules/` and Chromium into `.tools/chromium/`. Git ignores both folders. Later runs use the repo's cat photos and fonts without external requests. Set `CHROMIUM_BIN=/path/to/chromium` to use an existing browser.
 
-Open `demos/chat.html`, `demos/friends.html`, or `demos/settings.html` to inspect a demo in your browser. They load the built theme automatically; use `?theme=...` to point at another CSS URL. Screenshot scripts can wait for `window.demoReady`. Photo credits are in `demos/images/`, and font licenses are in `demos/fonts/`.
+Open `demos/chat.html`, `demos/friends.html`, or `demos/settings.html` in your browser to view the built theme. Use `?theme=...` for another CSS URL; screenshot scripts can wait for `window.demoReady`. See `demos/images/` for photo credits and `demos/fonts/` for font licenses.
 
-To inspect a custom build in the chat demo, open `demos/chat.html?theme=../build/relay98-custom.theme.css`. The screenshot command always builds and captures the standard theme.
+For a custom build, open `demos/chat.html?theme=../build/relay98-custom.theme.css`.
 
 ## Checks
 
@@ -136,9 +136,9 @@ npm test             # build, settings validation, and demo-loader regressions
 npm run test:browser  # customizer interactions and compiled CSS in Chromium
 ```
 
-Browser checks use the same Playwright and Chromium setup as screenshots. They exercise the local page, the generated build command, and the demo pages without replacing the README pictures.
+Browser checks share the screenshot tools and test the editor, build command and demos. They leave the README pictures unchanged.
 
-The unit suite includes a Bash command test, so Bash must be available. GitHub Actions runs these checks on Node.js 20 and 24 and checks the committed CSS and JSON exports. Releases run the tests before building the CSS variants and JSON exports.
+The unit tests need Bash. GitHub Actions runs them on Node.js 20 and 24 and checks the committed CSS and JSON exports. Releases run the tests, then build the CSS variants and JSON exports.
 
 ## Structure
 
@@ -161,22 +161,18 @@ demos/               three static Discord views for screenshots, plus shared lay
 assets/              generated 1920 × 1080 PNGs used above
 ```
 
-To change the defaults in the source, edit the `--r98-*` variables at the top of `src/00-variables.css`. The customizer's presets and allowed settings live in `scripts/customization.js`.
+Edit `--r98-*` in `src/00-variables.css` for theme defaults, and `scripts/customization.js` for editor presets and allowed settings.
 
 ## Fonts
 
-The theme prefers [Monocraft](https://github.com/IdreesInc/Monocraft) for interface text and code when it's installed on your computer. Otherwise, it uses `PixeloidSans` and `PixelOperatorMono` if available, then Google's `Pixelify Sans` and `VT323`. The demos use the same font choices, with bundled copies of the Google fonts for screenshots.
+Relay98 uses [Monocraft](https://github.com/IdreesInc/Monocraft) for interface text and code if you have it installed. It falls back to `PixeloidSans` and `PixelOperatorMono`, then Google's `Pixelify Sans` and `VT323`. The demos use the same choices and include local copies of the Google fonts.
 
-I recommend installing [Monocraft](https://github.com/IdreesInc/Monocraft) as it's a cool font anyway, but you can still have a more than decent experience with the google pixel-art fonts too.
+I like [Monocraft](https://github.com/IdreesInc/Monocraft), but the Google pixel fonts work too.
 
 ## Discord updates
 
-Like system24 and midnight, the layout rules use Discord's hashed class names, such as `.guilds__5e434`. If Discord renames a class, its layout rule will stop matching. 
-
-Colors still work because they use Discord's CSS variables.
+Like system24 and midnight, Relay98 uses Discord's hashed class names, such as `.guilds__5e434`, for layout. Discord can break those rules by renaming classes. Colours use Discord's CSS variables and keep working.
 
 ## AI assistance
 
-I originally used this as a sketchy theme that I was basically maintaining along the time, but the theme's colours and styling are completely written by me basically with some AI cleanup.
-
-AI has helped with parts of the theme code, the demo pages and the screenshot tooling.
+I started with a rough theme and kept working on it. The colours and styling are mine; AI helped with parts of the code, cleanup, demos and screenshot tools.

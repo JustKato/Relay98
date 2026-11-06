@@ -1,6 +1,4 @@
-/* Colors and fonts for Discord's current and older tokens.
-   Charcoal panels with a slight green tint, pixel fonts, a pine/sage window
-   bar, soft bevels and faint CSS textures. */
+/* Pine palette, pixel fonts and textures, mapped to current and older Discord tokens. */
 
 /* Vesktop allows fonts from Google Fonts, GitHub, GitLab and Codeberg.
    It silently blocks other hosts, including unpkg and personal sites. */
@@ -11,7 +9,7 @@
     --r98-font: 'Monocraft', 'PixeloidSans', 'Pixelify Sans', 'Tahoma', sans-serif;
     --r98-font-code: 'Monocraft', 'PixelOperatorMono', 'VT323', 'Courier New', monospace;
 
-    /* Sizes used by Discord panels, messages and controls. */
+    /* Panel, text and control sizes. */
     --r98-font-size: 16px;
     --r98-code-size: 15px;
     --r98-message-spacing: 4px;
@@ -21,8 +19,7 @@
     --r98-avatar-radius: 0px;
     --r98-scrollbar-width: 14px;
 
-    /* Charcoal surfaces, darkest to lightest.
-       A slight green cast matches the pine/sage window bar. */
+    /* Green-tinted charcoal surfaces, darkest to lightest. */
     --r98-bg-0: #1b1d1c; /* wells: inputs, chat bar, code, server rail */
     --r98-bg-1: #222524; /* side panels: channel list, members */
     --r98-bg-2: #292c2b; /* chat */
@@ -43,8 +40,8 @@
     --r98-text-4: #aeb4ac; /* channels, icons */
     --r98-text-5: #a7aca4; /* muted, timestamps, placeholders */
 
-    /* Muted pine/sage window bar, inspired by hunter (#3e5641), Torrey pine
-       (#527a54) and sage (#7a9167). Darker shades keep white text readable. */
+    /* Hunter (#3e5641), Torrey pine (#527a54) and sage (#7a9167), darkened
+       for readable white title-bar text. */
     --r98-titlebar: linear-gradient(to right, #2e4a3b, 75%, #5b8360);
 
     /* Accents. */
@@ -67,7 +64,7 @@
     --r98-active: rgba(255, 255, 255, 0.08);
     --r98-border: #3a3f3c;
 
-    /* Faint panel textures use CSS and need no image files. */
+    /* CSS panel textures; no image files needed. */
     /* chat + friends: soft CRT scanlines */
     --r98-pat-scan: repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.016) 0 1px, transparent 1px 3px);
     /* server rail + user panel: 2px pixel dither */

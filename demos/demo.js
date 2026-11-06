@@ -94,7 +94,7 @@
         root.dataset.demoReady = 'true';
     })();
 
-    // Show load errors on the page. Screenshot scripts can still catch demoReady.
+    // Show load errors and let screenshot scripts catch demoReady rejections.
     window.demoReady.catch(async (error) => {
         root.dataset.demoStatus = 'error';
         root.dataset.demoError = error.message;

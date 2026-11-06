@@ -248,7 +248,7 @@
         if (focus) tab.focus();
     }
 
-    // Arrow keys move between tabs, as in the WAI-ARIA tabs pattern.
+    // WAI-ARIA tab keyboard navigation.
     function tabKeys(list, activate) {
         list.addEventListener('keydown', (event) => {
             const tabs = [...list.querySelectorAll('[role=tab]')];
@@ -312,7 +312,7 @@
         tabKeys(list, activate);
     }
 
-    // Album art is optional. Covers without a matching file keep the gradient.
+    // Missing album art leaves the gradient visible.
     function loadCovers() {
         for (const cover of document.querySelectorAll('[data-cover]')) {
             const image = element('img', { alt: '', src: `demos/images/spotifast/${cover.dataset.cover}` });

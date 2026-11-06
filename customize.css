@@ -701,7 +701,7 @@ h2 {
     color: var(--red);
 }
 
-/* Preview frame; the apps inside keep their own visual rules. */
+/* Preview frame. */
 .preview-panel {
     container-type: inline-size;
     overflow: hidden;
@@ -1368,8 +1368,7 @@ h2 {
     border-radius: var(--r98-radius);
 }
 
-/* Spotifast preview. Colours come from toSpotifast(), so this matches the
-   exported theme. Spotifast keeps its own fonts and layout. */
+/* Spotifast uses the exported toSpotifast() colours with its own fonts and layout. */
 .sf {
     display: grid;
     grid-template-rows: minmax(0, 1fr) auto;
@@ -1858,7 +1857,7 @@ h2 {
     flex: 0 1 90px;
 }
 
-/* Build and export share a terminal-style workspace. */
+/* Build and export. */
 .build-body {
     padding: 14px 16px 16px;
 }
@@ -2048,7 +2047,7 @@ h2 {
     }
 }
 
-/* On short screens, allow the entire preview/export column to scroll. */
+/* Let the preview/export column scroll on short screens. */
 @media (max-height: 950px) {
     .output {
         position: static;

@@ -1,6 +1,6 @@
 # Spotifast covers
 
-The Spotifast preview in `customize.html` looks for album art here. These files aren't in the repo; covers without a file show a plain gradient.
+Add album art here for the Spotifast preview in `customize.html`. The repo includes no covers; missing files show a gradient.
 
 | File | Used for |
 | --- | --- |
@@ -12,6 +12,6 @@ The Spotifast preview in `customize.html` looks for album art here. These files 
 | `xxxtentacion-question-mark.jpg` | ? |
 | `xxxtentacion-17.jpg` | 17 |
 | `xxxtentacion-skins.jpg` | Skins |
-| `joji.jpg`, `xxxtentacion.jpg`, `sub-urban.jpg` | Daily Mix 1–3 |
+| `joji.jpg`, `xxxtentacion.jpg`, `sub-urban.jpg` | Daily Mix 1 to 3 |
 
-Square images work best. Any size is fine.
+Square images of any size work best.

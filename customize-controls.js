@@ -1,4 +1,4 @@
-/* Styled controls keep the native fields as the editor's source of truth. */
+/* Custom controls read and write the native form fields. */
 (() => {
     'use strict';
 
@@ -21,8 +21,7 @@
 
     function close(restoreFocus = false) {
         if (!active) return;
-        // pointerdown outside runs before the field's blur/change event.
-        // Commit a typed value while its colour target is still available.
+        // Outside pointerdown precedes blur/change; save the typed colour before closing.
         const focused = document.activeElement;
         if (active.kind === 'colour' && picker.contains(focused) && focused.matches('input[type=text], input[type=number]')) {
             focused.dispatchEvent(new Event('change', { bubbles: true }));
@@ -131,8 +130,7 @@
         } else if (event.key === 'Tab' && isOpen) {
             const trigger = active.trigger;
             commit(active.index);
-            // A Custom font choice focuses its text field in the editor's
-            // change handler. Keep that focus instead of tabbing past it.
+            // The Custom font handler focuses its text field; Tab must leave focus there.
             if (document.activeElement !== trigger) event.preventDefault();
         } else if (['Enter', ' ', 'ArrowDown', 'ArrowUp', 'Home', 'End'].includes(event.key)) {
             event.preventDefault();
