@@ -77,7 +77,7 @@ code {
 
 /* Inset track with a 50% dither pattern. */
 ::-webkit-scrollbar-track {
-    background: var(--r98-bg-0) var(--r98-pat-scrollbar-track) 0 0 / 2px 2px !important;
+    background: var(--r98-bg-0) var(--r98-pat-scrollbar-track) 0 0 / var(--r98-pat-scrollbar-track-size, 2px 2px) !important;
     border: none !important;
     border-radius: var(--r98-radius) !important;
     margin: 0 !important;
@@ -87,7 +87,7 @@ code {
 ::-webkit-scrollbar-thumb {
     background-color: var(--r98-bg-3) !important;
     background-image: var(--r98-pat-scrollbar-thumb) !important;
-    background-size: 6px 10px !important;
+    background-size: var(--r98-pat-scrollbar-thumb-size, 6px 10px) !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
     background-clip: border-box !important;

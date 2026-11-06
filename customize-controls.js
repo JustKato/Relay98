@@ -44,6 +44,10 @@
         const topEdge = viewport?.offsetTop || 0;
         const width = viewport?.width || innerWidth;
         const height = viewport?.height || innerHeight;
+        if (!rect.width || rect.bottom <= topEdge || rect.top >= topEdge + height || rect.right <= leftEdge || rect.left >= leftEdge + width) {
+            close();
+            return;
+        }
         const gap = 6;
         const margin = 10;
         panel.style.width = `${Math.min(active.kind === 'select' ? Math.max(rect.width, 180) : 280, width - margin * 2)}px`;
@@ -73,7 +77,10 @@
         const option = listbox.children[index];
         if (!option) return;
         active.trigger.setAttribute('aria-activedescendant', option.id);
-        option.scrollIntoView({ block: 'nearest' });
+        const top = option.offsetTop;
+        const bottom = top + option.offsetHeight;
+        if (top < listbox.scrollTop) listbox.scrollTop = top;
+        else if (bottom > listbox.scrollTop + listbox.clientHeight) listbox.scrollTop = bottom - listbox.clientHeight;
     }
 
     function commit(index) {
@@ -344,7 +351,8 @@
         const trigger = colours.get(native);
         active = { kind: 'colour', native, trigger, panel: picker };
         colourState = hexToHSV(native.value);
-        picker.heading.textContent = native.closest('.color-control')?.querySelector('label')?.textContent || 'Colour';
+        const label = native.getAttribute('aria-label')?.replace(/^Pick /, '') || 'Colour';
+        picker.heading.textContent = label[0].toUpperCase() + label.slice(1);
         clearColourError();
         picker.swatches.replaceChildren();
         const unique = [...new Set([...colours.keys()].map((input) => input.value))].slice(0, 8);
@@ -416,7 +424,7 @@
             window.addEventListener('resize', position);
             window.visualViewport?.addEventListener('resize', position);
             document.addEventListener('scroll', (event) => {
-                if (active && !active.panel.contains(event.target)) close();
+                if (active && !active.panel.contains(event.target)) position();
             }, true);
         }
         root.querySelectorAll('select').forEach(enhanceSelect);

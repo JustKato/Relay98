@@ -109,12 +109,12 @@ img[class*=" avatar_"],
 
 /* Separate panels with 1px borders. */
 .guilds__5e434 {
-    border-right: 1px solid var(--r98-line) !important;
+    border-right: var(--r98-panel-border-width, 1px) solid var(--r98-line) !important;
 }
 .sidebarList__5e434 {
     width: var(--r98-sidebar-width) !important;
     min-width: var(--r98-sidebar-width) !important;
-    border-right: 1px solid var(--r98-line) !important;
+    border-right: var(--r98-panel-border-width, 1px) solid var(--r98-line) !important;
 }
 .container_c8ffbb {
     width: var(--r98-member-width) !important;
@@ -125,7 +125,7 @@ img[class*=" avatar_"],
 }
 .container_c8ffbb /* member list */,
 .nowPlayingColumn__133bf /* active now */ {
-    border-left: 1px solid var(--r98-line) !important;
+    border-left: var(--r98-panel-border-width, 1px) solid var(--r98-line) !important;
 }
 .panels__5e434 /* user panel */ {
     background: var(--r98-bg-0) var(--r98-pat-dither) !important;

@@ -532,12 +532,12 @@ img[class*=" avatar_"],
 
 /* Separate panels with 1px borders. */
 .guilds__5e434 {
-    border-right: 1px solid var(--r98-line) !important;
+    border-right: var(--r98-panel-border-width, 1px) solid var(--r98-line) !important;
 }
 .sidebarList__5e434 {
     width: var(--r98-sidebar-width) !important;
     min-width: var(--r98-sidebar-width) !important;
-    border-right: 1px solid var(--r98-line) !important;
+    border-right: var(--r98-panel-border-width, 1px) solid var(--r98-line) !important;
 }
 .container_c8ffbb {
     width: var(--r98-member-width) !important;
@@ -548,7 +548,7 @@ img[class*=" avatar_"],
 }
 .container_c8ffbb /* member list */,
 .nowPlayingColumn__133bf /* active now */ {
-    border-left: 1px solid var(--r98-line) !important;
+    border-left: var(--r98-panel-border-width, 1px) solid var(--r98-line) !important;
 }
 .panels__5e434 /* user panel */ {
     background: var(--r98-bg-0) var(--r98-pat-dither) !important;
@@ -689,7 +689,7 @@ code {
 
 /* Inset track with a 50% dither pattern. */
 ::-webkit-scrollbar-track {
-    background: var(--r98-bg-0) var(--r98-pat-scrollbar-track) 0 0 / 2px 2px !important;
+    background: var(--r98-bg-0) var(--r98-pat-scrollbar-track) 0 0 / var(--r98-pat-scrollbar-track-size, 2px 2px) !important;
     border: none !important;
     border-radius: var(--r98-radius) !important;
     margin: 0 !important;
@@ -699,7 +699,7 @@ code {
 ::-webkit-scrollbar-thumb {
     background-color: var(--r98-bg-3) !important;
     background-image: var(--r98-pat-scrollbar-thumb) !important;
-    background-size: 6px 10px !important;
+    background-size: var(--r98-pat-scrollbar-thumb-size, 6px 10px) !important;
     background-position: center !important;
     background-repeat: no-repeat !important;
     background-clip: border-box !important;

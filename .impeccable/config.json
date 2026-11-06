@@ -20,6 +20,42 @@
         ],
         "createdAt": "2026-11-06T17:51:25.904Z",
         "reason": "Agent: .sample-embed is an intentional Discord message-embed preview with a colour marker. Git blame attributes this border to 71f2fdc, before this redesign; preserving the sample appearance is within the requested scope."
+      },
+      {
+        "rule": "low-contrast",
+        "value": "*",
+        "files": [
+          "demos/chat.html"
+        ],
+        "createdAt": "2026-11-06T18:18:30.441Z",
+        "reason": "Agent: existing Discord screenshot fixture with compact metadata and native Discord colours. This task adds selector attributes for optional effects; preserving the original default appearance is a user requirement. The demo loads the built theme at runtime."
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "demos/chat.html"
+        ],
+        "createdAt": "2026-11-06T18:18:30.445Z",
+        "reason": "Agent: existing Discord screenshot fixture with compact metadata and native Discord colours. This task adds selector attributes for optional effects; preserving the original default appearance is a user requirement. The demo loads the built theme at runtime."
+      },
+      {
+        "rule": "undersized-ui-text",
+        "value": "*",
+        "files": [
+          "demos/chat.html"
+        ],
+        "createdAt": "2026-11-06T18:18:30.449Z",
+        "reason": "Agent: existing Discord screenshot fixture with compact metadata and native Discord colours. This task adds selector attributes for optional effects; preserving the original default appearance is a user requirement. The demo loads the built theme at runtime."
+      },
+      {
+        "rule": "tiny-text",
+        "value": "*",
+        "files": [
+          "demos/chat.html"
+        ],
+        "createdAt": "2026-11-06T18:18:30.453Z",
+        "reason": "Agent: existing Discord screenshot fixture with compact metadata and native Discord colours. This task adds selector attributes for optional effects; preserving the original default appearance is a user requirement. The demo loads the built theme at runtime."
       }
     ]
   }

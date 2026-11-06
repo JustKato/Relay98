@@ -29,7 +29,7 @@ npm run dev     # rebuilds automatically when files in src/ change
 
 Download or clone the repo, then open [customize.html](customize.html) in your browser. You don't need a server.
 
-1. Pick an accent and adjust the settings. Pine is the default. The ten alternatives include 2004, with classic Steam olive and mustard colours. Under Effects, you can toggle each pattern.
+1. Pick an accent and adjust the settings. Pine is the default. The ten alternatives include 2004, with classic Steam olive and mustard colours. Badges show which app exports each control affects.
 2. Use the tabs above the preview to switch between Discord (chat, friends) and Spotifast (home, liked songs).
 3. Run the copied build command in the Relay98 folder, then install `build/relay98-custom.theme.css`. Enable Relay98 Custom and disable the original.
 
@@ -38,6 +38,10 @@ The command works in Bash, PowerShell and Command Prompt without extra escaping.
 Check panel sizes in Discord; the preview uses a sample layout. The editor makes no external requests. Install custom fonts on your computer. The Google Fonts switch controls whether the built theme loads Pixelify Sans and VT323 from Google.
 
 The Spotifast preview matches the export colours. For optional album covers, see [demos/images/spotifast/](demos/images/spotifast/README.md).
+
+Effects starts with the original theme settings. Open a group to change textures, surfaces or app-specific options. Discord extras include message dividers, alternating rows and text glow, all off by default. Each app has its own Reset button; it keeps your colours and other settings.
+
+Spotifast controls change its supported colour roles: page tint, popup shadows and backgrounds, outlines, accent style and panel tint. Turn off Colour from album art in Spotifast to use the exported page tint. The Popup button beside the preview shows the popup colours. Fonts, layout and Discord effects affect the Discord CSS export. Palette JSON includes all base colours and ignores app-specific effects.
 
 Your browser saves the last valid settings. Save downloads the full setup, including fonts and spacing; Load restores it. You can also build from that file:
 
@@ -64,7 +68,7 @@ Omitted fields use the defaults. For Diskette with larger text and system fonts:
 }
 ```
 
-Effect switches are `scanlines`, `dots`, `dither`, `stripes`, `scrollbar`, `bevels` and `shadows`. Older settings with `"textures": false` turn all patterns off. Use six-digit hex colours and whole-pixel sizes within the editor's ranges. The build rejects invalid values and unknown options. Run `npm run build -- --help` for command-line options.
+The `effects` object holds Discord switches, including `gradient`, `panelBorders`, `messageDividers`, `alternatingMessages` and `textGlow`. Use `effectValues` for texture strength/scale, shadow offset and glow size. Spotifast options live under `spotifast`. Older settings with `"textures": false` turn all five patterns off; omitted options keep their defaults. Use six-digit hex colours and whole-pixel sizes within the editor's ranges. The build rejects invalid values and unknown options. Run `npm run build -- --help` for command-line options.
 
 ## Theme versions
 

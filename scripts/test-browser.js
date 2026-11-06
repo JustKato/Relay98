@@ -54,7 +54,12 @@ async function main() {
         });
         const showSetting = async (selector) => {
             const panel = await page.locator(selector).evaluate((node) => node.closest('.settings-page')?.id);
-            if (panel) await page.locator(`.settings-tabs [aria-controls="${panel}"]`).click();
+            if (panel && !(await page.locator(`#${panel}`).isVisible())) await page.locator(`.settings-tabs [aria-controls="${panel}"]`).click();
+            const accordions = page.locator(selector).locator('xpath=ancestor::details');
+            for (let index = 0; index < await accordions.count(); index++) {
+                const accordion = accordions.nth(index);
+                if (await accordion.getAttribute('open') === null) await accordion.locator('summary').first().click();
+            }
         };
         const choose = async (selector, value) => {
             await showSetting(selector);
@@ -66,6 +71,10 @@ async function main() {
             await showSetting(selector);
             await page.locator(selector).fill(String(value));
             await page.locator(selector).blur();
+        };
+        const toggle = async (selector, checked) => {
+            await showSetting(selector);
+            await page.locator(selector).setChecked(checked);
         };
         const downloadJSON = async (selector) => {
             const event = page.waitForEvent('download');
@@ -123,6 +132,14 @@ async function main() {
         assert.equal(await accent('Pine').getAttribute('aria-checked'), 'true');
         assert.equal(await accent('Pine').getAttribute('aria-describedby'), 'default-accent');
         assert.equal(await page.locator('#default-accent').textContent(), 'Default');
+        assert.equal(await page.locator('#settings-colours > .section-heading .export-badge').textContent(), 'Palette JSON');
+        assert.equal(await page.locator('label[for="hex-bg-2"] .export-badge').textContent(), 'Both apps');
+        assert.equal(await page.locator('label[for="hex-titlebar-start"] .export-badge').textContent(), 'Both apps');
+        assert.equal(await page.locator('label[for="hex-titlebar-end"] .export-badge').textContent(), 'Discord');
+        for (const id of ['settings-type', 'settings-layout']) assert.equal(await page.locator(`#${id} .export-badge`).textContent(), 'Discord');
+        const effectScopes = await page.locator('#settings-effects .export-badge').allTextContents();
+        assert.ok(effectScopes.includes('Discord') && effectScopes.includes('Spotifast'));
+        for (const id of ['effects-textures', 'effects-surfaces', 'effects-extras', 'effects-spotifast']) assert.equal(await page.locator(`#${id}`).getAttribute('open'), null);
 
         // Exercise the visible controls, including keyboard-only editing.
         await page.locator('#settings-tab-colours').press('End');
@@ -192,6 +209,146 @@ async function main() {
         assert.deepEqual(await readConfig(), customization.defaults);
         assert.equal(await page.locator('#color-accent-trigger').evaluate((node) => getComputedStyle(node).backgroundColor), 'rgb(74, 122, 84)');
         await image('customize-desktop.png');
+
+        // Effects keep their app scope across edits, downloads and resets.
+        await choose('#avatar-shape', 'round');
+        await change('#size-fontSize', 18);
+        const beforeEffects = await readConfig();
+        const originalSpotifastStyle = await page.locator('#spotifast-preview').getAttribute('style');
+        const originalTexture = await page.locator('.preview-chat').first().evaluate((node) => getComputedStyle(node).backgroundImage);
+        await showSetting('#effect-value-glowRadius');
+        assert.equal(await page.locator('#effect-value-glowRadius').isDisabled(), true);
+        await toggle('#effect-gradient', false);
+        await toggle('#effect-panelBorders', false);
+        await toggle('#effect-messageDividers', true);
+        await toggle('#effect-alternatingMessages', true);
+        await toggle('#effect-textGlow', true);
+        await change('#effect-value-textureStrength', 60);
+        await change('#effect-value-textureScale', 150);
+        await change('#effect-value-shadowOffset', 7);
+        await change('#effect-value-glowRadius', 5);
+        const discordEffects = await readConfig();
+        assert.deepEqual(discordEffects.effectValues, { textureStrength: 60, textureScale: 150, shadowOffset: 7, glowRadius: 5 });
+        assert.equal(await page.locator('.preview-title').evaluate((node) => getComputedStyle(node).backgroundColor), rgb(discordEffects.colors['titlebar-start']));
+        assert.equal(await page.locator('.preview-sidebar').first().evaluate((node) => getComputedStyle(node).borderRightWidth), '0px');
+        assert.equal(await page.locator('.sample-message').first().evaluate((node) => getComputedStyle(node).borderBottomWidth), '1px');
+        assert.equal(await page.locator('.sample-message:nth-child(even)').first().evaluate((node) => getComputedStyle(node).backgroundColor), rgb(discordEffects.colors['bg-1']));
+        assert.match(await page.locator('.message-content > p:not(.message-meta)').first().evaluate((node) => getComputedStyle(node).textShadow), /5px/);
+        assert.match(await page.locator('.sample-embed').first().evaluate((node) => getComputedStyle(node).boxShadow), /7px 7px/);
+        assert.notEqual(await page.locator('.preview-chat').first().evaluate((node) => getComputedStyle(node).backgroundImage), originalTexture);
+        assert.equal(await page.locator('.preview-sidebar').first().evaluate((node) => getComputedStyle(node).backgroundSize), '9px 9px');
+        assert.equal(await page.locator('#spotifast-preview').getAttribute('style'), originalSpotifastStyle, 'Discord effects leave the Spotifast preview unchanged');
+        assert.deepEqual(customization.toSpotifast(discordEffects), customization.toSpotifast(beforeEffects));
+        assert.deepEqual(customization.toPalette(discordEffects), customization.toPalette(beforeEffects));
+
+        await showSetting('#effect-range-textureStrength');
+        await page.locator('#effect-range-textureStrength').focus();
+        await page.locator('#effect-range-textureStrength').press('Home');
+        assert.equal(await page.locator('#effect-value-textureStrength').inputValue(), '0');
+        assert.equal(await page.locator('.preview-chat').first().evaluate((node) => getComputedStyle(node).backgroundImage), 'none');
+        await change('#effect-value-textureStrength', 60);
+        const validEffectsCommand = await command();
+        await change('#effect-value-textureScale', 999);
+        assert.equal(await page.locator('#effect-value-textureScale').getAttribute('aria-invalid'), 'true');
+        assert.equal(await command(), validEffectsCommand);
+        await change('#effect-value-textureScale', 150);
+
+        const discordStyle = await page.locator('#theme-preview').getAttribute('style');
+        await toggle('#spotifast-tint', false);
+        await toggle('#spotifast-shadows', false);
+        assert.equal(await page.locator('#spotifast-tintStrength').isDisabled(), true);
+        assert.equal(await page.locator('#spotifast-shadowStrength').isDisabled(), true);
+        await page.locator('#preview-spotifast-popup').click();
+        assert.equal(await page.locator('#spotifast-popup').isVisible(), true);
+        const noPopupShadow = await page.locator('#spotifast-popup').evaluate((node) => getComputedStyle(node).boxShadow);
+        assert.ok(noPopupShadow === 'none' || /rgba\([^)]*, 0\)/.test(noPopupShadow), 'disabling popup shadows removes their visible opacity');
+        await toggle('#spotifast-tint', true);
+        await toggle('#spotifast-shadows', true);
+        await toggle('#spotifast-solidPopups', true);
+        await change('#spotifast-tintStrength', 160);
+        await change('#spotifast-shadowStrength', 140);
+        await showSetting('#spotifast-outlines');
+        const outlinesTrigger = page.locator('#spotifast-outlines-trigger');
+        const selectPopup = page.locator('#editor-select-list');
+        await outlinesTrigger.evaluate((node) => window.scrollTo(0, scrollY + node.getBoundingClientRect().top - innerHeight + 100));
+        await page.waitForFunction(() => Math.abs(document.getElementById('spotifast-outlines-trigger').getBoundingClientRect().top - innerHeight + 100) < 1);
+        const beforeOpenScroll = await page.evaluate(() => scrollY);
+        await outlinesTrigger.click();
+        assert.equal(await selectPopup.isVisible(), true);
+        assert.equal(await page.evaluate(() => scrollY), beforeOpenScroll, 'highlighting the selected option does not scroll the page');
+        const openPosition = await selectPopup.boundingBox();
+        await page.evaluate(() => new Promise((resolve) => requestAnimationFrame(() => {
+            document.dispatchEvent(new Event('scroll'));
+            resolve();
+        })));
+        assert.equal(await selectPopup.isVisible(), true, 'a delayed scroll event keeps a stationary dropdown open');
+        assert.deepEqual(await selectPopup.boundingBox(), openPosition);
+        await page.evaluate(() => new Promise((resolve) => {
+            window.scrollBy(0, 32);
+            requestAnimationFrame(() => requestAnimationFrame(resolve));
+        }));
+        assert.equal(await selectPopup.isVisible(), true, 'a dropdown follows its visible control during scroll');
+        const movedPosition = await selectPopup.boundingBox();
+        assert.ok(Math.abs(movedPosition.y - openPosition.y + 32) < 1, 'popup stays anchored after a small scroll');
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.waitForFunction(() => document.getElementById('editor-select-list').hidden);
+        assert.equal(await outlinesTrigger.getAttribute('aria-expanded'), 'false', 'scrolling the control offscreen closes its dropdown');
+        await choose('#spotifast-outlines', 'none');
+        assert.match(await page.locator('.sf-player').evaluate((node) => getComputedStyle(node).borderTopColor), /, 0\)$/);
+        await choose('#spotifast-outlines', 'accent');
+        await choose('#spotifast-accentStyle', 'neutral');
+        assert.equal(await page.locator('#spotifast-panelTint').isDisabled(), true);
+        await choose('#spotifast-panels', 'tinted');
+        await change('#spotifast-panelTint', 35);
+        const scopedEffects = await readConfig();
+        assert.match(await page.locator('#spotifast-popup').evaluate((node) => getComputedStyle(node).backgroundColor), /^rgb\(/, 'solid popups use an opaque colour');
+        assert.notEqual(await page.locator('#spotifast-popup').evaluate((node) => getComputedStyle(node).boxShadow), noPopupShadow);
+        assert.deepEqual(scopedEffects.spotifast, {
+            tint: true, tintStrength: 160, shadows: true, shadowStrength: 140,
+            solidPopups: true, outlines: 'accent', accentStyle: 'neutral', panels: 'tinted', panelTint: 35,
+        });
+        assert.equal(await page.locator('#theme-preview').getAttribute('style'), discordStyle, 'Spotifast controls leave the Discord preview unchanged');
+        assert.deepEqual(customization.toVariables(scopedEffects), customization.toVariables(discordEffects));
+        assert.deepEqual(customization.toPalette(scopedEffects), customization.toPalette(beforeEffects));
+        assert.notDeepEqual(customization.toSpotifast(scopedEffects), customization.toSpotifast(beforeEffects));
+        assert.equal(await page.locator('.sf-player').evaluate((node) => getComputedStyle(node).backgroundColor), rgb(customization.toSpotifast(scopedEffects).colors.panel));
+        assert.equal(await page.locator('.sf-play.small').evaluate((node) => getComputedStyle(node).backgroundColor), rgb(customization.toSpotifast(scopedEffects).colors.accent));
+        const validSpotifastCommand = await command();
+        await change('#spotifast-panelTint', 99);
+        assert.equal(await page.locator('#spotifast-panelTint').getAttribute('aria-invalid'), 'true');
+        assert.equal(await command(), validSpotifastCommand);
+        await change('#spotifast-panelTint', 35);
+
+        const effectsSettings = await downloadJSON('#export-settings');
+        assert.deepEqual(effectsSettings.value, scopedEffects);
+        const effectsSpotifast = await downloadJSON('#export-spotifast');
+        assert.deepEqual(effectsSpotifast.value, customization.toSpotifast(scopedEffects));
+        const effectsPalette = await downloadJSON('#export-palette');
+        assert.deepEqual(effectsPalette.value, customization.toPalette(beforeEffects));
+        await page.reload();
+        await page.waitForFunction(() => document.documentElement.dataset.customizerStatus === 'ready');
+        assert.deepEqual(await readConfig(), scopedEffects, 'app-specific effects survive a reload');
+        await showSetting('#effect-value-glowRadius');
+        assert.equal(await page.locator('#effect-value-glowRadius').inputValue(), '5');
+        await showSetting('#spotifast-panelTint');
+        assert.equal(await page.locator('#spotifast-panelTint').inputValue(), '35');
+        await showSetting('#reset-discord-effects');
+        await page.locator('#reset-discord-effects').click();
+        const discordReset = { ...scopedEffects, effects: customization.defaults.effects, effectValues: customization.defaults.effectValues };
+        assert.deepEqual(await readConfig(), discordReset, 'Discord reset preserves Spotifast and other settings');
+        await toggle('#effect-textGlow', true);
+        const beforeSpotifastReset = await readConfig();
+        await showSetting('#reset-spotifast-effects');
+        await page.locator('#reset-spotifast-effects').click();
+        assert.deepEqual(await readConfig(), { ...beforeSpotifastReset, spotifast: customization.defaults.spotifast }, 'Spotifast reset preserves Discord and other settings');
+        await page.locator('#import-file').setInputFiles(effectsSettings.file);
+        await page.waitForFunction(() => document.getElementById('feedback').textContent.startsWith('Loaded '));
+        assert.deepEqual(await readConfig(), scopedEffects, 'settings import restores both effect scopes');
+        await page.locator('#reset-settings').click();
+        assert.deepEqual(await readConfig(), customization.defaults);
+        await page.locator('#tab-discord').click();
+        console.log('PASS effects: Discord and Spotifast previews, ranges, app scope, JSON, persistence, scoped resets');
+
         // Load legacy Discord settings.
         const legacySettings = { variant: 'discord', palette: 'discord', avatarShape: 'round' };
         await page.locator('#import-file').setInputFiles({ name: 'legacy-discord-settings.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(legacySettings)) });
@@ -394,11 +551,41 @@ async function main() {
                 console.log(`PASS 2004 compiled button contrast: ${normalContrast.toFixed(2)}:1 normal, ${hoverContrast.toFixed(2)}:1 hover`);
             }
         }
+        // Exercise exported effect rules against the same Discord attributes used by the demo.
+        const extrasConfig = customization.normalize({
+            ...scopedEffects,
+            effects: { ...Object.fromEntries(Object.keys(scopedEffects.effects).map((key) => [key, true])), panelBorders: false },
+        });
+        const extras = build({ custom: extrasConfig, output: path.join(temporary, 'effects.theme.css'), quiet: true });
+        await page.goto(`${fileURL('demos/chat.html')}?theme=${encodeURIComponent(pathToFileURL(extras.output).href)}`);
+        await page.evaluate(() => window.demoReady);
+        const effectStyle = (selector, property) => page.locator(selector).first().evaluate((node, name) => getComputedStyle(node)[name], property);
+        assert.equal(await effectStyle('.demo-sidebar', 'borderRightWidth'), '0px');
+        assert.equal(await effectStyle('#chat-messages-general-1', 'borderBottomWidth'), '1px');
+        assert.equal(await effectStyle('#chat-messages-general-1', 'borderBottomColor'), rgb(extrasConfig.colors.border));
+        assert.equal(await effectStyle('#chat-messages-general-2', 'backgroundColor'), rgb(extrasConfig.colors['bg-1']));
+        const glow = `${rgb(extrasConfig.colors['accent-light'])} 0px 0px 5px`;
+        assert.equal(await effectStyle('#chat-messages-general-1 .markup__75297', 'textShadow'), glow);
+        assert.equal(await effectStyle('.demo-titlebar .title_c38106', 'textShadow'), glow);
+        assert.equal(await effectStyle('.demo-message-heading', 'textShadow'), 'none', 'message glow leaves author metadata unchanged');
+        assert.equal(await effectStyle('.demo-channel-welcome p', 'textShadow'), 'none', 'message glow stays scoped to chat markup');
+        assert.equal(await effectStyle('.demo-sidebar', 'backgroundSize'), '9px 9px');
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, 'effects demo overflow');
+        await image('custom-effects-chat.png');
+        console.log('PASS compiled effects: message dividers, alternating backgrounds, scoped glow, panel borders and texture scale');
+
         const base = build({ output: path.join(temporary, 'original.theme.css'), quiet: true });
         for (const scene of ['chat', 'friends', 'settings']) {
             await page.goto(`${fileURL(`demos/${scene}.html`)}?theme=${encodeURIComponent(pathToFileURL(base.output).href)}`);
             await page.evaluate(() => window.demoReady);
             assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true, `default ${scene} overflow`);
+            if (scene === 'chat') {
+                assert.equal(await effectStyle('#chat-messages-general-1', 'borderBottomWidth'), '0px');
+                assert.equal(await effectStyle('#chat-messages-general-2', 'backgroundColor'), 'rgba(0, 0, 0, 0)');
+                assert.equal(await effectStyle('#chat-messages-general-1 .markup__75297', 'textShadow'), 'none');
+                assert.equal(await effectStyle('#chat-messages-general-1', 'marginBottom'), '4px');
+                assert.equal(await effectStyle('#chat-messages-general-1 .markup__75297', 'fontSize'), '16px');
+            }
         }
         await page.goto(`${fileURL('demos/chat.html')}?theme=${encodeURIComponent(pathToFileURL(path.join(temporary, 'missing.css')).href)}`);
         await page.waitForFunction(() => document.documentElement.dataset.demoStatus === 'error');

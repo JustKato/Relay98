@@ -141,7 +141,33 @@
         { key: 'stripes', label: 'Title bar stripes', hint: 'Lines over the title bar', vars: ['bar'] },
         { key: 'scrollbar', label: 'Scrollbar pattern', hint: 'Checkered track and grip', vars: ['scrollbar-track', 'scrollbar-thumb'] },
     ];
-    const effectKeys = [...patterns.map(({ key }) => key), 'bevels', 'shadows'];
+    const effectControls = [
+        { key: 'bevels', label: 'Bevels', hint: 'Raised buttons and inset fields', group: 'surfaces', default: true },
+        { key: 'shadows', label: 'Shadows', hint: 'Floating panels and menus', group: 'surfaces', default: true },
+        { key: 'gradient', label: 'Title bar gradient', hint: 'Blend the two title bar colours', group: 'surfaces', default: true },
+        { key: 'panelBorders', label: 'Panel borders', hint: 'Lines between sidebars and chat', group: 'surfaces', default: true },
+        { key: 'messageDividers', label: 'Message dividers', hint: 'Separate message groups', group: 'extras', default: false },
+        { key: 'alternatingMessages', label: 'Alternating rows', hint: 'Shade every other message group', group: 'extras', default: false },
+        { key: 'textGlow', label: 'Text glow', hint: 'Message text and window titles', group: 'extras', default: false },
+    ];
+    const effectRanges = [
+        { key: 'textureStrength', label: 'Texture strength', default: 100, min: 0, max: 200, step: 1, unit: '%', group: 'textures' },
+        { key: 'textureScale', label: 'Texture scale', default: 100, min: 50, max: 200, step: 1, unit: '%', group: 'textures' },
+        { key: 'shadowOffset', label: 'Shadow offset', default: 3, min: 0, max: 8, step: 1, unit: 'px', group: 'surfaces', dependsOn: { key: 'shadows', value: true } },
+        { key: 'glowRadius', label: 'Glow size', default: 2, min: 1, max: 8, step: 1, unit: 'px', group: 'extras', dependsOn: { key: 'textGlow', value: true } },
+    ];
+    const spotifastOptions = [
+        { key: 'tint', label: 'Page tint', hint: 'Header colour fade', type: 'boolean', default: true },
+        { key: 'tintStrength', label: 'Tint strength', type: 'number', default: 100, min: 0, max: 200, step: 1, unit: '%', dependsOn: { key: 'tint', value: true } },
+        { key: 'shadows', label: 'Popup shadows', hint: 'Menus and floating windows', type: 'boolean', default: true },
+        { key: 'shadowStrength', label: 'Shadow strength', type: 'number', default: 100, min: 0, max: 200, step: 1, unit: '%', dependsOn: { key: 'shadows', value: true } },
+        { key: 'solidPopups', label: 'Solid popups', hint: 'Opaque menu backgrounds', type: 'boolean', default: false },
+        { key: 'outlines', label: 'Outlines', type: 'select', default: 'original', choices: { original: 'Original', accent: 'Accent', none: 'None' } },
+        { key: 'accentStyle', label: 'Accent style', type: 'select', default: 'accent', choices: { accent: 'Palette', neutral: 'Neutral' } },
+        { key: 'panels', label: 'Panels', type: 'select', default: 'original', choices: { original: 'Original', tinted: 'Tinted' } },
+        { key: 'panelTint', label: 'Panel tint', type: 'number', default: 20, min: 0, max: 50, step: 1, unit: '%', dependsOn: { key: 'panels', value: 'tinted' } },
+    ];
+    const effectKeys = [...patterns.map(({ key }) => key), ...effectControls.map(({ key }) => key)];
 
     function object(value, label, allowed) {
         if (value === null || typeof value !== 'object' || Array.isArray(value)) throw new Error(`${label} must be an object.`);
@@ -160,8 +186,25 @@
         return value.trim();
     }
 
+    function options(input, fields, label) {
+        object(input, label, fields.map(({ key }) => key));
+        const result = {};
+        for (const field of fields) {
+            const value = Object.hasOwn(input, field.key) ? input[field.key] : field.default;
+            if (field.type === 'boolean') {
+                if (typeof value !== 'boolean') throw new Error(`${field.label} must be true or false.`);
+            } else if (field.type === 'select') {
+                if (typeof value !== 'string' || !Object.hasOwn(field.choices, value)) throw new Error(`Unknown ${field.label.toLowerCase()} option: ${value}`);
+            } else if (!Number.isInteger(value) || value < field.min || value > field.max) {
+                throw new Error(`${field.label} must be a whole number from ${field.min} to ${field.max}.`);
+            }
+            result[field.key] = value;
+        }
+        return result;
+    }
+
     function normalize(input = {}) {
-        object(input, 'configuration', ['variant', 'avatarShape', 'palette', 'colors', 'sizes', 'fonts', 'effects', 'googleFonts']);
+        object(input, 'configuration', ['variant', 'avatarShape', 'palette', 'colors', 'sizes', 'fonts', 'effects', 'effectValues', 'spotifast', 'googleFonts']);
         const variant = input.variant === undefined ? 'original' : input.variant;
         if (typeof variant !== 'string' || !Object.hasOwn(variants, variant)) throw new Error(`Unknown theme version: ${variant}`);
         const avatarShape = input.avatarShape === undefined ? variants[variant].avatarShape : input.avatarShape;
@@ -174,7 +217,9 @@
             colors: { ...palettes[selected].colors },
             sizes: Object.fromEntries(sizes.map(({ key, default: value }) => [key, value])),
             fonts: { ui: fontPresets.retro.ui, code: fontPresets.retro.code },
-            effects: Object.fromEntries(effectKeys.map((key) => [key, true])),
+            effects: Object.fromEntries([...patterns.map(({ key }) => [key, true]), ...effectControls.map(({ key, default: value }) => [key, value])]),
+            effectValues: options(input.effectValues === undefined ? {} : input.effectValues, effectRanges, 'effect value'),
+            spotifast: options(input.spotifast === undefined ? {} : input.spotifast, spotifastOptions, 'Spotifast'),
             googleFonts: true,
         };
         if (input.colors !== undefined) {
@@ -217,6 +262,26 @@
         return result;
     }
 
+    function textureVariables(config) {
+        const strength = config.effectValues.textureStrength / 100;
+        const scale = config.effectValues.textureScale / 100;
+        const px = (value) => `${Number((value * scale).toFixed(3))}px`;
+        const alpha = (value) => Number(Math.min(1, value * strength).toFixed(4));
+        const rgba = (hex) => `rgba(${hex.slice(1).match(/../g).map((value) => parseInt(value, 16)).join(', ')}, ${alpha(1)})`;
+        return {
+            '--r98-pat-scan': `repeating-linear-gradient(to bottom, rgba(255, 255, 255, ${alpha(.016)}) 0 ${px(1)}, transparent ${px(1)} ${px(3)})`,
+            '--r98-pat-dither': `repeating-conic-gradient(rgba(255, 255, 255, ${alpha(.022)}) 0% 25%, transparent 0% 50%)`,
+            '--r98-pat-dither-size': `${px(4)} ${px(4)}`,
+            '--r98-pat-dots': `radial-gradient(rgba(255, 255, 255, ${alpha(.035)}) ${px(.75)}, transparent ${px(1)})`,
+            '--r98-pat-dots-size': `${px(6)} ${px(6)}`,
+            '--r98-pat-bar': `repeating-linear-gradient(to bottom, rgba(0, 0, 0, ${alpha(.1)}) 0 ${px(1)}, transparent ${px(1)} ${px(2)})`,
+            '--r98-pat-scrollbar-track': `repeating-conic-gradient(${rgba(config.colors['bg-1'])} 0% 25%, ${rgba(config.colors['bg-0'])} 0% 50%)`,
+            '--r98-pat-scrollbar-track-size': `${px(2)} ${px(2)}`,
+            '--r98-pat-scrollbar-thumb': `repeating-linear-gradient(to bottom, ${rgba(config.colors['bevel-light'])} 0 ${px(1)}, ${rgba(config.colors['bevel-dark'])} ${px(1)} ${px(2)}, transparent ${px(2)} ${px(4)})`,
+            '--r98-pat-scrollbar-thumb-size': `${px(6)} ${px(10)}`,
+        };
+    }
+
     function toVariables(input) {
         const config = normalize(input);
         const vars = Object.fromEntries(Object.entries(config.colors).map(([key, value]) => [`--r98-${key}`, value]));
@@ -226,13 +291,18 @@
             vars[`--r98-on-${role}`] = [config.colors['text-1'], config.colors['bg-0'], '#ffffff', '#000000']
                 .find((foreground) => contrast(foreground, config.colors[role]) >= 4.5);
         }
-        vars['--r98-titlebar'] = `linear-gradient(to right, ${config.colors['titlebar-start']}, 75%, ${config.colors['titlebar-end']})`;
+        vars['--r98-titlebar'] = config.effects.gradient
+            ? `linear-gradient(to right, ${config.colors['titlebar-start']}, 75%, ${config.colors['titlebar-end']})`
+            : config.colors['titlebar-start'];
         vars['--r98-avatar-radius'] = avatarShapes[config.avatarShape].radius;
         vars['--r98-font'] = config.fonts.ui;
         vars['--r98-font-code'] = config.fonts.code;
         for (const { key, variable } of sizes) vars[variable] = `${config.sizes[key]}px`;
+        if (config.effectValues.textureStrength !== 100 || config.effectValues.textureScale !== 100) Object.assign(vars, textureVariables(config));
         for (const pattern of patterns) {
-            if (!config.effects[pattern.key]) for (const key of pattern.vars) vars[`--r98-pat-${key}`] = 'none';
+            if (!config.effects[pattern.key] || config.effectValues.textureStrength === 0) {
+                for (const key of pattern.vars) vars[`--r98-pat-${key}`] = 'none';
+            }
         }
         if (!config.effects.bevels) {
             vars['--r98-raised'] = 'none';
@@ -240,11 +310,21 @@
             vars['--r98-toolbar-shadow'] = 'none';
         }
         if (!config.effects.shadows) vars['--r98-drop'] = 'none';
+        else if (config.effectValues.shadowOffset !== 3) vars['--r98-drop'] = `${config.effectValues.shadowOffset}px ${config.effectValues.shadowOffset}px 0 rgba(0, 0, 0, 0.35)`;
+        if (!config.effects.panelBorders) vars['--r98-panel-border-width'] = '0px';
+        if (config.effects.messageDividers) vars['--r98-message-divider'] = '1px solid var(--r98-border)';
+        if (config.effects.alternatingMessages) vars['--r98-message-alt-bg'] = config.colors['bg-1'];
+        if (config.effects.textGlow) vars['--r98-text-glow'] = `0 0 ${config.effectValues.glowRadius}px ${config.colors['accent-light']}`;
         return vars;
     }
 
     function toCSS(input) {
-        return `:root {\n${Object.entries(toVariables(input)).map(([key, value]) => `    ${key}: ${value};`).join('\n')}\n}\n`;
+        const config = normalize(input);
+        let css = `:root {\n${Object.entries(toVariables(config)).map(([key, value]) => `    ${key}: ${value};`).join('\n')}\n}\n`;
+        if (config.effects.messageDividers) css += '\n.chatContent_f75fb0 [id^="chat-messages-"] {\n    border-bottom: var(--r98-message-divider) !important;\n}\n';
+        if (config.effects.alternatingMessages) css += '\n.chatContent_f75fb0 [id^="chat-messages-"]:nth-child(even):not([class*="mentioned_"]):not([class*="replying_"]) {\n    background-color: var(--r98-message-alt-bg) !important;\n}\n';
+        if (config.effects.textGlow) css += '\n.chatContent_f75fb0 :is([class^="markup_"], [class*=" markup_"]),\n.bar_c38106 .title_c38106 {\n    text-shadow: var(--r98-text-glow) !important;\n}\n';
+        return css;
     }
 
     function luminance(hex) {
@@ -312,27 +392,45 @@
 
     // https://spotifast.rocks/settings-and-files/#custom-themes
     function toSpotifast(input) {
-        const { base, colors: c } = toPalette(input);
+        const config = normalize(input);
+        const { base, colors: c } = toPalette(config);
+        const settings = config.spotifast;
+        const opacity = (color, strength) => `${color.slice(0, 7)}${Math.min(255, Math.round(parseInt(color.slice(7), 16) * strength / 100)).toString(16).padStart(2, '0')}`;
+        const blend = (first, second, amount) => `#${first.slice(1).match(/../g).map((value, index) => {
+            const start = parseInt(value, 16), end = parseInt(second.slice(1 + index * 2, 3 + index * 2), 16);
+            return Math.round(start + (end - start) * amount / 100).toString(16).padStart(2, '0');
+        }).join('')}`;
+        const gray = (color) => {
+            const light = luminance(color);
+            const value = Math.round((light <= .0031308 ? 12.92 * light : 1.055 * light ** (1 / 2.4) - .055) * 255).toString(16).padStart(2, '0');
+            return `#${value.repeat(3)}`;
+        };
+        const neutral = settings.accentStyle === 'neutral';
+        const accent = neutral ? [gray(c.textSecondary), gray(c.text), '#ffffff', '#000000'].find((color) => contrast(color, c.background) >= 4.5) : c.accent;
+        const accentHover = neutral ? blend(accent, luminance(c.background) < .179 ? '#ffffff' : '#000000', 10) : c.accentHover;
+        const onAccent = neutral
+            ? [c.text, c.input, '#ffffff', '#000000'].find((text) => Math.min(contrast(text, accent), contrast(text, accentHover)) >= 4.5)
+            : c.onAccent;
         return {
             base,
             colors: {
                 window: c.background,
-                panel: c.panel,
+                panel: settings.panels === 'tinted' ? blend(c.panel, c.accent, settings.panelTint) : c.panel,
                 surface: c.surface,
                 surface_hover: c.surfaceHover,
                 surface_active: c.selection,
-                outline: c.border,
+                outline: settings.outlines === 'accent' ? c.accentFocus : settings.outlines === 'none' ? `${c.border}00` : c.border,
                 text: c.text,
                 secondary: c.textSecondary,
                 dim: c.textMuted,
-                accent: c.accent,
-                accent_hover: c.accentHover,
-                on_accent: c.onAccent,
+                accent,
+                accent_hover: accentHover,
+                on_accent: onAccent,
                 danger: c.danger,
                 warning: c.warning,
-                overlay: c.overlay,
-                shadow: c.shadow,
-                tint: c.tint,
+                overlay: settings.solidPopups ? `${c.input}ff` : c.overlay,
+                shadow: opacity(c.shadow, settings.shadows ? settings.shadowStrength : 0),
+                tint: opacity(c.tint, settings.tint ? settings.tintStrength : 0),
             },
         };
     }
@@ -361,5 +459,5 @@
         return `npm run build -- --custom ${encode(input)}`;
     }
 
-    return { colors, sizes, patterns, palettes, paletteOptions, variants, avatarShapes, fontPresets, defaults: normalize(), normalize, toVariables, toCSS, toPalette, toSpotifast, encode, decode, command };
+    return { colors, sizes, patterns, effectControls, effectRanges, spotifastOptions, palettes, paletteOptions, variants, avatarShapes, fontPresets, defaults: normalize(), normalize, toVariables, toCSS, toPalette, toSpotifast, encode, decode, command };
 }));

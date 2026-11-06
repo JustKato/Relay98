@@ -60,7 +60,7 @@
             </div>
 
             <section class="group settings-page" id="settings-colours" role="tabpanel" aria-labelledby="settings-tab-colours">
-                <h2 id="colors-heading" class="visually-hidden">Colours</h2>
+                <div class="section-heading"><h2 id="colors-heading">Colours</h2><span class="export-badge scope-palette">Palette JSON</span></div>
                 <div class="color-grid" id="main-colors"></div>
                 <details class="more">
                     <summary>All colours <span id="advanced-count"></span></summary>
@@ -69,7 +69,7 @@
             </section>
 
             <section class="group settings-page" id="settings-type" role="tabpanel" aria-labelledby="settings-tab-type" hidden>
-                <h2 id="fonts-heading">Fonts</h2>
+                <div class="section-heading"><h2 id="fonts-heading">Fonts</h2><span class="export-badge scope-discord">Discord</span></div>
                 <div class="field-stack" id="font-fields"></div>
                 <p class="hint">Custom fonts must be installed on your computer.</p>
                 <label class="switch-row font-loading"><span><strong>Google Fonts</strong><small>Load pixel fonts in the built theme</small></span><input type="checkbox" id="google-fonts" role="switch"><span class="switch" aria-hidden="true"></span></label>
@@ -77,19 +77,34 @@
             </section>
 
             <section class="group settings-page" id="settings-layout" role="tabpanel" aria-labelledby="settings-tab-layout" hidden>
-                <h2 id="sizes-heading">Spacing &amp; layout</h2>
+                <div class="section-heading"><h2 id="sizes-heading">Spacing &amp; layout</h2><span class="export-badge scope-discord">Discord</span></div>
                 <div class="field avatar-field"><label for="avatar-shape">Avatars</label><select id="avatar-shape"></select></div>
                 <div id="size-controls" class="size-controls"></div>
             </section>
 
             <section class="group settings-page" id="settings-effects" role="tabpanel" aria-labelledby="settings-tab-effects" hidden>
                 <h2 id="effects-heading" class="visually-hidden">Effects</h2>
-                <div class="switch-list">
-                    <label class="switch-row switch-master"><span><strong>Patterns</strong><small id="pattern-summary">All on</small></span><input type="checkbox" id="patterns-all" role="switch"><span class="switch" aria-hidden="true"></span></label>
-                    <div class="switch-group" id="pattern-toggles" role="group" aria-label="Patterns"></div>
-                    <label class="switch-row"><span><strong>Bevels</strong><small>Raised buttons, inset fields</small></span><input type="checkbox" id="effect-bevels" data-effect="bevels" role="switch"><span class="switch" aria-hidden="true"></span></label>
-                    <label class="switch-row"><span><strong>Shadows</strong><small>Under embeds and popouts</small></span><input type="checkbox" id="effect-shadows" data-effect="shadows" role="switch"><span class="switch" aria-hidden="true"></span></label>
-                </div>
+                <div class="effects-heading"><span class="export-badge scope-discord">Discord</span><button type="button" id="reset-discord-effects" class="text-button" aria-label="Reset Discord effects">Reset</button></div>
+                <details class="effect-section" id="effects-textures" data-preview-app="discord">
+                    <summary>Textures <span class="summary-hint" id="textures-state"></span></summary>
+                    <div class="effect-section-body">
+                        <label class="switch-row switch-master"><span><strong>Patterns</strong><small id="pattern-summary">All on</small></span><input type="checkbox" id="patterns-all"><span class="switch" aria-hidden="true"></span></label>
+                        <div class="switch-group" id="pattern-toggles" role="group" aria-label="Patterns"></div>
+                        <div id="textures-controls" class="effect-controls"></div>
+                    </div>
+                </details>
+                <details class="effect-section" id="effects-surfaces" data-preview-app="discord">
+                    <summary>Surfaces <span class="summary-hint" id="surfaces-state"></span></summary><div id="surfaces-controls" class="effect-section-body effect-controls"></div>
+                </details>
+                <details class="effect-section" id="effects-extras" data-preview-app="discord">
+                    <summary>Extras <span class="summary-hint" id="extras-state"></span></summary><div id="extras-controls" class="effect-section-body effect-controls"></div>
+                </details>
+                <div class="effects-heading spotifast-effects-heading"><span class="export-badge scope-spotifast">Spotifast</span><button type="button" id="reset-spotifast-effects" class="text-button" aria-label="Reset Spotifast effects">Reset</button></div>
+                <details class="effect-section" id="effects-spotifast" data-preview-app="spotifast">
+                    <summary>Colours &amp; popups <span class="summary-hint" id="spotifast-state"></span></summary>
+                    <div class="effect-section-body"><p class="hint effect-note">Turn off Colour from album art in Spotifast to use this tint.</p><div id="spotifast-controls" class="effect-controls"></div></div>
+                </details>
+                <p id="effects-status" class="effects-status" role="status"></p>
             </section>
 
             <div class="settings-footer">
@@ -107,6 +122,7 @@
                         <button type="button" role="tab" id="tab-spotifast" data-app="spotifast" aria-controls="spotifast-preview">Spotifast</button>
                     </div>
                     <div class="segmented segmented-small" role="tablist" aria-label="Page" id="page-tabs"></div>
+                    <button type="button" id="preview-spotifast-popup" class="popup-preview-toggle" aria-controls="spotifast-popup" aria-expanded="false" hidden>Popup</button>
                 </div>
 
                 <div class="preview" id="theme-preview" role="tabpanel" aria-labelledby="tab-discord">
@@ -180,6 +196,7 @@
                 </div>
 
                 <div class="sf" id="spotifast-preview" role="tabpanel" aria-labelledby="tab-spotifast" hidden>
+                    <div class="sf-popup" id="spotifast-popup" hidden><strong>Popup preview</strong><span>Add to queue</span><span>Go to album</span></div>
                     <div class="sf-body">
                         <aside class="sf-side">
                             <nav class="sf-card sf-nav">
