@@ -236,6 +236,11 @@
                 control.append(element('label', { for: select.id }, option.label), select);
             }
             $('spotifast-controls').append(control);
+            if (option.key === 'tint') {
+                const note = element('p', { class: 'hint effect-note', id: 'spotifast-tint-note' }, 'Turn off Colour from album art in Spotifast to use this tint.');
+                $('spotifast-controls').append(note);
+                $('spotifast-tint').setAttribute('aria-describedby', note.id);
+            }
         }
         for (const group of document.querySelectorAll('[data-preview-app]')) {
             const preview = () => {
@@ -297,6 +302,7 @@
     }
 
     function render() {
+        $('effects-status').textContent = '';
         const preview = $('theme-preview');
         preview.removeAttribute('style');
         for (const [key, value] of Object.entries(api.toVariables(state))) preview.style.setProperty(key, value);
@@ -347,7 +353,6 @@
             const next = JSON.parse(JSON.stringify(state));
             change(next);
             state = api.normalize(next);
-            $('effects-status').textContent = '';
             render();
             if ($('feedback').classList.contains('error')) feedback('');
             return true;

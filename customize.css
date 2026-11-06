@@ -479,7 +479,7 @@ h2 {
     cursor: not-allowed;
 }
 .effect-note {
-    margin: 0 0 18px;
+    margin: -8px 0 0;
     font-size: 15px;
 }
 .effects-status {
@@ -1680,13 +1680,20 @@ h2 {
     background: var(--select);
     border-color: var(--accent);
 }
-.sf-popup {
+.sf-popup-stage {
     position: absolute;
     z-index: 4;
     top: 60px;
     right: 16px;
-    width: 184px;
+    width: 208px;
     max-width: calc(100% - 32px);
+    padding: 12px;
+    background: var(--sf-window);
+}
+.sf-popup-stage:has([hidden]) {
+    display: none;
+}
+.sf-popup {
     padding: 6px;
     border: 1px solid var(--sf-outline);
     border-radius: 4px;

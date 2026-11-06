@@ -102,14 +102,14 @@
                 <div class="effects-heading spotifast-effects-heading"><span class="export-badge scope-spotifast">Spotifast</span><button type="button" id="reset-spotifast-effects" class="text-button" aria-label="Reset Spotifast effects">Reset</button></div>
                 <details class="effect-section" id="effects-spotifast" data-preview-app="spotifast">
                     <summary>Colours &amp; popups <span class="summary-hint" id="spotifast-state"></span></summary>
-                    <div class="effect-section-body"><p class="hint effect-note">Turn off Colour from album art in Spotifast to use this tint.</p><div id="spotifast-controls" class="effect-controls"></div></div>
+                    <div class="effect-section-body"><div id="spotifast-controls" class="effect-controls"></div></div>
                 </details>
                 <p id="effects-status" class="effects-status" role="status"></p>
             </section>
 
             <div class="settings-footer">
                 <div class="settings-files"><button type="button" id="export-settings">Save</button><button type="button" id="import-settings">Load</button><input type="file" id="import-file" accept="application/json,.json" hidden></div>
-                <button type="button" id="reset-settings" class="text-button">Reset</button>
+                <button type="button" id="reset-settings" class="text-button">Reset all</button>
             </div>
         </form>
 
@@ -196,7 +196,7 @@
                 </div>
 
                 <div class="sf" id="spotifast-preview" role="tabpanel" aria-labelledby="tab-spotifast" hidden>
-                    <div class="sf-popup" id="spotifast-popup" hidden><strong>Popup preview</strong><span>Add to queue</span><span>Go to album</span></div>
+                    <div class="sf-popup-stage"><div class="sf-popup" id="spotifast-popup" hidden><strong>Popup preview</strong><span>Add to queue</span><span>Go to album</span></div></div>
                     <div class="sf-body">
                         <aside class="sf-side">
                             <nav class="sf-card sf-nav">
